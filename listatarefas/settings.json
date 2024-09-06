@@ -1,0 +1,7 @@
+{
+    "browserWindow": {
+        "width": 1280,
+        "height": 720,
+        "autoHideMenuBar": true
+    }
+}

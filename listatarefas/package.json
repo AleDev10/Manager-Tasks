@@ -1,6 +1,6 @@
 {
   "name": "com.aledev10.listatarefa",
-  "displayName": "listatarefa",
+  "displayName": "ManagerTasks",
   "version": "1.0.0",
   "description": "A sample Apache Cordova application that responds to the deviceready event.",
   "main": "index.js",
