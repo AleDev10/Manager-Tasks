@@ -1,0 +1,95 @@
+:root{
+    --preto: #353535;
+    --roxo-main: #c935f2;
+    --roxo-secund:#4c1a59;
+    --cinza: #f0f0f0;
+    --branco: #ffffff;
+    --cinza-escuro:#b1b1b1;
+    --azul:#5d35f2;
+}
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+#main{
+    width: 100vw;
+    height: 100vh;
+    font-size: 100%;
+    font-family: "Montserrat";
+}
+
+#modalbox{
+    width: 100vw;
+    height: 100vh; 
+    background-color: rgb(0, 0, 0, 0.7);
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 5%;
+    
+}
+#modalbox .box1{
+    background-color: var(--branco);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 5%;
+    gap: 1rem;
+}
+#modalbox .boximg{
+    display: flex;
+    justify-content: center;
+}
+#modalbox .boximg img{
+  width: 30%;
+
+}
+.boxinfo{
+    text-align: center;
+}
+#modalbox input{
+    font-family: "Montserrat_medium";
+    width: 60%;
+    padding: 0.5rem;
+    border-radius: 1rem;
+    border: none;
+    background-color: var(--roxo-main);
+    text-align: center;
+    outline-color: var(--azul);
+    font-size: 1rem;
+    color: var(--branco);
+}
+#modalbox input::placeholder{
+    color: var(--preto);
+    text-align: center;
+    font-family: "Montserrat_medium";
+}
+#modalbox button{
+    width: 40%;
+    height: 2rem;
+    border-radius: 2rem;
+    outline: none;
+    border: var(--roxo-main) solid;
+    background-color: transparent;
+    font-family: "Montserrat_medium";
+    color: var(--roxo-main);
+    cursor: pointer;
+
+}
+#modalbox button:hover{
+    color: var(--preto);
+    border: none;
+    background-color: var(--roxo-main);
+}
+#modalbox button:hover:active{
+    background-color: #d574f0;
+}
+@media screen and (max-width:1000px){
+    #modalbox{
+        display: none;
+    }
+}
