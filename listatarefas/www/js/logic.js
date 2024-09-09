@@ -22,6 +22,9 @@ document.addEventListener("DOMContentLoaded",()=>{
         </div>
     `;
 
+    /* declarações de funções */
+    
+    
     /* criação da janela pagina inicial */
     const pagina_inicial= document.createElement("div");
     pagina_inicial.setAttribute("id", "pagina_inicial");
@@ -44,37 +47,31 @@ document.addEventListener("DOMContentLoaded",()=>{
     secao_esquerda.appendChild(boxmenu);
 
     //botao home
-    const item_menu_home= document.createElement("div");
+    const item_menu_home= document.createElement("button");
     boxmenu.appendChild(item_menu_home);
     item_menu_home.setAttribute("class","boxmenuitems");
     const logo_home= document.createElement("img");
     logo_home.setAttribute("src","img/icons/home.png");
+    item_menu_home.innerHTML="Pagina inicial";
     item_menu_home.appendChild(logo_home);
-    const home_info= document.createElement("p");
-    home_info.innerHTML="Pagina inicial";
-    item_menu_home.appendChild(home_info);
 
     //botao settings
-    const item_menu_settings= document.createElement("div");
+    const item_menu_settings= document.createElement("button");
     boxmenu.appendChild(item_menu_settings);
     item_menu_settings.setAttribute("class","boxmenuitems");
     const logo_settings= document.createElement("img");
     logo_settings.setAttribute("src","img/icons/settings.png");
+    item_menu_settings.innerHTML="Configurações";
     item_menu_settings.appendChild(logo_settings);
-    const settings_info= document.createElement("p");
-    settings_info.innerHTML="Configurações";
-    item_menu_settings.appendChild(settings_info);
 
     //botao help
-    const item_menu_help= document.createElement("div");
+    const item_menu_help= document.createElement("button");
     boxmenu.appendChild(item_menu_help);
     item_menu_help.setAttribute("class","boxmenuitems");
     const logo_help= document.createElement("img");
     logo_help.setAttribute("src","img/icons/help.png");
+    item_menu_help.innerHTML="Sobre app";
     item_menu_help.appendChild(logo_help);
-    const help_info= document.createElement("p");
-    help_info.innerHTML="Sobre o app";
-    item_menu_help.appendChild(help_info);
 
     //caixa do filtro
     const boxfilter = document.createElement("div");
@@ -201,7 +198,7 @@ document.addEventListener("DOMContentLoaded",()=>{
     title_list2.setAttribute("class","title_list");
     title_list2.innerHTML="Mercado";
     list2.appendChild(title_list2);
-    //lista 2
+    //lista 3
     const list3 =document.createElement("div");
     list3.setAttribute("class","list");
     display_list.appendChild(list3);
@@ -210,7 +207,7 @@ document.addEventListener("DOMContentLoaded",()=>{
     title_list3.setAttribute("class","title_list");
     title_list3.innerHTML="Projecto";
     list3.appendChild(title_list3);
-    //lista 2
+    //lista 4
     const list4 =document.createElement("div");
     list4.setAttribute("class","list");
     display_list.appendChild(list4);
@@ -219,5 +216,50 @@ document.addEventListener("DOMContentLoaded",()=>{
     title_list4.setAttribute("class","title_list");
     title_list4.innerHTML="to do";
     list4.appendChild(title_list4);
+    //lista 5
+    const list5 =document.createElement("div");
+    list5.setAttribute("class","list");
+    display_list.appendChild(list5);
+    //titulo da lista
+    const title_list5=document.createElement("h4");
+    title_list5.setAttribute("class","title_list");
+    title_list5.innerHTML="to do";
+    list5.appendChild(title_list5);
+    //lista 6
+    const list6 =document.createElement("div");
+    list6.setAttribute("class","list");
+    display_list.appendChild(list6);
+    //titulo da lista
+    const title_list6=document.createElement("h4");
+    title_list6.setAttribute("class","title_list");
+    title_list6.innerHTML="to do";
+    list6.appendChild(title_list6);
+    //lista 7
+    const list7 =document.createElement("div");
+    list7.setAttribute("class","list");
+    display_list.appendChild(list7);
+    //titulo da lista
+    const title_list7=document.createElement("h4");
+    title_list7.setAttribute("class","title_list");
+    title_list7.innerHTML="to do";
+    list7.appendChild(title_list7);
+    //lista 8
+    const list8 =document.createElement("div");
+    list8.setAttribute("class","list");
+    display_list.appendChild(list8);
+    //titulo da lista
+    const title_list8=document.createElement("h4");
+    title_list8.setAttribute("class","title_list");
+    title_list8.innerHTML="to do";
+    list8.appendChild(title_list8);
+    //lista 9
+    const list9 =document.createElement("div");
+    list9.setAttribute("class","list");
+    display_list.appendChild(list9);
+    //titulo da lista
+    const title_list9=document.createElement("h4");
+    title_list9.setAttribute("class","title_list");
+    title_list9.innerHTML="to do";
+    list9.appendChild(title_list9);
 
 })
