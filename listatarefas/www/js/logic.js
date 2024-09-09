@@ -46,6 +46,7 @@ document.addEventListener("DOMContentLoaded",()=>{
     //botao home
     const item_menu_home= document.createElement("div");
     boxmenu.appendChild(item_menu_home);
+    item_menu_home.setAttribute("class","boxmenuitems");
     const logo_home= document.createElement("img");
     logo_home.setAttribute("src","img/icons/home.png");
     item_menu_home.appendChild(logo_home);
@@ -56,6 +57,7 @@ document.addEventListener("DOMContentLoaded",()=>{
     //botao settings
     const item_menu_settings= document.createElement("div");
     boxmenu.appendChild(item_menu_settings);
+    item_menu_settings.setAttribute("class","boxmenuitems");
     const logo_settings= document.createElement("img");
     logo_settings.setAttribute("src","img/icons/settings.png");
     item_menu_settings.appendChild(logo_settings);
@@ -66,6 +68,7 @@ document.addEventListener("DOMContentLoaded",()=>{
     //botao help
     const item_menu_help= document.createElement("div");
     boxmenu.appendChild(item_menu_help);
+    item_menu_help.setAttribute("class","boxmenuitems");
     const logo_help= document.createElement("img");
     logo_help.setAttribute("src","img/icons/help.png");
     item_menu_help.appendChild(logo_help);
@@ -110,11 +113,13 @@ document.addEventListener("DOMContentLoaded",()=>{
     boxfilter.appendChild(display_filter);
 
     //itens do display filter
-    const display_filter_item1 = document.createElement("p");
+    const display_filter_item1 = document.createElement("button");
     display_filter_item1.innerHTML="começo";
+    display_filter_item1.setAttribute("class","display_filter_itens");
     display_filter.appendChild(display_filter_item1);
-    const display_filter_item2 = document.createElement("p");
+    const display_filter_item2 = document.createElement("button");
     display_filter_item2.innerHTML="mercado";
+    display_filter_item2.setAttribute("class","display_filter_itens");
     display_filter.appendChild(display_filter_item2);
 
     
@@ -214,4 +219,5 @@ document.addEventListener("DOMContentLoaded",()=>{
     title_list4.setAttribute("class","title_list");
     title_list4.innerHTML="to do";
     list4.appendChild(title_list4);
+
 })
