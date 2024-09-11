@@ -6,6 +6,7 @@
     --branco: #ffffff;
     --cinza-escuro:#b1b1b1;
     --azul:#5d35f2;
+    --vermelho:#f2355e;
 }
 *{
     margin: 0;
@@ -92,14 +93,14 @@
     background-color: #d574f0;
 }
 
-/* estilização da pagina inicial */
-
-/* estilização da aria esquerda da pagina inicial */
-#pagina_inicial{
+/* estilização da pagina principal */
+#windowsmain{
     display: grid;
     grid-template-columns: 1fr 5fr;
     max-height: 100vh;
 }
+
+/* estilização da aria esquerda geral de todas as janelas */
 #secao_esquerda{
     background-color: var(--branco);
     height: 100vh;
@@ -197,8 +198,9 @@
     background-color: var(--cinza);
 }
 
+/* começo da estilização da janela pagina inicial */
 /* estilização da aria direita da pagina inicial */
-#secao_direita{
+#secao_direita_pagina_inicial{
     padding: 2rem;
     height: 100vh;
 }
@@ -311,9 +313,130 @@
 .list:hover:active{
     background-color: var(--roxo-main);
 }
+
+
+/* estilização da aria direta da pagina configurações */
+#secao_direita_config{
+    padding: 1rem;
+    height: 100vh;
+}
+#title_config{
+    color: var(--roxo-main);
+    text-align: center;
+    font-family: "Montserrat_black";
+    font-size: 3.5rem;
+}
+#boxconfig{
+    background-color: var(--branco);
+    border-radius: .5rem;
+    height: 80%;
+    box-shadow: 3px 3px 4px rgba(0, 0, 0, 0.171);
+    padding: 2rem;
+    margin-top: 1rem;
+}
+#boxaparencia{
+    padding: 1em;
+}
+#boxaparencia h3{
+    color: var(--roxo-main);
+}
+#boxaparenciacor{
+    margin: .5rem;
+    display: flex;
+    align-items: center;
+}
+.btnCorlors{
+    margin: .5rem;
+    width: 5%;
+    height: 35px;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    transition: .5s ease;
+}
+.btnCorlors:hover{
+    border: rgba(0, 0, 0, 0.726) solid 1px;
+}
+#btnCor1{
+    background-color: var(--roxo-main)
+}
+#btnCor2{
+    background-color: var(--azul)
+}
+#btnCor3{
+    background-color: var(--vermelho);
+}
+#boxfont{
+    margin: .5rem; 
+}
+#inputfont{
+    margin-left: .5rem;
+    margin-right: .5rem;
+    width: 10%;
+    outline: none;
+    font-family: "Montserrat_medium";
+}
+#boxstorage{
+    padding: 1rem;
+}
+#boxstorage h3{
+    color: var(--roxo-main);
+}
+#boxstorage button{
+    color: var(--roxo-main);
+    background-color: var(--preto);
+    width: 20%;
+    padding: .6rem;
+    border: none;
+    border-radius: 2rem;
+    outline: none;
+    margin: .5rem;
+    font-family: "Montserrat_medium";
+}
+#boxstorage button:hover{
+    background-color: var(--roxo-main);
+    color: var(--branco);
+}
+#boxstorage button:hover:active{
+    background-color: var(--roxo-secund);
+}
+#btnsconfig{
+    display: flex;
+    justify-content: end;
+    align-items: end;
+    height: 40%;
+}
+#btnsconfig button{
+    margin-left: 1rem;
+    width: 15%;
+    height: 20%;
+    border-radius: 3rem;
+    border: none;
+    outline: none;
+    background-color: var(--preto);
+    color: var(--branco);
+    font-family: "Montserrat_medium";
+    cursor: pointer;
+}
+#btnsconfig button:hover{
+    background-color: var(--roxo-main);
+}
+#btnsconfig button:hover:active{
+    background-color: var(--roxo-secund);
+}
+
+
+
+
+
+
 /* aria da responsividade com media query */
 @media screen and (max-width:2000px){
     #modalbox{
         display: none;
     }
+    #secao_direita_pagina_inicial{
+        display: none;
+    }
+    
 }
