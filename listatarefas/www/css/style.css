@@ -198,7 +198,9 @@
     background-color: var(--cinza);
 }
 
-/* começo da estilização da janela pagina inicial */
+/* começo da estilização da 
+janela pagina inicial */
+
 /* estilização da aria direita da pagina inicial */
 #secao_direita_pagina_inicial{
     padding: 2rem;
@@ -315,25 +317,27 @@
 }
 
 
-/* estilização da aria direta da pagina configurações */
-#secao_direita_config{
+/* estilização gerais das arias direitas das panelas configuração e sobre app*/
+.secao_direita{
     padding: 1rem;
     height: 100vh;
 }
-#title_config{
+#title_config, #title_help{
     color: var(--roxo-main);
     text-align: center;
     font-family: "Montserrat_black";
     font-size: 3.5rem;
 }
-#boxconfig{
+#boxconfig,#boxhelp{
     background-color: var(--branco);
     border-radius: .5rem;
     height: 80%;
     box-shadow: 3px 3px 4px rgba(0, 0, 0, 0.171);
     padding: 2rem;
     margin-top: 1rem;
+    font-size: .9rem;
 }
+/* estilização da aria direta da pagina configurações */
 #boxaparencia{
     padding: 1em;
 }
@@ -425,18 +429,142 @@
     background-color: var(--roxo-secund);
 }
 
+/* estilização da aria direta da pagina configurações */
+#boxversao{
+    padding: 1em;
+}
+#boxversao div{
+    display: flex;
+    align-items: center;
+    gap: .3rem;
+}
+#boxversao #versaotitle{
+    color: var(--roxo-main);
+}
+#boxversao h3{
+    color: var(--preto);
+}
+#boxdescricao{
+   padding-right: 1rem;
+   padding-left: 1rem;
+}
+#boxdescricao p{
+    padding: .5rem;
+}
+#boxredes{
+    padding-right: 1rem;
+   padding-left: 1rem;
+}
+#boxredes p{
+    padding: .5rem;
+}
+#dica{
+   padding-right: 1rem;
+   padding-left: 1rem;
+   font-size: .6rem;
+}
+#dica p{
+    padding: .5rem;
+}
 
+/* estilização da janela 
+modal type list */
 
-
-
-
+#modaltypelist{
+    width: 100vw;
+    height: 100vh; 
+    background-color: rgb(0, 0, 0, 0.7);
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 5%;
+    position: absolute;
+    z-index: 1000;
+}
+#boxtypelist{
+    background-color: var(--branco);
+    padding: 5%;
+    width: 48%;
+    height: 90%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+#btnCancel {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    border: none;
+    background-color: var(--roxo-main);
+    position: absolute;
+    top: 12%;
+    right: 27.4%;
+    cursor: pointer;
+    font-size: 1rem;
+    color: var(--branco);
+    font-family: "Montserrat_black";
+}
+#btnCancel:hover{
+    background-color: var(--roxo-secund);
+}
+#btnCancel:hover:active{
+    background-color: var(--roxo-main);
+}
+#imgmodallist{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+#imgmodallist img{
+    width: 75%;
+}
+#modallistinfo{
+    text-align: center;
+    padding: 1.5rem;
+    font-size: 1.5rem;
+}
+#modallistinfo h1{
+    color: var(--roxo-main);
+}
+#boxmodallist{
+    display: flex;
+    justify-content: center;
+}
+.btnsmodallist{
+    width: 35%;
+    margin-left: 1rem;
+    margin-right: 1rem;
+    margin-top: 1rem;
+    font-family: "Montserrat_medium";
+    font-size: 1rem;
+    padding: .5rem;
+    border-radius: 1rem;
+    background-color: var(--roxo-secund);
+    color: var(--branco);
+    border: none;
+    outline: none;
+    cursor: pointer;
+}
+.btnsmodallist:hover{
+    background-color: var(--roxo-main);
+}
+.btnsmodallist:hover:active{
+    background-color: var(--roxo-secund);
+}
 /* aria da responsividade com media query */
 @media screen and (max-width:2000px){
     #modalbox{
         display: none;
     }
-    #secao_direita_pagina_inicial{
+    /* #secao_direita_pagina_inicial{
+        display: none;
+    } */
+    #secao_direita_config{
         display: none;
     }
-    
+    #secao_direita_help{
+        display: none;
+    }
 }

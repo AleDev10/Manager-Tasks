@@ -123,10 +123,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   /* aria direita da pagina inicial */
   const secao_direita_pagina_inicial = document.createElement("div");
-  secao_direita_pagina_inicial.setAttribute(
-    "id",
-    "secao_direita_pagina_inicial"
-  );
+  secao_direita_pagina_inicial.setAttribute("id","secao_direita_pagina_inicial");
   WindowMain.appendChild(secao_direita_pagina_inicial);
 
   // caixa do titulo e paragrafo
@@ -265,12 +262,37 @@ document.addEventListener("DOMContentLoaded", () => {
   title_list9.innerHTML = "to do";
   list9.appendChild(title_list9);
 
+
+  /* criação da janela 
+    modal tipo de lista */
+
+    const modaltypelist=document.createElement("div");
+    modaltypelist.setAttribute("id", "modaltypelist");
+    WindowMain.appendChild(modaltypelist);
+    modaltypelist.innerHTML = `
+      <div id="boxtypelist">
+        <button id="btnCancel">X</button>
+        <div id="imgmodallist"><img src="img/logo/logoapp.png" alt="logo"></div>
+        <div id="modallistinfo">
+          <h1>Tipo de lista</h1>
+          <p>Escolha o tipo de lista<br>que deseja criar</p>
+        </div>
+        <div id="boxmodallist">
+          <button class="btnsmodallist">Normal</button>
+          <button class="btnsmodallist">Tabela</button>
+        </div>
+      </div>
+
+    `;
+
+
   /* criação da janela 
     configurações */
 
   //aria direita da janela configurações
   const secao_direita_config = document.createElement("div");
   secao_direita_config.setAttribute("id", "secao_direita_config");
+  secao_direita_config.setAttribute("class", "secao_direita");
   WindowMain.appendChild(secao_direita_config);
 
   //titulo da aria configurações
@@ -284,7 +306,7 @@ document.addEventListener("DOMContentLoaded", () => {
   BoxConfig.setAttribute("id", "boxconfig");
   secao_direita_config.appendChild(BoxConfig);
 
-  //itens da caixa de apresentação
+  //itens da caixa de apresentação configurações
 
   //caixa de configurações de aparência
   const boxaparencia = document.createElement("div");
@@ -348,4 +370,64 @@ document.addEventListener("DOMContentLoaded", () => {
   const btnCancelconfig = document.createElement("button");
   btnCancelconfig.innerHTML="Cancelar";
   btnsConfig.appendChild( btnCancelconfig);
+
+    /* criação da janela 
+    sobre app */
+
+  //aria direita da janela sobre app
+  const secao_direita_help = document.createElement("div");
+  secao_direita_help.setAttribute("id", "secao_direita_help");
+  secao_direita_help.setAttribute("class", "secao_direita");
+  WindowMain.appendChild(secao_direita_help);
+
+  //titulo da aria configurações
+  const title_help = document.createElement("h1");
+  title_help.setAttribute("id", "title_help");
+  title_help.innerHTML = "SOBRE APP";
+  secao_direita_help.appendChild(title_help);
+
+  //caixa de apresentação das configurações
+  const Boxhelp = document.createElement("div");
+  Boxhelp.setAttribute("id", "boxhelp");
+  secao_direita_help.appendChild(Boxhelp);
+
+  //itens da caixa de apresentação help
+  Boxhelp.innerHTML = `
+    <div id="boxversao">
+      <div><h3 id="versaotitle">Versão:  </h3><p>1.0</p></div>
+      <div><h3><b>Criado por:</b></h3><p> Alexandre junqueiro</p></div>
+      <div><h3><b>Lançamento:</b></h3><p> Sem data</p></div>
+    </div>
+    <div id="boxdescricao">
+      <h3>Descrição:</h3>
+      <p>
+        Este app é um projecto que faz parte do processo de aprendizagem de programação,<br>
+        ele é gratuito e open search, proibido a venda, a ideia era pegar em um projeto de<br> 
+        nível beginner e construir um app que as pessoas podem utilizar no seu dia a dia.
+      </p>
+      <p>
+        O armazenamento do app é limitado, então recomendo que apague as listas mais antigas<br>
+        para melhor desempenho do app.
+      </p>
+      <p>
+        Ele foi desenvolvido com tecnologia web <b>(HTML,CSS, JAVASCRIPT)</b>, electron <b>(um framework javascript)</b><br>
+        e <b>apache cordova electron</b>. Caso queira participar deste projeto fique avontade em contribuir no repositório do github.
+      </p>
+    </div>
+    <div id="boxredes">
+      <h3>Redes:</h3>
+      <p>
+      LinkedIn: <a href="https://www.linkedin.com/in/alexandre-junqueiro/">Perfil do criador</a><br>
+      GitHub: <a href="https://github.com/AleDev10/Manager-Tasks">Reportório do projeto</a><br>
+      Instagram: <a href="https://www.instagram.com/alexandre_junqueiro/">Perfil do criador</a><br>
+      Facebook: <a href="https://web.facebook.com/profile.php?id=100008443771463">Perfil do criador</a><br>
+      </p>
+    </div>
+    <div id="dica">
+      <p><i>"Burro não é aquele que começa com a má brincadeira, burro é aquele que continua com a má brincadeira."</i></p>
+    </div>
+
+  `;
+
+  
 });
