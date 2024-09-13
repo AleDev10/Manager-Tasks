@@ -553,14 +553,22 @@ modal type list */
 .btnsmodallist:hover:active{
     background-color: var(--roxo-secund);
 }
+
+/* estilização da janela 
+tipo de lista normal */
+
+
 /* aria da responsividade com media query */
 @media screen and (max-width:2000px){
     #modalbox{
         display: none;
     }
-    /* #secao_direita_pagina_inicial{
+    #secao_direita_pagina_inicial{
         display: none;
-    } */
+    }
+    #modaltypelist{
+        display: none;
+    }
     #secao_direita_config{
         display: none;
     }

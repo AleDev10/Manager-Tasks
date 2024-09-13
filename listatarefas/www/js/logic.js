@@ -157,6 +157,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const btn_select = document.createElement("button");
   btn_select.innerHTML = "Selecionar";
   btn_select.setAttribute("class", "btn_clean");
+  btn_select.setAttribute("id", "btnslecionarlist");
   boxtoolbar.appendChild(btn_select);
 
   //caixa da barra de pesquisa
@@ -284,6 +285,129 @@ document.addEventListener("DOMContentLoaded", () => {
       </div>
 
     `;
+
+    /* criação da janela 
+    tipo de lista normal */
+
+    //aria direita da pagina lista normal
+    const secao_direita_list_normal=document.createElement("div");
+    secao_direita_list_normal.setAttribute("id", "secao_direita_list_normal");
+    WindowMain.appendChild(secao_direita_list_normal);
+
+    //caixa de entrada de entrada da lista normal
+    const boxlistinputnormal=document.createElement("div");
+    boxlistinputnormal.setAttribute("id","boxlistinputnormal");
+    secao_direita_list_normal.appendChild(boxlistinputnormal);
+
+    //itens da caixa de entrada da lista normal
+    const inputlistnormal = document.createElement("input");
+    inputlistnormal.setAttribute("id","inputlistnormal");
+    inputlistnormal.setAttribute("placeholder","Digite uma tarefa");
+    boxlistinputnormal.appendChild(inputlistnormal);
+    const btn_delet_tasks= document.createElement("button");
+    btn_delet_tasks.setAttribute("id","btn_delet_tasks");
+    btn_delet_tasks.innerHTML="Deletar tarefas";
+    boxlistinputnormal.appendChild(btn_delet_tasks);
+    const count_tasks_normal_list=document.createElement("p");
+    count_tasks_normal_list.setAttribute("id","count_tasks_normal_list");
+    count_tasks_normal_list.setAttribute("class","");
+    count_tasks_normal_list.innerHTML="2 tarefas";
+    boxlistinputnormal.appendChild(count_tasks_normal_list);
+
+    //caixa dos botões de ações da list normal
+    const box_btns_list_normal=document.createElement("div");
+    box_btns_list_normal.setAttribute("id","box_btns_list_normal");
+    secao_direita_list_normal.appendChild( box_btns_list_normal);
+
+    //itens da caixa dos botões de ações da lista normal
+
+    //botão adicionar
+    const btn_add_list_normal=document.createElement("button");
+    btn_add_list_normal.setAttribute("class","btnListNormal");
+    btn_add_list_normal.innerHTML="Adicionar";
+    box_btns_list_normal.appendChild( btn_add_list_normal );
+    //botão cancelar
+    const btn_cancel_list_normal=document.createElement("button");
+    btn_cancel_list_normal.setAttribute("class","btnListNormal");
+    btn_cancel_list_normal.innerHTML="Cancelar";
+    box_btns_list_normal.appendChild( btn_cancel_list_normal );
+    //botão salvar
+    const btn_save_list_normal=document.createElement("button");
+    btn_save_list_normal.setAttribute("class","btnListNormal");
+    btn_save_list_normal.innerHTML="Salvar";
+    box_btns_list_normal.appendChild( btn_save_list_normal );
+
+    //caixa de apresentação das lista de tarefas normal
+    const box_display_list_normal=document.createElement("div");
+    box_display_list_normal.setAttribute("id","boxdisplaylistnormal");
+    secao_direita_list_normal.appendChild(box_display_list_normal);
+
+    //itens da caixa de apresentação das lista de tarefas normal
+    
+    //titulo da tarefa
+    const title_task_normal=document.createElement("h1");
+    title_task_normal.setAttribute("id","titletasknormal");
+    title_task_normal.innerHTML="Titulo";
+    box_display_list_normal.appendChild(title_task_normal);
+    //caixa categorias
+    const boxcategorias_list_normal=document.createElement("div");
+    boxcategorias_list_normal.setAttribute("class","boxcategorias");
+    box_display_list_normal.appendChild(boxcategorias_list_normal);
+    //seletor categorias
+    const seletor_categorias_normal=document.createElement("select");
+    boxcategorias_list_normal.appendChild(seletor_categorias_normal);
+    //itens da categorias
+    const caterianormal1=document.createElement("option");
+    caterianormal1.innerHTML="Categorias";
+    seletor_categorias_normal.appendChild(caterianormal1);
+    const caterianormal2=document.createElement("option");
+    caterianormal2.innerHTML="Lista de tarefas";
+    seletor_categorias_normal.appendChild(caterianormal2);
+    const caterianormal3=document.createElement("option");
+    caterianormal3.innerHTML="Projetos";
+    seletor_categorias_normal.appendChild(caterianormal3);
+    //icone da caixa categorias
+    const iconCategoriaNormal=document.createElement("img");
+    iconCategoriaNormal.setAttribute("src","img/icons/filter.png");
+    boxcategorias_list_normal.appendChild(iconCategoriaNormal);
+
+    //linha divisória
+    const linha_lista_normal=document.createElement("hr");
+    box_display_list_normal.appendChild(linha_lista_normal);
+
+    //caixa de uma tarefa
+    const boxTasklistnormal=document.createElement("div");
+    boxTasklistnormal.setAttribute("class","boxTasklistnormal");
+    box_display_list_normal.appendChild(boxTasklistnormal);
+
+    //itens da caixa de uma tarefa
+    const boxTask=document.createElement("div");
+    boxTask.setAttribute("class","boxTask");
+    boxTasklistnormal.appendChild(boxTask);
+    //itens da tarefa
+    const iconchecktask = document.createElement("img");
+    iconchecktask.setAttribute("src","img/icons/boxchak.png");
+    boxTask.appendChild(iconchecktask);
+    const infoTask = document.createElement("span");
+    infoTask.setAttribute("class","infoTask");
+    infoTask.innerHTML="Começo de todo";
+    boxTask.appendChild(infoTask);
+    const iconedittask = document.createElement("img");
+    iconedittask.setAttribute("src","img/icons/edite.png");
+    boxTask.appendChild(iconedittask);
+    const icondeletetask = document.createElement("img");
+    icondeletetask.setAttribute("src","img/icons/delete.png");
+    boxTask.appendChild(icondeletetask);
+    //aria de descrição da tarefa
+    const descricaoTask=document.createElement("div");
+    descricaoTask.setAttribute("class","descricaoTask");
+    boxTask.appendChild(descricaoTask);
+    //itens da descrição
+    const txtDescricao=document.createElement("textarea");
+    txtDescricao.setAttribute("class","txtDescricao");
+    txtDescricao.innerHTML="Descrição";
+    descricaoTask.appendChild(txtDescricao);
+    
 
 
   /* criação da janela 
