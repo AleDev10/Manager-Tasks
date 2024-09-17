@@ -292,6 +292,7 @@ document.addEventListener("DOMContentLoaded", () => {
     //aria direita da pagina lista normal
     const secao_direita_list_normal=document.createElement("div");
     secao_direita_list_normal.setAttribute("id", "secao_direita_list_normal");
+    secao_direita_list_normal.setAttribute("class", "secao_direita");
     WindowMain.appendChild(secao_direita_list_normal);
 
     //caixa de entrada de entrada da lista normal
@@ -306,11 +307,12 @@ document.addEventListener("DOMContentLoaded", () => {
     boxlistinputnormal.appendChild(inputlistnormal);
     const btn_delet_tasks= document.createElement("button");
     btn_delet_tasks.setAttribute("id","btn_delet_tasks");
+    btn_delet_tasks.setAttribute("class","btn_clean");
     btn_delet_tasks.innerHTML="Deletar tarefas";
     boxlistinputnormal.appendChild(btn_delet_tasks);
     const count_tasks_normal_list=document.createElement("p");
     count_tasks_normal_list.setAttribute("id","count_tasks_normal_list");
-    count_tasks_normal_list.setAttribute("class","");
+    /* count_tasks_normal_list.setAttribute("class",""); */
     count_tasks_normal_list.innerHTML="2 tarefas";
     boxlistinputnormal.appendChild(count_tasks_normal_list);
 

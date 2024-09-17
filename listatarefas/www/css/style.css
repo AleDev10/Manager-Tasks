@@ -556,6 +556,54 @@ modal type list */
 
 /* estilização da janela 
 tipo de lista normal */
+#boxlistinputnormal{
+    display: flex;
+    align-items: center;
+    border: var(--roxo-main) solid 3px;
+    border-radius: 4rem;
+    padding: .2rem;
+    
+}
+#inputlistnormal{
+    background-color: var(--roxo-main);
+    height: 3rem;
+    border-radius: 4rem;
+    border: none;
+    outline: none;
+    width: 75%;
+    padding: 1rem;
+    margin-right: 1rem;
+    font-size: 1rem;
+    font-family: "Montserrat_medium";
+    
+}
+#inputlistnormal::placeholder{
+    color: var(--branco);
+}
+#btn_delet_tasks{
+    margin-right: 1.5rem;
+}
+#box_btns_list_normal{
+    padding: 1rem;
+}
+.btnListNormal{
+    width: 15%;
+    height: 30px;
+    margin: 0px .5rem;
+    background-color: var(--roxo-main);
+    border: none;
+    border-radius: 1rem;
+    font-family: "Montserrat_bold";
+    font-size: 1rem;
+    color: var(--preto);
+}
+.btnListNormal:hover{
+    background-color: var(--roxo-secund);
+    color: var(--branco);
+}
+.btnListNormal:hover:active{
+    background-color: var(--roxo-main);
+}
 
 
 /* aria da responsividade com media query */
@@ -569,6 +617,9 @@ tipo de lista normal */
     #modaltypelist{
         display: none;
     }
+    /* #secao_direita_list_normal{
+        display: none;
+    } */
     #secao_direita_config{
         display: none;
     }
