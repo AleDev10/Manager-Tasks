@@ -604,7 +604,85 @@ tipo de lista normal */
 .btnListNormal:hover:active{
     background-color: var(--roxo-main);
 }
-
+#boxdisplaylistnormal{
+    background-color: var(--branco);
+    height: 75%;
+    padding: 1rem;
+    border-radius: .5rem;
+    box-shadow: 3px 3px 4px rgba(0, 0, 0, 0.171);
+}
+#boxtitle_list_normal{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+#boxdisplaylistnormal #boxtitle_list_normal h1{
+    color: var(--roxo-secund);
+    font-size: 3rem;
+    font-weight: 900;
+    margin-left: .2rem;
+}
+.boxcategorias{
+    border-radius: 3rem;
+    border: var(--roxo-main) solid 5px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: .3rem;
+    -webkit-border-radius: 3rem;
+    -moz-border-radius: 3rem;
+    -ms-border-radius: 3rem;
+    -o-border-radius: 3rem;
+}
+.boxcategorias select{
+    border: none;
+    outline: none;
+    appearance: none;
+    width: 90%;
+    color: var(--cinza-escuro);
+}
+.boxcategorias img{
+    width: 9%;
+}
+.boxTasklistnormal{
+    padding-top: 1rem;
+    padding-right: .5rem;
+    padding-left: 2rem;
+}
+.boxTask{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.boxTask1{
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+.boxTask1 span{
+    font-weight: 700;
+}
+.checkbox{
+    width: 10%;
+}
+.boxTask2{
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+.boxTask2 img{
+    width: 20%;
+}
+.descricaoTask{
+    padding-left: 3rem;
+    padding-right: 6rem;
+}
+.txtDescricao{
+    resize: none;
+    width: 100%;
+    border: none;
+    font-family: "Montserrat_medium";
+}
 
 /* aria da responsividade com media query */
 @media screen and (max-width:2000px){

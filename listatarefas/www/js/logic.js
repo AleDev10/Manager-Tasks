@@ -346,15 +346,19 @@ document.addEventListener("DOMContentLoaded", () => {
 
     //itens da caixa de apresentação das lista de tarefas normal
     
+    //caixa do titulo da tarefa e o filtor de caterorias
+    const boxtitle_list_normal=document.createElement("div");
+    boxtitle_list_normal.setAttribute("id","boxtitle_list_normal");
+    box_display_list_normal.appendChild(boxtitle_list_normal);
     //titulo da tarefa
     const title_task_normal=document.createElement("h1");
     title_task_normal.setAttribute("id","titletasknormal");
     title_task_normal.innerHTML="Titulo";
-    box_display_list_normal.appendChild(title_task_normal);
+    boxtitle_list_normal.appendChild(title_task_normal);
     //caixa categorias
     const boxcategorias_list_normal=document.createElement("div");
     boxcategorias_list_normal.setAttribute("class","boxcategorias");
-    box_display_list_normal.appendChild(boxcategorias_list_normal);
+    boxtitle_list_normal.appendChild(boxcategorias_list_normal);
     //seletor categorias
     const seletor_categorias_normal=document.createElement("select");
     boxcategorias_list_normal.appendChild(seletor_categorias_normal);
@@ -382,32 +386,44 @@ document.addEventListener("DOMContentLoaded", () => {
     boxTasklistnormal.setAttribute("class","boxTasklistnormal");
     box_display_list_normal.appendChild(boxTasklistnormal);
 
-    //itens da caixa de uma tarefa
+    // caixa de uma tarefa
     const boxTask=document.createElement("div");
     boxTask.setAttribute("class","boxTask");
     boxTasklistnormal.appendChild(boxTask);
+
+    const boxTask1=document.createElement("div");
+    boxTask1.setAttribute("class","boxTask1");
+    boxTask.appendChild(boxTask1);
+    const boxTask2=document.createElement("div");
+    boxTask2.setAttribute("class","boxTask2");
+    boxTask.appendChild(boxTask2);
+    
     //itens da tarefa
     const iconchecktask = document.createElement("img");
     iconchecktask.setAttribute("src","img/icons/boxchak.png");
-    boxTask.appendChild(iconchecktask);
+    iconchecktask.setAttribute("class","checkbox");
+    boxTask1.appendChild(iconchecktask);
     const infoTask = document.createElement("span");
     infoTask.setAttribute("class","infoTask");
     infoTask.innerHTML="Começo de todo";
-    boxTask.appendChild(infoTask);
+    boxTask1.appendChild(infoTask);
+
     const iconedittask = document.createElement("img");
     iconedittask.setAttribute("src","img/icons/edite.png");
-    boxTask.appendChild(iconedittask);
+    boxTask2.appendChild(iconedittask);
     const icondeletetask = document.createElement("img");
     icondeletetask.setAttribute("src","img/icons/delete.png");
-    boxTask.appendChild(icondeletetask);
+    boxTask2.appendChild(icondeletetask);
+
+
     //aria de descrição da tarefa
     const descricaoTask=document.createElement("div");
     descricaoTask.setAttribute("class","descricaoTask");
-    boxTask.appendChild(descricaoTask);
+    boxTasklistnormal.appendChild(descricaoTask);
     //itens da descrição
     const txtDescricao=document.createElement("textarea");
     txtDescricao.setAttribute("class","txtDescricao");
-    txtDescricao.innerHTML="Descrição";
+    txtDescricao.innerHTML="Descrição...";
     descricaoTask.appendChild(txtDescricao);
     
 
