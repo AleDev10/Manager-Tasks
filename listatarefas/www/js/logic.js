@@ -2,27 +2,15 @@ document.addEventListener("DOMContentLoaded", () => {
   //seleções gerais
   const main = document.getElementById("main");
 
-  //criação da janela modal inicial
-  const modalBox = document.createElement("div");
-  modalBox.setAttribute("id", "modalbox");
-  main.appendChild(modalBox);
-  modalBox.innerHTML = `
-        <div class="box1">
-            <div class="boximg">
-                 <img src="img/logo/logoapp.png" alt="logo">
-            </div> 
-            <div class="boxinfo">
-                <p>Seja Bem Vindo,<br>o <b>Manager Tasks</b> é um<br>gerenciador de tarefas simples e<br>fácil de usar, projetado para te ajudar na tua<br>produtividade, tenha um bom proveito e<br> muito obrigado por usar o nosso app.</p>
-            </div>
-            <input type="text" id="inputNome"  placeholder="Primeiro nome" autofocus>   
-            <div class="boxinfo">
-                <p>Caso queiras saber mais sobre o app<br>visite a secção "Sobre app".</p>
-            </div>
-            <button >Avançar</button>
-        </div>
-    `;
+  //aria das variaveis globais
+  var nome_user;
+  var ativar=false;
+  var contador_listas=0;
+  /* var estado_modal1=JSON.parse(localStorage.getItem("estado_modal1")) || [{
+    user:"",
+    states: true,
+  }]; */
 
-  /* declarações de funções */
 
   /* criação da janela main */
   const WindowMain = document.createElement("div");
@@ -119,173 +107,187 @@ document.addEventListener("DOMContentLoaded", () => {
   display_filter.appendChild(display_filter_item2);
 
   /* criação da janela 
-    pagina inicial */
-
-  /* aria direita da pagina inicial */
-  const secao_direita_pagina_inicial = document.createElement("div");
-  secao_direita_pagina_inicial.setAttribute("id","secao_direita_pagina_inicial");
-  WindowMain.appendChild(secao_direita_pagina_inicial);
-
-  // caixa do titulo e paragrafo
-  const boxtitle = document.createElement("div");
-  boxtitle.setAttribute("id", "boxtitle");
-  secao_direita_pagina_inicial.appendChild(boxtitle);
-  const titulo_direita = document.createElement("h1");
-  titulo_direita.innerHTML = `&#x1F44B;Olá Alexandre,`;
-  boxtitle.appendChild(titulo_direita);
-  const info_title = document.createElement("p");
-  info_title.innerHTML = "pronto para organizar as tarefas.";
-  boxtitle.appendChild(info_title);
-
-  //caixa da barra de ferramentas da aria direita
-  const boxtoolbar = document.createElement("div");
-  boxtoolbar.setAttribute("id", "boxtoolbar");
-  secao_direita_pagina_inicial.appendChild(boxtoolbar);
-
-  //botões e item da barra de ferramenta
-  const btn_new_list = document.createElement("button");
-  btn_new_list.setAttribute("id", "btn_new_list");
-  btn_new_list.innerHTML = "Nova lista";
-  boxtoolbar.appendChild(btn_new_list);
-  const btn_delete_list = document.createElement("button");
-  btn_delete_list.setAttribute("class", "btn_clean");
-  btn_delete_list.innerHTML = "Deletar listas";
-  boxtoolbar.appendChild(btn_delete_list);
-  const info_count_list = document.createElement("p");
-  info_count_list.innerHTML = "4 listas";
-  boxtoolbar.appendChild(info_count_list);
-  const btn_select = document.createElement("button");
-  btn_select.innerHTML = "Selecionar";
-  btn_select.setAttribute("class", "btn_clean");
-  btn_select.setAttribute("id", "btnslecionarlist");
-  boxtoolbar.appendChild(btn_select);
-
-  //caixa da barra de pesquisa
-  const boxsearch = document.createElement("div");
-  boxsearch.setAttribute("id", "boxsearch");
-  boxtoolbar.appendChild(boxsearch);
-
-  //entrada da caixa de pesquisa
-  const input_search = document.createElement("input");
-  input_search.setAttribute("id", "input_search");
-  input_search.setAttribute("placeholder", "Pesquisa");
-  boxsearch.appendChild(input_search);
-
-  //icon da barra de pesquisa
-  const icon_search = document.createElement("img");
-  icon_search.setAttribute("src", "img/icons/search.png");
-  boxsearch.appendChild(icon_search);
-
-  //display das listas na pagina inicial aria direita
-  const display_list = document.createElement("div");
-  display_list.setAttribute("id", "display_list");
-  secao_direita_pagina_inicial.appendChild(display_list);
-
-  //listas a serem mostradas no display da aria direita
-  const list1 = document.createElement("div");
-  list1.setAttribute("class", "list");
-  display_list.appendChild(list1);
-  //titulo da lista
-  const title_list1 = document.createElement("h4");
-  title_list1.setAttribute("class", "title_list");
-  title_list1.innerHTML = "Começo";
-  list1.appendChild(title_list1);
-  //lista 2
-  const list2 = document.createElement("div");
-  list2.setAttribute("class", "list");
-  display_list.appendChild(list2);
-  //titulo da lista
-  const title_list2 = document.createElement("h4");
-  title_list2.setAttribute("class", "title_list");
-  title_list2.innerHTML = "Mercado";
-  list2.appendChild(title_list2);
-  //lista 3
-  const list3 = document.createElement("div");
-  list3.setAttribute("class", "list");
-  display_list.appendChild(list3);
-  //titulo da lista
-  const title_list3 = document.createElement("h4");
-  title_list3.setAttribute("class", "title_list");
-  title_list3.innerHTML = "Projecto";
-  list3.appendChild(title_list3);
-  //lista 4
-  const list4 = document.createElement("div");
-  list4.setAttribute("class", "list");
-  display_list.appendChild(list4);
-  //titulo da lista
-  const title_list4 = document.createElement("h4");
-  title_list4.setAttribute("class", "title_list");
-  title_list4.innerHTML = "to do";
-  list4.appendChild(title_list4);
-  //lista 5
-  const list5 = document.createElement("div");
-  list5.setAttribute("class", "list");
-  display_list.appendChild(list5);
-  //titulo da lista
-  const title_list5 = document.createElement("h4");
-  title_list5.setAttribute("class", "title_list");
-  title_list5.innerHTML = "to do";
-  list5.appendChild(title_list5);
-  //lista 6
-  const list6 = document.createElement("div");
-  list6.setAttribute("class", "list");
-  display_list.appendChild(list6);
-  //titulo da lista
-  const title_list6 = document.createElement("h4");
-  title_list6.setAttribute("class", "title_list");
-  title_list6.innerHTML = "to do";
-  list6.appendChild(title_list6);
-  //lista 7
-  const list7 = document.createElement("div");
-  list7.setAttribute("class", "list");
-  display_list.appendChild(list7);
-  //titulo da lista
-  const title_list7 = document.createElement("h4");
-  title_list7.setAttribute("class", "title_list");
-  title_list7.innerHTML = "to do";
-  list7.appendChild(title_list7);
-  //lista 8
-  const list8 = document.createElement("div");
-  list8.setAttribute("class", "list");
-  display_list.appendChild(list8);
-  //titulo da lista
-  const title_list8 = document.createElement("h4");
-  title_list8.setAttribute("class", "title_list");
-  title_list8.innerHTML = "to do";
-  list8.appendChild(title_list8);
-  //lista 9
-  const list9 = document.createElement("div");
-  list9.setAttribute("class", "list");
-  display_list.appendChild(list9);
-  //titulo da lista
-  const title_list9 = document.createElement("h4");
-  title_list9.setAttribute("class", "title_list");
-  title_list9.innerHTML = "to do";
-  list9.appendChild(title_list9);
-
-
-  /* criação da janela 
     modal tipo de lista */
-
-    const modaltypelist=document.createElement("div");
-    modaltypelist.setAttribute("id", "modaltypelist");
-    WindowMain.appendChild(modaltypelist);
-    modaltypelist.innerHTML = `
-      <div id="boxtypelist">
-        <button id="btnCancel">X</button>
-        <div id="imgmodallist"><img src="img/logo/logoapp.png" alt="logo"></div>
-        <div id="modallistinfo">
-          <h1>Tipo de lista</h1>
-          <p>Escolha o tipo de lista<br>que deseja criar</p>
+    function modal_nova_lista(){
+    
+      const modaltypelist=document.createElement("div");
+      modaltypelist.setAttribute("id", "modaltypelist");
+      WindowMain.appendChild(modaltypelist);
+      const boxtypelist=document.createElement("div");
+      boxtypelist.setAttribute("id","boxtypelist");
+      modaltypelist.appendChild(boxtypelist);
+      const btn_cancelar_modal=document.createElement("button");
+      btn_cancelar_modal.setAttribute("id","btnCancel");
+      btn_cancelar_modal.innerText="X";
+      btn_cancelar_modal.addEventListener("click", ()=>{
+        modaltypelist.remove(boxtypelist);
+      });
+      boxtypelist.appendChild(btn_cancelar_modal);
+      const imgmodallist=document.createElement("div");
+      imgmodallist.setAttribute("id","imgmodallist");
+      imgmodallist.innerHTML=`<img src="img/logo/logoapp.png" alt="logo">`;
+      boxtypelist.appendChild(imgmodallist);
+      const modallistinfo = document.createElement("div");
+      modallistinfo.setAttribute("id","modallistinfo");
+      modallistinfo.innerHTML=`
+        <h1>Tipo de lista</h1>
+        <p>Escolha o tipo de lista<br>que deseja criar</p>
+      `;
+      boxtypelist.appendChild(modallistinfo);
+      const boxmodallist=document.createElement("div");
+      boxmodallist.setAttribute("id","boxmodallist");
+      boxtypelist.appendChild(boxmodallist);
+      const btnsmodallist_normal=document.createElement("button");
+      btnsmodallist_normal.setAttribute("class","btnsmodallist");
+      btnsmodallist_normal.innerText="Normal";
+      boxmodallist.appendChild(btnsmodallist_normal);
+      const btnsmodallist_tabela=document.createElement("button");
+      btnsmodallist_tabela.setAttribute("class","btnsmodallist");
+      btnsmodallist_tabela.innerText="Tabela";
+      boxmodallist.appendChild(btnsmodallist_tabela);
+      /*modaltypelist.innerHTML = `
+        <div id="boxtypelist">
+          <button id="btnCancel">X</button>
+          <div id="imgmodallist"><img src="img/logo/logoapp.png" alt="logo"></div>
+          <div id="modallistinfo">
+            <h1>Tipo de lista</h1>
+            <p>Escolha o tipo de lista<br>que deseja criar</p>
+          </div>
+          <div id="boxmodallist">
+            <button class="btnsmodallist">Normal</button>
+            <button class="btnsmodallist">Tabela</button>
+          </div>
         </div>
-        <div id="boxmodallist">
-          <button class="btnsmodallist">Normal</button>
-          <button class="btnsmodallist">Tabela</button>
-        </div>
-      </div>
+  
+      `;*/
+    }
 
-    `;
-
+   /* criação da janela 
+    pagina inicial */
+    function pagina_inicial(){
+      /* aria direita da pagina inicial */
+    const secao_direita_pagina_inicial = document.createElement("div");
+    secao_direita_pagina_inicial.setAttribute("id","secao_direita_pagina_inicial");
+    WindowMain.appendChild(secao_direita_pagina_inicial);
+  
+    // caixa do titulo e paragrafo
+    const boxtitle = document.createElement("div");
+    boxtitle.setAttribute("id", "boxtitle");
+    secao_direita_pagina_inicial.appendChild(boxtitle);
+    const titulo_direita = document.createElement("h1");
+    titulo_direita.innerHTML = `&#x1F44B;Olá ${nome_user},`;
+    boxtitle.appendChild(titulo_direita);
+    const info_title = document.createElement("p");
+    info_title.innerHTML = "pronto para organizar as tarefas.";
+    boxtitle.appendChild(info_title);
+  
+    //caixa da barra de ferramentas da aria direita
+    const boxtoolbar = document.createElement("div");
+    boxtoolbar.setAttribute("id", "boxtoolbar");
+    secao_direita_pagina_inicial.appendChild(boxtoolbar);
+  
+    //botões e item da barra de ferramenta
+    const btn_new_list = document.createElement("button");
+    btn_new_list.setAttribute("id", "btn_new_list");
+    btn_new_list.innerHTML = "Nova lista";
+    btn_new_list.addEventListener("click", () => {
+      modal_nova_lista();
+    });
+    boxtoolbar.appendChild(btn_new_list);
+    const btn_delete_list = document.createElement("button");
+    btn_delete_list.setAttribute("class", "btn_clean");
+    btn_delete_list.innerHTML = "Deletar listas";
+    boxtoolbar.appendChild(btn_delete_list);
+    const info_count_list = document.createElement("p");
+    info_count_list.innerHTML = `${contador_listas} listas`;
+    boxtoolbar.appendChild(info_count_list);
+    const btn_select = document.createElement("button");
+    btn_select.innerHTML = "Selecionar";
+    btn_select.setAttribute("class", "btn_clean");
+    btn_select.setAttribute("id", "btnslecionarlist");
+    boxtoolbar.appendChild(btn_select);
+  
+    //caixa da barra de pesquisa
+    const boxsearch = document.createElement("div");
+    boxsearch.setAttribute("id", "boxsearch");
+    boxtoolbar.appendChild(boxsearch);
+  
+    //entrada da caixa de pesquisa
+    const input_search = document.createElement("input");
+    input_search.setAttribute("id", "input_search");
+    input_search.setAttribute("placeholder", "Pesquisa");
+    boxsearch.appendChild(input_search);
+  
+    //icon da barra de pesquisa
+    const icon_search = document.createElement("img");
+    icon_search.setAttribute("src", "img/icons/search.png");
+    boxsearch.appendChild(icon_search);
+  
+    //display das listas na pagina inicial aria direita
+    const display_list = document.createElement("div");
+    display_list.setAttribute("id", "display_list");
+    secao_direita_pagina_inicial.appendChild(display_list);
+  
+    //listas a serem mostradas no display da aria direita
+    const list1 = document.createElement("div");
+    list1.setAttribute("class", "list");
+    display_list.appendChild(list1);
+    //titulo da lista
+    const title_list1 = document.createElement("h4");
+    title_list1.setAttribute("class", "title_list");
+    title_list1.innerHTML = "Começo";
+    list1.appendChild(title_list1);
+    //lista 2
+    const list2 = document.createElement("div");
+    list2.setAttribute("class", "list");
+    display_list.appendChild(list2);
+    //titulo da lista
+    const title_list2 = document.createElement("h4");
+    title_list2.setAttribute("class", "title_list");
+    title_list2.innerHTML = "Mercado";
+    list2.appendChild(title_list2);
+  }
+  //criação da janela modal inicial
+  function modal_inicio(){
+    const modalBox = document.createElement("div");
+  modalBox.setAttribute("id", "modalbox");
+  WindowMain.appendChild(modalBox);
+  const box1=document.createElement("div");
+  box1.setAttribute("class", "box1");
+  modalBox.appendChild(box1);
+  box1.innerHTML = `<div class="boximg">
+                 <img src="img/logo/logoapp.png" alt="logo">
+            </div> 
+            <div class="boxinfo">
+                <p>Seja Bem Vindo,<br>o <b>Manager Tasks</b> é um<br>gerenciador de tarefas simples e<br>fácil de usar, projetado para te ajudar na tua<br>produtividade, tenha um bom proveito e<br> muito obrigado por usar o nosso app.</p>
+            </div>
+            <input type="text" id="inputNome"  placeholder="Primeiro nome" autofocus>   
+            <div class="boxinfo">
+                <p>Caso queiras saber mais sobre o app<br>visite a secção "Sobre app".</p>
+            </div>`;
+    const buttonmodal= document.createElement("button");
+    box1.appendChild(buttonmodal);
+    buttonmodal.innerHTML = "Avançar";
+    buttonmodal.addEventListener("click",()=> {
+      let nome=document.getElementById("inputNome").value;
+      if(nome==""){
+        document.getElementById("inputNome").placeholder="Erro";
+      }else{
+        /* estado_modal1={
+          user: nome,
+          states: true,
+        };
+        localStorage.setItem("estado_modal1", JSON.stringify(estado_modal1)); */
+        nome_user=nome;
+        ativar=true;
+        modalBox.style.display="none";
+        pagina_inicial();
+      }
+    });
+  }
+  
+//resto da aplicação
+  function more(){  
     /* criação da janela 
     tipo de lista normal */
 
@@ -569,7 +571,11 @@ document.addEventListener("DOMContentLoaded", () => {
       <p><i>"Burro não é aquele que começa com a má brincadeira, burro é aquele que continua com a má brincadeira."</i></p>
     </div>
 
-  `;
+  `;}
 
-  
+  if(ativar==false){
+    modal_inicio();
+  }else{
+    pagina_inicial();
+  }
 });
