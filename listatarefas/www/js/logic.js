@@ -6,6 +6,9 @@ document.addEventListener("DOMContentLoaded", () => {
   var nome_user;
   var ativar=false;
   var contador_listas=0;
+  var menuconf=false;
+  var menuhelp=false;
+  var menuinicial=true;
   /* var estado_modal1=JSON.parse(localStorage.getItem("estado_modal1")) || [{
     user:"",
     states: true,
@@ -37,6 +40,19 @@ document.addEventListener("DOMContentLoaded", () => {
   const item_menu_home = document.createElement("button");
   boxmenu.appendChild(item_menu_home);
   item_menu_home.setAttribute("class", "boxmenuitems");
+  item_menu_home.setAttribute("id", "paginaincial");
+  item_menu_home.addEventListener("click", (e) => {
+    if (e.target.id == "paginaincial" && menuinicial==false){
+      WindowMain.removeChild(secao_direita_config);
+      help();
+      WindowMain.removeChild(secao_direita_help);
+      
+      pagina_inicial();
+      menuinicial=true;
+      menuconf=false;
+      menuhelp=false;
+    }
+  });
   const logo_home = document.createElement("img");
   logo_home.setAttribute("src", "img/icons/home.png");
   item_menu_home.innerHTML = "Pagina inicial";
@@ -45,7 +61,19 @@ document.addEventListener("DOMContentLoaded", () => {
   //botao settings
   const item_menu_settings = document.createElement("button");
   boxmenu.appendChild(item_menu_settings);
+  item_menu_settings.addEventListener("click",(e)=>{
+    if (e.target.id == "configuracao" && menuconf==false){
+      WindowMain.removeChild(secao_direita_pagina_inicial);
+      help();
+      WindowMain.removeChild(secao_direita_help);
+      setup();
+      menuconf=true;
+      menuinicial=false;
+      menuhelp=false;
+    }
+  });
   item_menu_settings.setAttribute("class", "boxmenuitems");
+  item_menu_settings.setAttribute("id", "configuracao");
   const logo_settings = document.createElement("img");
   logo_settings.setAttribute("src", "img/icons/settings.png");
   item_menu_settings.innerHTML = "Configurações";
@@ -55,6 +83,18 @@ document.addEventListener("DOMContentLoaded", () => {
   const item_menu_help = document.createElement("button");
   boxmenu.appendChild(item_menu_help);
   item_menu_help.setAttribute("class", "boxmenuitems");
+  item_menu_help.setAttribute("id", "ajuda");
+  item_menu_help.addEventListener("click",(e)=>{
+    if(e.target.id=="ajuda" && menuhelp==false){
+      WindowMain.removeChild(secao_direita_pagina_inicial);
+      setup();
+      WindowMain.removeChild(secao_direita_config);
+      help();
+      menuhelp=true;
+      menuconf=false;
+      menuinicial=false;
+    }
+  });
   const logo_help = document.createElement("img");
   logo_help.setAttribute("src", "img/icons/help.png");
   item_menu_help.innerHTML = "Sobre app";
@@ -106,9 +146,9 @@ document.addEventListener("DOMContentLoaded", () => {
   display_filter_item2.setAttribute("class", "display_filter_itens");
   display_filter.appendChild(display_filter_item2);
 
-  /* criação da janela 
-    modal tipo de lista */
-    function modal_nova_lista(){
+
+  //criação da janela modal tipo de lista
+  function modal_nova_lista(){
     
       const modaltypelist=document.createElement("div");
       modaltypelist.setAttribute("id", "modaltypelist");
@@ -161,10 +201,8 @@ document.addEventListener("DOMContentLoaded", () => {
   
       `;*/
     }
-
-   /* criação da janela 
-    pagina inicial */
-    function pagina_inicial(){
+  //criação da janela pagina inicial
+  function pagina_inicial(){
       /* aria direita da pagina inicial */
     const secao_direita_pagina_inicial = document.createElement("div");
     secao_direita_pagina_inicial.setAttribute("id","secao_direita_pagina_inicial");
@@ -237,15 +275,6 @@ document.addEventListener("DOMContentLoaded", () => {
     title_list1.setAttribute("class", "title_list");
     title_list1.innerHTML = "Começo";
     list1.appendChild(title_list1);
-    //lista 2
-    const list2 = document.createElement("div");
-    list2.setAttribute("class", "list");
-    display_list.appendChild(list2);
-    //titulo da lista
-    const title_list2 = document.createElement("h4");
-    title_list2.setAttribute("class", "title_list");
-    title_list2.innerHTML = "Mercado";
-    list2.appendChild(title_list2);
   }
   //criação da janela modal inicial
   function modal_inicio(){
@@ -285,7 +314,150 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
   }
+  //criação da janela configurações
+  function setup() {
+
+  //aria direita da janela configurações
+  const secao_direita_config = document.createElement("div");
+  secao_direita_config.setAttribute("id", "secao_direita_config");
+  secao_direita_config.setAttribute("class", "secao_direita");
+  WindowMain.appendChild(secao_direita_config);
+
+  //titulo da aria configurações
+  const title_config = document.createElement("h1");
+  title_config.setAttribute("id", "title_config");
+  title_config.innerHTML = "CONFIGURAÇÕES";
+  secao_direita_config.appendChild(title_config);
+
+  //caixa de apresentação das configurações
+  const BoxConfig = document.createElement("div");
+  BoxConfig.setAttribute("id", "boxconfig");
+  secao_direita_config.appendChild(BoxConfig);
+
+  //itens da caixa de apresentação configurações
+
+  //caixa de configurações de aparência
+  const boxaparencia = document.createElement("div");
+  boxaparencia.setAttribute("id", "boxaparencia");
+  BoxConfig.appendChild(boxaparencia);
+  //titulo
+  const tituloaparencia = document.createElement("h3");
+  tituloaparencia.innerHTML = "Aparência";
+  boxaparencia.appendChild(tituloaparencia);
+  //caixa aparência mudar cor
+  const boxaparenciarCor = document.createElement("div");
+  boxaparenciarCor.setAttribute("id", "boxaparenciacor");
+  boxaparenciarCor.innerHTML = "Mudar cor:";
+  boxaparencia.appendChild(boxaparenciarCor);
+  //botões das cores
+  const btn_cor1 = document.createElement("button");
+  btn_cor1.setAttribute("class", "btnCorlors");
+  btn_cor1.setAttribute("id", "btnCor1");
+  boxaparenciarCor.appendChild(btn_cor1);
+  const btn_cor2 = document.createElement("button");
+  btn_cor2.setAttribute("class", "btnCorlors");
+  btn_cor2.setAttribute("id", "btnCor2");
+  boxaparenciarCor.appendChild(btn_cor2);
+  const btn_cor3 = document.createElement("button");
+  btn_cor3.setAttribute("class", "btnCorlors");
+  btn_cor3.setAttribute("id", "btnCor3");
+  boxaparenciarCor.appendChild(btn_cor3);
+
+  //caixa de configurações de tamanho da font
+  const boxfont = document.createElement("div");
+  boxfont.setAttribute("id", "boxfont");
+  boxfont.innerHTML = "Tamanho da font:";
+  boxaparencia.appendChild(boxfont);
+  //input tamanho da font
+  const inputfont = document.createElement("input");
+  inputfont.setAttribute("id", "inputfont");
+  boxfont.appendChild(inputfont);
+  boxfont.innerHTML += "%";
+
+  //caixa de configurações armazenamento
+  const boxstorage=document.createElement("div");
+  boxstorage.setAttribute("id", "boxstorage");
+  BoxConfig.appendChild(boxstorage);
+  //titulo
+  const titleStorage=document.createElement("h3");
+  titleStorage.innerHTML="Armazenamento";
+  boxstorage.appendChild(titleStorage);
+  //botão apagar todo armazenamento
+  const btn_delAll_storage=document.createElement("button");
+  btn_delAll_storage.innerHTML="Apagar todo";
+  boxstorage.appendChild(btn_delAll_storage);
+
+  // caixa dis botões cancelar e salvar da configurações
+  const btnsConfig=document.createElement("div");
+  btnsConfig.setAttribute("id", "btnsconfig");
+  BoxConfig.appendChild(btnsConfig);
+  //botões
+  const btnSalveconfig = document.createElement("button");
+  btnSalveconfig.innerHTML="Salvar";
+  btnsConfig.appendChild(btnSalveconfig);
+  const btnCancelconfig = document.createElement("button");
+  btnCancelconfig.innerHTML="Cancelar";
+  btnsConfig.appendChild( btnCancelconfig);
+  }
   
+  //criação da janela sobre app
+  function help() {
+
+  //aria direita da janela sobre app
+  const secao_direita_help = document.createElement("div");
+  secao_direita_help.setAttribute("id", "secao_direita_help");
+  secao_direita_help.setAttribute("class", "secao_direita");
+  WindowMain.appendChild(secao_direita_help);
+
+  //titulo da aria configurações
+  const title_help = document.createElement("h1");
+  title_help.setAttribute("id", "title_help");
+  title_help.innerHTML = "SOBRE APP";
+  secao_direita_help.appendChild(title_help);
+
+  //caixa de apresentação das configurações
+  const Boxhelp = document.createElement("div");
+  Boxhelp.setAttribute("id", "boxhelp");
+  secao_direita_help.appendChild(Boxhelp);
+
+  //itens da caixa de apresentação help
+  Boxhelp.innerHTML = `
+    <div id="boxversao">
+      <div><h3 id="versaotitle">Versão:  </h3><p>1.0</p></div>
+      <div><h3><b>Criado por:</b></h3><p> Alexandre junqueiro</p></div>
+      <div><h3><b>Lançamento:</b></h3><p> Sem data</p></div>
+    </div>
+    <div id="boxdescricao">
+      <h3>Descrição:</h3>
+      <p>
+        Este app é um projecto que faz parte do processo de aprendizagem de programação,<br>
+        ele é gratuito e open search, proibido a venda, a ideia era pegar em um projeto de<br> 
+        nível beginner e construir um app que as pessoas podem utilizar no seu dia a dia.
+      </p>
+      <p>
+        O armazenamento do app é limitado, então recomendo que apague as listas mais antigas<br>
+        para melhor desempenho do app.
+      </p>
+      <p>
+        Ele foi desenvolvido com tecnologia web <b>(HTML,CSS, JAVASCRIPT)</b>, electron <b>(um framework javascript)</b><br>
+        e <b>apache cordova electron</b>. Caso queira participar deste projeto fique avontade em contribuir no repositório do github.
+      </p>
+    </div>
+    <div id="boxredes">
+      <h3>Redes:</h3>
+      <p>
+      LinkedIn: <a href="https://www.linkedin.com/in/alexandre-junqueiro/">Perfil do criador</a><br>
+      GitHub: <a href="https://github.com/AleDev10/Manager-Tasks">Reportório do projeto</a><br>
+      Instagram: <a href="https://www.instagram.com/alexandre_junqueiro/">Perfil do criador</a><br>
+      Facebook: <a href="https://web.facebook.com/profile.php?id=100008443771463">Perfil do criador</a><br>
+      </p>
+    </div>
+    <div id="dica">
+      <p><i>"Burro não é aquele que começa com a má brincadeira, burro é aquele que continua com a má brincadeira."</i></p>
+    </div>
+
+  `;
+  }
 //resto da aplicação
   function more(){  
     /* criação da janela 
@@ -427,151 +599,8 @@ document.addEventListener("DOMContentLoaded", () => {
     txtDescricao.setAttribute("class","txtDescricao");
     txtDescricao.innerHTML="Descrição...";
     descricaoTask.appendChild(txtDescricao);
-    
 
-
-  /* criação da janela 
-    configurações */
-
-  //aria direita da janela configurações
-  const secao_direita_config = document.createElement("div");
-  secao_direita_config.setAttribute("id", "secao_direita_config");
-  secao_direita_config.setAttribute("class", "secao_direita");
-  WindowMain.appendChild(secao_direita_config);
-
-  //titulo da aria configurações
-  const title_config = document.createElement("h1");
-  title_config.setAttribute("id", "title_config");
-  title_config.innerHTML = "CONFIGURAÇÕES";
-  secao_direita_config.appendChild(title_config);
-
-  //caixa de apresentação das configurações
-  const BoxConfig = document.createElement("div");
-  BoxConfig.setAttribute("id", "boxconfig");
-  secao_direita_config.appendChild(BoxConfig);
-
-  //itens da caixa de apresentação configurações
-
-  //caixa de configurações de aparência
-  const boxaparencia = document.createElement("div");
-  boxaparencia.setAttribute("id", "boxaparencia");
-  BoxConfig.appendChild(boxaparencia);
-  //titulo
-  const tituloaparencia = document.createElement("h3");
-  tituloaparencia.innerHTML = "Aparência";
-  boxaparencia.appendChild(tituloaparencia);
-  //caixa aparência mudar cor
-  const boxaparenciarCor = document.createElement("div");
-  boxaparenciarCor.setAttribute("id", "boxaparenciacor");
-  boxaparenciarCor.innerHTML = "Mudar cor:";
-  boxaparencia.appendChild(boxaparenciarCor);
-  //botões das cores
-  const btn_cor1 = document.createElement("button");
-  btn_cor1.setAttribute("class", "btnCorlors");
-  btn_cor1.setAttribute("id", "btnCor1");
-  boxaparenciarCor.appendChild(btn_cor1);
-  const btn_cor2 = document.createElement("button");
-  btn_cor2.setAttribute("class", "btnCorlors");
-  btn_cor2.setAttribute("id", "btnCor2");
-  boxaparenciarCor.appendChild(btn_cor2);
-  const btn_cor3 = document.createElement("button");
-  btn_cor3.setAttribute("class", "btnCorlors");
-  btn_cor3.setAttribute("id", "btnCor3");
-  boxaparenciarCor.appendChild(btn_cor3);
-
-  //caixa de configurações de tamanho da font
-  const boxfont = document.createElement("div");
-  boxfont.setAttribute("id", "boxfont");
-  boxfont.innerHTML = "Tamanho da font:";
-  boxaparencia.appendChild(boxfont);
-  //input tamanho da font
-  const inputfont = document.createElement("input");
-  inputfont.setAttribute("id", "inputfont");
-  boxfont.appendChild(inputfont);
-  boxfont.innerHTML += "%";
-
-  //caixa de configurações armazenamento
-  const boxstorage=document.createElement("div");
-  boxstorage.setAttribute("id", "boxstorage");
-  BoxConfig.appendChild(boxstorage);
-  //titulo
-  const titleStorage=document.createElement("h3");
-  titleStorage.innerHTML="Armazenamento";
-  boxstorage.appendChild(titleStorage);
-  //botão apagar todo armazenamento
-  const btn_delAll_storage=document.createElement("button");
-  btn_delAll_storage.innerHTML="Apagar todo";
-  boxstorage.appendChild(btn_delAll_storage);
-
-  // caixa dis botões cancelar e salvar da configurações
-  const btnsConfig=document.createElement("div");
-  btnsConfig.setAttribute("id", "btnsconfig");
-  BoxConfig.appendChild(btnsConfig);
-  //botões
-  const btnSalveconfig = document.createElement("button");
-  btnSalveconfig.innerHTML="Salvar";
-  btnsConfig.appendChild(btnSalveconfig);
-  const btnCancelconfig = document.createElement("button");
-  btnCancelconfig.innerHTML="Cancelar";
-  btnsConfig.appendChild( btnCancelconfig);
-
-    /* criação da janela 
-    sobre app */
-
-  //aria direita da janela sobre app
-  const secao_direita_help = document.createElement("div");
-  secao_direita_help.setAttribute("id", "secao_direita_help");
-  secao_direita_help.setAttribute("class", "secao_direita");
-  WindowMain.appendChild(secao_direita_help);
-
-  //titulo da aria configurações
-  const title_help = document.createElement("h1");
-  title_help.setAttribute("id", "title_help");
-  title_help.innerHTML = "SOBRE APP";
-  secao_direita_help.appendChild(title_help);
-
-  //caixa de apresentação das configurações
-  const Boxhelp = document.createElement("div");
-  Boxhelp.setAttribute("id", "boxhelp");
-  secao_direita_help.appendChild(Boxhelp);
-
-  //itens da caixa de apresentação help
-  Boxhelp.innerHTML = `
-    <div id="boxversao">
-      <div><h3 id="versaotitle">Versão:  </h3><p>1.0</p></div>
-      <div><h3><b>Criado por:</b></h3><p> Alexandre junqueiro</p></div>
-      <div><h3><b>Lançamento:</b></h3><p> Sem data</p></div>
-    </div>
-    <div id="boxdescricao">
-      <h3>Descrição:</h3>
-      <p>
-        Este app é um projecto que faz parte do processo de aprendizagem de programação,<br>
-        ele é gratuito e open search, proibido a venda, a ideia era pegar em um projeto de<br> 
-        nível beginner e construir um app que as pessoas podem utilizar no seu dia a dia.
-      </p>
-      <p>
-        O armazenamento do app é limitado, então recomendo que apague as listas mais antigas<br>
-        para melhor desempenho do app.
-      </p>
-      <p>
-        Ele foi desenvolvido com tecnologia web <b>(HTML,CSS, JAVASCRIPT)</b>, electron <b>(um framework javascript)</b><br>
-        e <b>apache cordova electron</b>. Caso queira participar deste projeto fique avontade em contribuir no repositório do github.
-      </p>
-    </div>
-    <div id="boxredes">
-      <h3>Redes:</h3>
-      <p>
-      LinkedIn: <a href="https://www.linkedin.com/in/alexandre-junqueiro/">Perfil do criador</a><br>
-      GitHub: <a href="https://github.com/AleDev10/Manager-Tasks">Reportório do projeto</a><br>
-      Instagram: <a href="https://www.instagram.com/alexandre_junqueiro/">Perfil do criador</a><br>
-      Facebook: <a href="https://web.facebook.com/profile.php?id=100008443771463">Perfil do criador</a><br>
-      </p>
-    </div>
-    <div id="dica">
-      <p><i>"Burro não é aquele que começa com a má brincadeira, burro é aquele que continua com a má brincadeira."</i></p>
-    </div>
-
-  `;}
+   }
 
   if(ativar==false){
     modal_inicio();

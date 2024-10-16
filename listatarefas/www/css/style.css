@@ -689,10 +689,4 @@ tipo de lista normal */
     #secao_direita_list_normal{
         display: none;
     }
-    #secao_direita_config{
-        display: none;
-    }
-    #secao_direita_help{
-        display: none;
-    }
 }
