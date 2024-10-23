@@ -401,7 +401,6 @@ document.addEventListener("DOMContentLoaded", () => {
   btnCancelconfig.innerHTML="Cancelar";
   btnsConfig.appendChild( btnCancelconfig);
   }
-  
   //criação da janela sobre app
   function help() {
 
