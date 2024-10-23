@@ -6,9 +6,9 @@ document.addEventListener("DOMContentLoaded", () => {
   var nome_user;
   var ativar=false;
   var contador_listas=0;
-  var menuconf=false;
-  var menuhelp=false;
-  var menuinicial=true;
+  var menu_activo="paginaincial";
+
+
   /* var estado_modal1=JSON.parse(localStorage.getItem("estado_modal1")) || [{
     user:"",
     states: true,
@@ -41,16 +41,16 @@ document.addEventListener("DOMContentLoaded", () => {
   boxmenu.appendChild(item_menu_home);
   item_menu_home.setAttribute("class", "boxmenuitems");
   item_menu_home.setAttribute("id", "paginaincial");
-  item_menu_home.addEventListener("click", (e) => {
-    if (e.target.id == "paginaincial" && menuinicial==false){
+  item_menu_home.addEventListener("click", () => {
+    if (menu_activo=="configuracao"){
       WindowMain.removeChild(secao_direita_config);
-      help();
-      WindowMain.removeChild(secao_direita_help);
-      
       pagina_inicial();
-      menuinicial=true;
-      menuconf=false;
-      menuhelp=false;
+      menu_activo="paginaincial";
+    }
+    if (menu_activo=="ajuda") {
+      WindowMain.removeChild(secao_direita_help);
+      pagina_inicial();
+      menu_activo="paginaincial";
     }
   });
   const logo_home = document.createElement("img");
@@ -61,15 +61,16 @@ document.addEventListener("DOMContentLoaded", () => {
   //botao settings
   const item_menu_settings = document.createElement("button");
   boxmenu.appendChild(item_menu_settings);
-  item_menu_settings.addEventListener("click",(e)=>{
-    if (e.target.id == "configuracao" && menuconf==false){
-      WindowMain.removeChild(secao_direita_pagina_inicial);
-      help();
+  item_menu_settings.addEventListener("click",()=>{
+    if (menu_activo=="paginaincial"){
+        WindowMain.removeChild(secao_direita_pagina_inicial);
+        setup();
+        menu_activo="configuracao";
+    }
+    if (menu_activo=="ajuda") {
       WindowMain.removeChild(secao_direita_help);
       setup();
-      menuconf=true;
-      menuinicial=false;
-      menuhelp=false;
+      menu_activo="configuracao";
     }
   });
   item_menu_settings.setAttribute("class", "boxmenuitems");
@@ -84,16 +85,17 @@ document.addEventListener("DOMContentLoaded", () => {
   boxmenu.appendChild(item_menu_help);
   item_menu_help.setAttribute("class", "boxmenuitems");
   item_menu_help.setAttribute("id", "ajuda");
-  item_menu_help.addEventListener("click",(e)=>{
-    if(e.target.id=="ajuda" && menuhelp==false){
+  item_menu_help.addEventListener("click",()=>{
+    if (menu_activo=="paginaincial"){
       WindowMain.removeChild(secao_direita_pagina_inicial);
-      setup();
-      WindowMain.removeChild(secao_direita_config);
       help();
-      menuhelp=true;
-      menuconf=false;
-      menuinicial=false;
-    }
+      menu_activo="ajuda";
+  }
+    if (menu_activo=="configuracao"){
+    WindowMain.removeChild(secao_direita_config);
+    help();
+    menu_activo="ajuda";
+  }
   });
   const logo_help = document.createElement("img");
   logo_help.setAttribute("src", "img/icons/help.png");
