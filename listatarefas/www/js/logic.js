@@ -6,6 +6,7 @@ document.addEventListener("DOMContentLoaded", () => {
   var nome_user;
   var ativar=false;
   var contador_listas=0;
+  var contador_tarefas=0;
   var menu_activo="paginaincial";
 
 
@@ -52,6 +53,11 @@ document.addEventListener("DOMContentLoaded", () => {
       pagina_inicial();
       menu_activo="paginaincial";
     }
+    if (menu_activo=="lista_normal") {
+      WindowMain.removeChild(secao_direita_list_normal);
+      pagina_inicial();
+      menu_activo="paginaincial";
+    }
   });
   const logo_home = document.createElement("img");
   logo_home.setAttribute("src", "img/icons/home.png");
@@ -69,6 +75,11 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     if (menu_activo=="ajuda") {
       WindowMain.removeChild(secao_direita_help);
+      setup();
+      menu_activo="configuracao";
+    }
+    if (menu_activo=="lista_normal") {
+      WindowMain.removeChild(secao_direita_list_normal);
       setup();
       menu_activo="configuracao";
     }
@@ -93,6 +104,11 @@ document.addEventListener("DOMContentLoaded", () => {
   }
     if (menu_activo=="configuracao"){
     WindowMain.removeChild(secao_direita_config);
+    help();
+    menu_activo="ajuda";
+  }
+  if (menu_activo=="lista_normal") {
+    WindowMain.removeChild(secao_direita_list_normal);
     help();
     menu_activo="ajuda";
   }
@@ -181,27 +197,18 @@ document.addEventListener("DOMContentLoaded", () => {
       boxtypelist.appendChild(boxmodallist);
       const btnsmodallist_normal=document.createElement("button");
       btnsmodallist_normal.setAttribute("class","btnsmodallist");
+      btnsmodallist_normal.addEventListener("click", ()=>{
+        modaltypelist.remove(boxtypelist);
+        WindowMain.removeChild(secao_direita_pagina_inicial);
+        lista_normal();
+        menu_activo="lista_normal";
+      })
       btnsmodallist_normal.innerText="Normal";
       boxmodallist.appendChild(btnsmodallist_normal);
       const btnsmodallist_tabela=document.createElement("button");
       btnsmodallist_tabela.setAttribute("class","btnsmodallist");
       btnsmodallist_tabela.innerText="Tabela";
       boxmodallist.appendChild(btnsmodallist_tabela);
-      /*modaltypelist.innerHTML = `
-        <div id="boxtypelist">
-          <button id="btnCancel">X</button>
-          <div id="imgmodallist"><img src="img/logo/logoapp.png" alt="logo"></div>
-          <div id="modallistinfo">
-            <h1>Tipo de lista</h1>
-            <p>Escolha o tipo de lista<br>que deseja criar</p>
-          </div>
-          <div id="boxmodallist">
-            <button class="btnsmodallist">Normal</button>
-            <button class="btnsmodallist">Tabela</button>
-          </div>
-        </div>
-  
-      `;*/
     }
   //criação da janela pagina inicial
   function pagina_inicial(){
@@ -460,7 +467,7 @@ document.addEventListener("DOMContentLoaded", () => {
   `;
   }
 //resto da aplicação
-  function more(){  
+  function lista_normal(){  
     /* criação da janela 
     tipo de lista normal */
 
@@ -488,7 +495,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const count_tasks_normal_list=document.createElement("p");
     count_tasks_normal_list.setAttribute("id","count_tasks_normal_list");
     /* count_tasks_normal_list.setAttribute("class",""); */
-    count_tasks_normal_list.innerHTML="2 tarefas";
+    count_tasks_normal_list.innerHTML=`${contador_tarefas} tarefas`;
     boxlistinputnormal.appendChild(count_tasks_normal_list);
 
     //caixa dos botões de ações da list normal
