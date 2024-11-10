@@ -3,11 +3,12 @@ document.addEventListener("DOMContentLoaded", () => {
   const main = document.getElementById("main");
 
   //aria das variaveis globais
-  var nome_user;
-  var ativar=false;
+  var nome_user="Alexandre";
+  var ativar=true;
   var contador_listas=0;
   var contador_tarefas=0;
   var menu_activo="paginaincial";
+  var valor_entrada="";
 
 
   /* var estado_modal1=JSON.parse(localStorage.getItem("estado_modal1")) || [{
@@ -486,10 +487,22 @@ document.addEventListener("DOMContentLoaded", () => {
     const inputlistnormal = document.createElement("input");
     inputlistnormal.setAttribute("id","inputlistnormal");
     inputlistnormal.setAttribute("placeholder","Digite uma tarefa");
+    inputlistnormal.addEventListener("keydown",(e)=>{
+      if(e.key==="Enter"){
+        adicionar_tarefa();
+        console.log("sim esta funcionar");
+      }else if (e.key==="Escape") {
+        cancelar_tarefa();
+      }
+    });
     boxlistinputnormal.appendChild(inputlistnormal);
+    inputlistnormal.focus();
     const btn_delet_tasks= document.createElement("button");
     btn_delet_tasks.setAttribute("id","btn_delet_tasks");
     btn_delet_tasks.setAttribute("class","btn_clean");
+    btn_delet_tasks.addEventListener("click",function(){
+      box_display_list_normal.removeChild(boxTasklistnormal);
+    })
     btn_delet_tasks.innerHTML="Deletar tarefas";
     boxlistinputnormal.appendChild(btn_delet_tasks);
     const count_tasks_normal_list=document.createElement("p");
@@ -508,11 +521,17 @@ document.addEventListener("DOMContentLoaded", () => {
     //botão adicionar
     const btn_add_list_normal=document.createElement("button");
     btn_add_list_normal.setAttribute("class","btnListNormal");
+    btn_add_list_normal.addEventListener("click",function(){
+      adicionar_tarefa();
+    });
     btn_add_list_normal.innerHTML="Adicionar";
     box_btns_list_normal.appendChild( btn_add_list_normal );
     //botão cancelar
     const btn_cancel_list_normal=document.createElement("button");
     btn_cancel_list_normal.setAttribute("class","btnListNormal");
+    btn_cancel_list_normal.addEventListener("click", function(){
+      cancelar_tarefa();
+    });
     btn_cancel_list_normal.innerHTML="Cancelar";
     box_btns_list_normal.appendChild( btn_cancel_list_normal );
     //botão salvar
@@ -531,6 +550,20 @@ document.addEventListener("DOMContentLoaded", () => {
     //caixa do titulo da tarefa e o filtor de caterorias
     const boxtitle_list_normal=document.createElement("div");
     boxtitle_list_normal.setAttribute("id","boxtitle_list_normal");
+    boxtitle_list_normal.addEventListener("click", function(e){
+      if (e.target.id==="titletasknormal") {
+        var editar = document.createElement("input");
+        editar.setAttribute("class","editar_campo");
+        editar.value=title_task_normal.textContent;
+        title_task_normal.replaceWith(editar);
+        editar.focus();
+        editar.addEventListener("blur", function(){
+          title_task_normal.textContent=editar.value
+          editar.replaceWith(title_task_normal);
+          inputlistnormal.focus();
+        })
+      }
+    });
     box_display_list_normal.appendChild(boxtitle_list_normal);
     //titulo da tarefa
     const title_task_normal=document.createElement("h1");
@@ -563,12 +596,30 @@ document.addEventListener("DOMContentLoaded", () => {
     const linha_lista_normal=document.createElement("hr");
     box_display_list_normal.appendChild(linha_lista_normal);
 
-    //caixa de uma tarefa
+    function cancelar_tarefa() {
+      inputlistnormal.value="";
+      inputlistnormal.focus();
+    }
+    function adicionar_tarefa() {
+      if (inputlistnormal.value=="") {
+        inputlistnormal.placeholder="Digite uma tarefa antes de adicionar";
+        inputlistnormal.focus();
+      }else{
+        contador_tarefas++;
+        count_tasks_normal_list.innerHTML=`${contador_tarefas} tarefas`;
+        adicionar(inputlistnormal.value);
+        inputlistnormal.value="";
+        inputlistnormal.placeholder="Digite uma tarefa";
+        inputlistnormal.focus();
+      }
+    }
+
+    function adicionar(tarefa) {
+      //caixa de uma tarefa
     const boxTasklistnormal=document.createElement("div");
     boxTasklistnormal.setAttribute("class","boxTasklistnormal");
     box_display_list_normal.appendChild(boxTasklistnormal);
-
-    // caixa de uma tarefa
+      // caixa de uma tarefa
     const boxTask=document.createElement("div");
     boxTask.setAttribute("class","boxTask");
     boxTasklistnormal.appendChild(boxTask);
@@ -587,7 +638,7 @@ document.addEventListener("DOMContentLoaded", () => {
     boxTask1.appendChild(iconchecktask);
     const infoTask = document.createElement("span");
     infoTask.setAttribute("class","infoTask");
-    infoTask.innerHTML="Começo de todo";
+    infoTask.innerHTML=`${tarefa}`;
     boxTask1.appendChild(infoTask);
 
     const iconedittask = document.createElement("img");
@@ -607,12 +658,17 @@ document.addEventListener("DOMContentLoaded", () => {
     txtDescricao.setAttribute("class","txtDescricao");
     txtDescricao.innerHTML="Descrição...";
     descricaoTask.appendChild(txtDescricao);
+    }
+    
 
    }
+
+  
 
   if(ativar==false){
     modal_inicio();
   }else{
-    pagina_inicial();
+    /* pagina_inicial(); */
+    lista_normal();
   }
 });
