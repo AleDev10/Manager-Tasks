@@ -63,7 +63,7 @@
     border: none;
     background-color: var(--roxo-main);
     text-align: center;
-    outline-color: var(--azul);
+    outline-color: #5d35f2;
     font-size: 1rem;
     color: var(--branco);
 }
@@ -127,6 +127,7 @@
     align-items: center;
     flex-direction: row-reverse;
     padding: .3rem;
+    margin: .2rem;
     font-size: 1rem;
     border: none;
     background-color: transparent;
@@ -142,6 +143,7 @@
 .boxmenuitems img{
     width: 15%;
     margin-right: .4rem;
+    border-radius: .2rem;
 }
 #boxfilter{
     background-color: var(--cinza);
@@ -625,16 +627,15 @@ tipo de lista normal */
 }
 .editar_campo{
     outline: none;
-    border-radius: 1rem;
     border: none;
     height: 2rem;
-    width: 40%;
+    width: 50%;
     padding: 1rem;
-    background-color: var(--roxo-main);
-    font-size: 1rem;
-    font-family: "Montserrat_medium";
-    font-weight: 500;
-    color: var(--branco);
+    background-color: transparent;
+    font-size: 2rem;
+    font-family: "Montserrat_black";
+    font-weight: 900;
+    color: var(--roxo-secund);
 }
 .boxcategorias{
     border-radius: 3rem;
@@ -678,9 +679,23 @@ tipo de lista normal */
 }
 .boxTask1 span{
     font-weight: 700;
+    padding-top: .4rem;
+    padding-bottom: .4rem;
+    padding-left: .8rem;
+
 }
 .checkbox{
     width: 1.5rem;
+}
+.concluido{
+    background-color: var(--roxo-main);
+    border-radius: 3rem;
+    text-decoration: line-through;
+    width: 50rem;
+}
+.entrada_edicao{
+    font-family: "Montserrat_bold";
+    padding: 1rem;
 }
 .boxTask2{
     display: flex;
