@@ -3,8 +3,8 @@ document.addEventListener("DOMContentLoaded", () => {
   const main = document.getElementById("main");
 
   //aria das variaveis globais
-  var nome_user = "Alexandre";
-  var ativar = true;
+  var nome_user = "";
+  var ativar = false;
   var contador_listas = 0;
   var contador_tarefas = 0;
   var menu_activo = "paginaincial";
@@ -12,8 +12,9 @@ document.addEventListener("DOMContentLoaded", () => {
   var cor_sistema = "#c935f2";
   var tarefas = [];
   var listas = [];
+  var ids= 1000;
 
-  /*construções dos elementos
+  /*declaração dos elementos
   de maneira global*/
 
    //declaração dos elementos da janela principal
@@ -41,7 +42,6 @@ document.addEventListener("DOMContentLoaded", () => {
   //declaração dos elementos da modal inicial
   const modalBox = document.createElement("div");
   const box1 = document.createElement("div");
-  const buttonmodal = document.createElement("button");
 
   //declaração dos elementos da modal tipo de lista
   const modaltypelist = document.createElement("div");
@@ -199,7 +199,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     //caixa principal da modal inicial
     modalBox.setAttribute("id", "modalbox");
-    WindowMain.appendChild(modalBox);
+    main.appendChild(modalBox);
 
     //caixa de conteúdo
     box1.setAttribute("class", "box1");
@@ -214,50 +214,17 @@ document.addEventListener("DOMContentLoaded", () => {
     <input type="text" id="inputNome"  placeholder="Primeiro nome" autofocus>   
     <div class="boxinfo">
       <p>Caso queiras saber mais sobre o app<br>visite a secção "Sobre app".</p>
-    </div>`;
+    </div>
+    <button id="btn_avancar">Avançar</button>`;
 
     //evento do input da janela modal
-    document.getElementById("inputNome").addEventListener("keydown", (e) => {
-      if (e.key === "Enter") {
-        let nome = document.getElementById("inputNome").value;
-        if (nome == "") {
-          document.getElementById("inputNome").placeholder =
-            "Tens que digitar um nome";
-          document.getElementById("inputNome").style.outlineColor = "#f2355e";
-          document.getElementById("inputNome").focus();
-        } else {
-          nome_user =
-            nome.charAt(0).toUpperCase() + nome.slice(1).toLowerCase();
-          ativar = true;
-          modalBox.style.display = "none";
-          pagina_inicial();
-          item_menu_home.style.backgroundColor = `${cor_sistema}`;
-          logo_home.style.backgroundColor = "#ffff";
-          item_menu_home.style.color = "#ffff";
-        }
-      }
-    });
+    document.getElementById("inputNome").addEventListener("keydown", (e) => { verificacao_input_modal_inicial_com_tecla(e.key)});
 
-    //botão da modal
-    box1.appendChild(buttonmodal);
-    buttonmodal.innerHTML = "Avançar";
-    buttonmodal.addEventListener("click", () => {
-      let nome = document.getElementById("inputNome").value.toLowerCase();
-      if (nome == "") {
-        document.getElementById("inputNome").placeholder =
-          "Tens que digitar um nome";
-        document.getElementById("inputNome").style.outlineColor = "#f2355e";
-        document.getElementById("inputNome").focus();
-      } else {
-        nome_user = nome.charAt(0).toUpperCase() + nome.slice(1).toLowerCase();
-        ativar = true;
-        modalBox.style.display = "none";
-        pagina_inicial();
-      }
-    });
+    //evento do botão da modal
+    document.getElementById("btn_avancar").addEventListener("click",verificacao_modal_inicial_com_botao);
   }
   //janela modal tipo de lista
-  function modal_nova_lista() {
+  function modal_tipo_lista() {
 
     //caixa principal da modal tipo de lista
     modaltypelist.setAttribute("id", "modaltypelist");
@@ -269,9 +236,7 @@ document.addEventListener("DOMContentLoaded", () => {
     //btn_cancelar_modal
     btn_cancelar_modal.setAttribute("id", "btnCancel");
     btn_cancelar_modal.innerText = "X";
-    btn_cancelar_modal.addEventListener("click", () => {
-      modaltypelist.remove(boxtypelist);
-    });
+    btn_cancelar_modal.addEventListener("click", botao_cancelar_modal_tipo_de_lista);
     boxtypelist.appendChild(btn_cancelar_modal);
     //imgmodallist
     imgmodallist.setAttribute("id", "imgmodallist");
@@ -291,12 +256,7 @@ document.addEventListener("DOMContentLoaded", () => {
     boxtypelist.appendChild(boxmodallist);
     //btnsmodallist_normal
     btnsmodallist_normal.setAttribute("class", "btnsmodallist");
-    btnsmodallist_normal.addEventListener("click", () => {
-      modaltypelist.remove(boxtypelist);
-      WindowMain.removeChild(secao_direita_pagina_inicial);
-      lista_normal();
-      menu_activo = "lista_normal";
-    });
+    btnsmodallist_normal.addEventListener("click",abrir_lista_normal);
     btnsmodallist_normal.innerText = "Normal";
     boxmodallist.appendChild(btnsmodallist_normal);
     //btnsmodallist_tabela
@@ -325,9 +285,7 @@ document.addEventListener("DOMContentLoaded", () => {
     //botões e item da barra de ferramenta
     btn_new_list.setAttribute("id", "btn_new_list");
     btn_new_list.innerHTML = "Nova lista";
-    btn_new_list.addEventListener("click", () => {
-      modal_nova_lista();
-    });
+    btn_new_list.addEventListener("click",modal_tipo_lista);
     boxtoolbar.appendChild(btn_new_list);
     btn_delete_list.setAttribute("class", "btn_clean");
     btn_delete_list.innerHTML = "Deletar listas";
@@ -353,21 +311,10 @@ document.addEventListener("DOMContentLoaded", () => {
     //display das listas na pagina inicial
     display_list.setAttribute("id", "display_list");
     secao_direita_pagina_inicial.appendChild(display_list);
-    listas.forEach((e) => {
-      //lista
-      list1.setAttribute("class", "list");
-      list1.addEventListener("click", () => {
-        console.log("em andamento");
-      });
-      display_list.appendChild(list1);
-      //titulo da lista
-      title_list1.setAttribute("class", "title_list");
-      title_list1.innerHTML = `${e.titulo_lista}`;
-      list1.appendChild(title_list1);
-    });
+    apresentar_listas_na_pagina_inicial();
   }
   //janela configurações
-  function setup() {
+  function configuracoes() {
     //aria direita da janela configurações
     secao_direita_config.setAttribute("id", "secao_direita_config");
     secao_direita_config.setAttribute("class", "secao_direita");
@@ -434,7 +381,7 @@ document.addEventListener("DOMContentLoaded", () => {
     btnsConfig.appendChild(btnCancelconfig);
   }
   //janela sobre app
-  function help() {
+  function sobre_app() {
     //caixa principal janela sobre app
     secao_direita_help.setAttribute("id", "secao_direita_help");
     secao_direita_help.setAttribute("class", "secao_direita");
@@ -503,14 +450,7 @@ document.addEventListener("DOMContentLoaded", () => {
     //itens da caixa de entrada da lista normal
     inputlistnormal.setAttribute("id", "inputlistnormal");
     inputlistnormal.setAttribute("placeholder", "Digite uma tarefa");
-    inputlistnormal.addEventListener("keydown", (e) => {
-      if (e.key === "Enter") {
-        adicionar_tarefa();
-        console.log("sim esta funcionar");
-      } else if (e.key === "Escape") {
-        cancelar_tarefa();
-      }
-    });
+    inputlistnormal.addEventListener("keydown",(e)=>{evento_do_input_lista_normal(e);});
     boxlistinputnormal.appendChild(inputlistnormal);
     //btn_delet_tasks
     btn_delet_tasks.setAttribute("id", "btn_delet_tasks");
@@ -529,23 +469,17 @@ document.addEventListener("DOMContentLoaded", () => {
     //itens da caixa 
     //botão adicionar
     btn_add_list_normal.setAttribute("class", "btnListNormal");
-    btn_add_list_normal.addEventListener("click", function () {
-      adicionar_tarefa();
-    });
+    btn_add_list_normal.addEventListener("click",adicionar_tarefa);
     btn_add_list_normal.innerHTML = "Adicionar";
     box_btns_list_normal.appendChild(btn_add_list_normal);
     //botão cancelar
     btn_cancel_list_normal.setAttribute("class", "btnListNormal");
-    btn_cancel_list_normal.addEventListener("click", function () {
-      cancelar_tarefa();
-    });
+    btn_cancel_list_normal.addEventListener("click",cancelar_tarefa);
     btn_cancel_list_normal.innerHTML = "Cancelar";
     box_btns_list_normal.appendChild(btn_cancel_list_normal);
     //botão salvar
     btn_save_list_normal.setAttribute("class", "btnListNormal");
-    btn_save_list_normal.addEventListener("click", function () {
-      salvar_lista();
-    });
+    btn_save_list_normal.addEventListener("click", salvar_lista);
     btn_save_list_normal.innerHTML = "Salvar";
     box_btns_list_normal.appendChild(btn_save_list_normal);
 
@@ -555,27 +489,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     //caixa do titulo da tarefa e o filtor de caterorias
     boxtitle_list_normal.setAttribute("id", "boxtitle_list_normal");
-    boxtitle_list_normal.addEventListener("click", function (e) {
-      if (e.target.id === "titletasknormal") {
-        var editar = document.createElement("input");
-        editar.setAttribute("class", "editar_campo");
-        editar.value = title_task_normal.textContent;
-        title_task_normal.replaceWith(editar);
-        editar.focus();
-        editar.addEventListener("blur", function () {
-          title_task_normal.textContent = editar.value;
-          editar.replaceWith(title_task_normal);
-          inputlistnormal.focus();
-        });
-        editar.addEventListener("keydown", function (e) {
-          if (e.key === "Enter") {
-            title_task_normal.textContent = editar.value;
-            editar.replaceWith(title_task_normal);
-            inputlistnormal.focus();
-          }
-        });
-      }
-    });
+    boxtitle_list_normal.addEventListener("click", function (e) {alterar_titulo(e)});
     box_display_list_normal.appendChild(boxtitle_list_normal);
     //titulo da tarefa
     title_task_normal.setAttribute("id", "titletasknormal");
@@ -607,7 +521,11 @@ document.addEventListener("DOMContentLoaded", () => {
   /*aria de 
    funcionalidades*/
 
-   function verificar_modal() {
+   //entrada de dados
+   
+   
+   //processamento de dados
+   function verificacao_modal_inicial() {
     if (ativar == false) {
       modal_inicio();
     } else {
@@ -619,64 +537,119 @@ document.addEventListener("DOMContentLoaded", () => {
    }
    function abrir_pagina_inicial() {
     if (menu_activo == "configuracao") {
-      WindowMain.removeChild(secao_direita_config);
-      cor_menu_pagina_inicial();
-      pagina_inicial();
-      menu_activo = "paginaincial";
+      remover_elemento_da_tela(WindowMain,secao_direita_config);
+      menu_ativo_pagina_inicial();
     }
     if (menu_activo == "ajuda") {
-      WindowMain.removeChild(secao_direita_help);
-      cor_menu_pagina_inicial();
-      pagina_inicial();
-      menu_activo = "paginaincial";
+      remover_elemento_da_tela(WindowMain,secao_direita_help);
+      menu_ativo_pagina_inicial();
     }
     if (menu_activo == "lista_normal") {
-      WindowMain.removeChild(secao_direita_list_normal);
-      cor_menu_pagina_inicial();
-      pagina_inicial();
-      menu_activo = "paginaincial";
+      remover_elemento_da_tela(WindowMain,secao_direita_list_normal);
+      menu_ativo_pagina_inicial();
     }
    }
    function abrir_configuracoes() {
     if (menu_activo == "paginaincial") {
-      WindowMain.removeChild(secao_direita_pagina_inicial);
-      cor_menu_configuracoes();
-      setup();
-      menu_activo = "configuracao";
+      remover_elemento_da_tela(WindowMain,secao_direita_pagina_inicial);
+      menu_ativo_configuracoes();
     }
     if (menu_activo == "ajuda") {
-      WindowMain.removeChild(secao_direita_help);
-      cor_menu_configuracoes();
-      setup();
-      menu_activo = "configuracao";
+      remover_elemento_da_tela(WindowMain,secao_direita_help);
+      menu_ativo_configuracoes();
     }
     if (menu_activo == "lista_normal") {
-      WindowMain.removeChild(secao_direita_list_normal);
-      cor_menu_configuracoes()
-      setup();
-      menu_activo = "configuracao";
+      remover_elemento_da_tela(WindowMain,secao_direita_list_normal);
+      menu_ativo_configuracoes();
     }
    }
    function abrir_sobre_app() {
     if (menu_activo == "paginaincial") {
-      WindowMain.removeChild(secao_direita_pagina_inicial);
-      cor_menu_sore_app();
-      help();
-      menu_activo = "ajuda";
+      remover_elemento_da_tela(WindowMain,secao_direita_pagina_inicial);
+      menu_ativo_sobre_app();
     }
     if (menu_activo == "configuracao") {
-      WindowMain.removeChild(secao_direita_config);
-      cor_menu_sore_app();
-      help();
-      menu_activo = "ajuda";
+      remover_elemento_da_tela(WindowMain,secao_direita_config);
+      menu_ativo_sobre_app();
     }
     if (menu_activo == "lista_normal") {
-      WindowMain.removeChild(secao_direita_list_normal);
-      cor_menu_sore_app();
-      help();
-      menu_activo = "ajuda";
+      remover_elemento_da_tela(WindowMain,secao_direita_list_normal);
+      menu_ativo_sobre_app();
     }
    }
+   function abrir_lista_normal() {
+      botao_cancelar_modal_tipo_de_lista();
+      remover_elemento_da_tela(WindowMain,secao_direita_pagina_inicial);
+      lista_normal();
+      menu_activo = "lista_normal";
+   }
+   function menu_ativo_pagina_inicial() {
+    cor_menu_pagina_inicial();
+    pagina_inicial();
+    menu_activo = "paginaincial";
+   }
+   function menu_ativo_configuracoes() {
+    cor_menu_configuracoes();
+    configuracoes();
+    menu_activo = "configuracao";
+   }
+   function menu_ativo_sobre_app() {
+    cor_menu_sobre_app();
+    sobre_app();
+    menu_activo = "ajuda";
+   }
+   function verificacao_input_modal_inicial_com_tecla(tecla) {
+    if (tecla === "Enter") {
+      //como os mesmos comandos usei a mesma função
+      verificacao_modal_inicial_com_botao();
+    }
+   }
+   function verificacao_modal_inicial_com_botao() {
+    let nome = document.getElementById("inputNome").value.toLowerCase();
+    if (nome == "") {
+      erro_do_input_da_modal_inicial();
+    } else {
+      nome_user = nome.charAt(0).toUpperCase() + nome.slice(1).toLowerCase();
+      ativar = true;
+      modalBox.style.display = "none";
+      janela_principal();
+      pagina_inicial();
+      cor_menu_pagina_inicial();
+      }
+   }
+   function evento_do_input_lista_normal(e) {
+    if (e.key === "Enter") {
+      adicionar_tarefa();
+    } else if (e.key === "Escape") {
+      cancelar_tarefa();
+    }
+   }
+   function botao_cancelar_modal_tipo_de_lista() {
+    modaltypelist.remove(boxtypelist);
+   }
+   function deletar_lista() {
+    tarefas.splice(0, tarefas.length);
+    contador_tarefas = 0;
+    remover_elemento_da_tela(WindowMain,secao_direita_list_normal);
+    janela_principal();
+    lista_normal();
+  }
+  function salvar_lista() {
+    listas.push({
+      titulo_lista: title_task_normal.textContent,
+      categoria: "listadetarefa",
+      num_tarefas: contador_tarefas,
+      tarefas: tarefas,
+      id: ids,
+    });
+    contador_listas++;
+    ids++;
+    console.log(listas);
+  }
+   
+
+
+   //saida de dados
    function cor_menu_pagina_inicial() {
       item_menu_settings.style.backgroundColor = "";
       logo_settings.style.backgroundColor = "";
@@ -699,7 +672,7 @@ document.addEventListener("DOMContentLoaded", () => {
       logo_home.style.backgroundColor = "";
       item_menu_home.style.color = "";
    }
-   function cor_menu_sore_app() {
+   function cor_menu_sobre_app() {
       item_menu_settings.style.backgroundColor = "";
       logo_settings.style.backgroundColor = "";
       item_menu_settings.style.color = "";
@@ -710,27 +683,53 @@ document.addEventListener("DOMContentLoaded", () => {
       logo_home.style.backgroundColor = "";
       item_menu_home.style.color = "";
    }
-  function salvar_lista() {
-    listas.push({
-      titulo_lista: title_task_normal.textContent,
-      categoria: "listadetarefa",
-      num_tarefas: contador_tarefas,
-      tarefas: tarefas,
-      id: 1000,
+   function erro_do_input_da_modal_inicial() {
+    document.getElementById("inputNome").placeholder = "Tens que digitar um nome";
+    document.getElementById("inputNome").style.outlineColor = "#f2355e";
+    document.getElementById("inputNome").focus();
+   }
+   function apresentar_listas_na_pagina_inicial() {
+    listas.forEach((e) => {
+      //lista
+      list1.setAttribute("class", "list");
+      display_list.appendChild(list1);
+      //titulo da lista
+      title_list1.setAttribute("class", "title_list");
+      title_list1.innerHTML = `${e.titulo_lista}`;
+      list1.appendChild(title_list1);
     });
-    contador_listas++;
-    console.log(listas);
-  }
-  function deletar_lista() {
-    tarefas.splice(0, tarefas.length);
-    contador_tarefas = 0;
-    count_tasks_normal_list.innerHTML = `${contador_tarefas} tarefas`;
-    boxTasklistnormal.innerHTML = "<div></div>";
-    inputlistnormal.focus();
-  }
-  function cancelar_tarefa() {
+   }
+   function remover_elemento_da_tela(pai,filho) {
+    pai.removeChild(filho);
+   }
+   function cancelar_tarefa() {
     inputlistnormal.value = "";
     inputlistnormal.focus();
+  }
+   
+   
+  
+  
+  function alterar_titulo(e) {
+    if (e.target.id === "titletasknormal") {
+      var editar = document.createElement("input");
+      editar.setAttribute("class", "editar_campo");
+      editar.value = title_task_normal.textContent;
+      title_task_normal.replaceWith(editar);
+      editar.focus();
+      editar.addEventListener("blur", function () {
+        title_task_normal.textContent = editar.value;
+        editar.replaceWith(title_task_normal);
+        inputlistnormal.focus();
+      });
+      editar.addEventListener("keydown", function (e) {
+        if (e.key === "Enter") {
+          title_task_normal.textContent = editar.value;
+          editar.replaceWith(title_task_normal);
+          inputlistnormal.focus();
+        }
+      });
+    }
   }
   function adicionar_tarefa() {
     if (inputlistnormal.value == "") {
@@ -910,5 +909,5 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   
-  verificar_modal();
+  verificacao_modal_inicial();
 });
