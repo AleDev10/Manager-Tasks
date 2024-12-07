@@ -932,7 +932,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
   
   
-
   function editar_descricao() {
     if (txtDescricao.innerHTML == "Discrição...") {
       txtDescricao.innerHTML = "";
@@ -944,6 +943,7 @@ document.addEventListener("DOMContentLoaded", () => {
     tarefas[i].descricao = txtDescricao.innerText;
   }
 
+  
   
   function criacao_da_tarefas(tarefas, i) {
     //caixa principal das tarefas
