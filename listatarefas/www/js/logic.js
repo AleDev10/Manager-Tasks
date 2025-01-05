@@ -4,15 +4,20 @@ document.addEventListener("DOMContentLoaded", () => {
 
   //aria das variaveis globais
   var nome_user = "";
-  var ativar = true;
+  var ativar = false;
   var contador_listas = 0;
   var contador_tarefas = 0;
   var menu_activo = "paginaincial";
   var valor_entrada = "";
   var cor_sistema = "#c935f2";
+  var confirmacao_de_lista_salva = false;
   var tarefas = [];
   var listas = [];
-  var ids = 1000;
+  var estatos_modal_salvar_lista = false;
+  var pagina_que_a_lista_vai_remover = "";
+  var dados_salvo_no_arrey = false;
+  var detalhes_da_descricao = [];
+  var lista_aberta=0
 
   /*declaração dos elementos
   de maneira global*/
@@ -82,6 +87,8 @@ document.addEventListener("DOMContentLoaded", () => {
   const btn_cor3 = document.createElement("button");
   const boxfont = document.createElement("div");
   const inputfont = document.createElement("input");
+  const gerenciador = document.createElement("div");
+  const nome_do_gerencidor = document.createElement("input");
   const boxstorage = document.createElement("div");
   const titleStorage = document.createElement("h3");
   const btn_delAll_storage = document.createElement("button");
@@ -104,6 +111,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const btn_add_list_normal = document.createElement("button");
   const btn_cancel_list_normal = document.createElement("button");
   const btn_save_list_normal = document.createElement("button");
+  const estatos_lista = document.createElement("span");
   const box_display_list_normal = document.createElement("div");
   const boxtitle_list_normal = document.createElement("div");
   const title_task_normal = document.createElement("h1");
@@ -126,6 +134,14 @@ document.addEventListener("DOMContentLoaded", () => {
   const icondeletetask = document.createElement("img");
   const descricaoTask = document.createElement("div");
   const txtDescricao = document.createElement("p");
+
+  //declaração dos elementos da lista normal
+  const modalsalvalista = document.createElement("div");
+  const info_salvar_lista = document.createElement("div");
+  const texto_salvar_lista = document.createElement("span");
+  const caixa_botoes_salvar_lista = document.createElement("div");
+  const botao_sim_salvar_lista = document.createElement("button");
+  const botao_nao_salvar_lista = document.createElement("button");
 
   //janela principal
   function janela_principal() {
@@ -240,7 +256,8 @@ document.addEventListener("DOMContentLoaded", () => {
   function modal_tipo_lista() {
     //caixa principal da modal tipo de lista
     modaltypelist.setAttribute("id", "modaltypelist");
-    WindowMain.appendChild(modaltypelist);
+    modaltypelist.style.display = "none";
+    main.appendChild(modaltypelist);
 
     //caixa typo de lista
     boxtypelist.setAttribute("id", "boxtypelist");
@@ -248,10 +265,9 @@ document.addEventListener("DOMContentLoaded", () => {
     //btn_cancelar_modal
     btn_cancelar_modal.setAttribute("id", "btnCancel");
     btn_cancelar_modal.innerText = "X";
-    btn_cancelar_modal.addEventListener(
-      "click",
-      botao_cancelar_modal_tipo_de_lista
-    );
+    btn_cancelar_modal.addEventListener("click", () => {
+      modaltypelist.style.display = "none";
+    });
     boxtypelist.appendChild(btn_cancelar_modal);
     //imgmodallist
     imgmodallist.setAttribute("id", "imgmodallist");
@@ -271,13 +287,47 @@ document.addEventListener("DOMContentLoaded", () => {
     boxtypelist.appendChild(boxmodallist);
     //btnsmodallist_normal
     btnsmodallist_normal.setAttribute("class", "btnsmodallist");
-    btnsmodallist_normal.addEventListener("click", abrir_lista_normal);
+    btnsmodallist_normal.addEventListener("click", () => {
+      modaltypelist.style.display = "none";
+      abrir_lista_normal();
+    });
     btnsmodallist_normal.innerText = "Normal";
     boxmodallist.appendChild(btnsmodallist_normal);
     //btnsmodallist_tabela
     btnsmodallist_tabela.setAttribute("class", "btnsmodallist");
     btnsmodallist_tabela.innerText = "Tabela";
     boxmodallist.appendChild(btnsmodallist_tabela);
+  }
+  function modal_salvar_lista() {
+    //elemento principal
+    modalsalvalista.setAttribute("id", "modalsalvalista");
+    modalsalvalista.style.display = "none";
+    main.appendChild(modalsalvalista);
+
+    info_salvar_lista.setAttribute("id", "info_salvar_lista");
+    modalsalvalista.appendChild(info_salvar_lista);
+
+    texto_salvar_lista.setAttribute("id", "texto_salvar_lista");
+    texto_salvar_lista.innerHTML =
+      "Deseja salvar as alterações<br>antes de sair da lista.";
+    info_salvar_lista.appendChild(texto_salvar_lista);
+
+    caixa_botoes_salvar_lista.setAttribute("id", "caixa_botoes_salvar_lista");
+    info_salvar_lista.appendChild(caixa_botoes_salvar_lista);
+    botao_sim_salvar_lista.setAttribute("id", "botao_sim_salvar_lista");
+    botao_sim_salvar_lista.addEventListener("click", () => {
+      estatos_modal_salvar_lista = true;
+      verificar_modal_salvar_lista();
+    });
+    botao_sim_salvar_lista.innerHTML = "Sim";
+    caixa_botoes_salvar_lista.appendChild(botao_sim_salvar_lista);
+    botao_nao_salvar_lista.setAttribute("id", "botao_nao_salvar_lista");
+    botao_nao_salvar_lista.addEventListener("click", () => {
+      estatos_modal_salvar_lista = false;
+      verificar_modal_salvar_lista();
+    });
+    botao_nao_salvar_lista.innerHTML = "Não";
+    caixa_botoes_salvar_lista.appendChild(botao_nao_salvar_lista);
   }
   //janela pagina inicial
   function pagina_inicial() {
@@ -286,6 +336,7 @@ document.addEventListener("DOMContentLoaded", () => {
       "id",
       "secao_direita_pagina_inicial"
     );
+    secao_direita_pagina_inicial.setAttribute("class", "secao_direita");
     WindowMain.appendChild(secao_direita_pagina_inicial);
 
     // caixa do titulo e paragrafo
@@ -302,7 +353,9 @@ document.addEventListener("DOMContentLoaded", () => {
     //botões e item da barra de ferramenta
     btn_new_list.setAttribute("id", "btn_new_list");
     btn_new_list.innerHTML = "Nova lista";
-    btn_new_list.addEventListener("click", modal_tipo_lista);
+    btn_new_list.addEventListener("click", () => {
+      modaltypelist.style.display = "flex";
+    });
     boxtoolbar.appendChild(btn_new_list);
     btn_delete_list.setAttribute("class", "btn_clean");
     btn_delete_list.innerHTML = "Deletar listas";
@@ -377,6 +430,13 @@ document.addEventListener("DOMContentLoaded", () => {
     inputfont.setAttribute("type", "number");
     boxfont.appendChild(inputfont);
     boxfont.innerHTML += "%";
+
+    gerenciador.setAttribute("class", "gerenciador");
+    gerenciador.innerHTML = "Nome do utilizador:";
+    boxaparencia.appendChild(gerenciador);
+    nome_do_gerencidor.setAttribute("class", "nome_do_gerencidor");
+    nome_do_gerencidor.value = nome_user;
+    gerenciador.appendChild(nome_do_gerencidor);
 
     //caixa de configurações armazenamento
     boxstorage.setAttribute("id", "boxstorage");
@@ -466,6 +526,7 @@ document.addEventListener("DOMContentLoaded", () => {
     //itens da caixa de entrada da lista normal
     inputlistnormal.setAttribute("id", "inputlistnormal");
     inputlistnormal.setAttribute("placeholder", "Digite uma tarefa");
+    inputlistnormal.value = "";
     inputlistnormal.addEventListener("keydown", (e) => {
       evento_do_input_lista_normal(e);
     });
@@ -504,15 +565,18 @@ document.addEventListener("DOMContentLoaded", () => {
     btn_save_list_normal.innerHTML = "Salvar";
     box_btns_list_normal.appendChild(btn_save_list_normal);
 
+    //informação do estado sa lista salvo ou não
+    estatos_lista.setAttribute("class", "estatos_lista");
+    estatos_lista.innerHTML = "* Lista alterada";
+    box_btns_list_normal.appendChild(estatos_lista);
+
     //caixa de apresentação das tarefas
     box_display_list_normal.setAttribute("id", "boxdisplaylistnormal");
     secao_direita_list_normal.appendChild(box_display_list_normal);
 
     //caixa do titulo da tarefa e o filtor de caterorias
     boxtitle_list_normal.setAttribute("id", "boxtitle_list_normal");
-    boxtitle_list_normal.addEventListener("click", function (e) {
-      alterar_titulo(e);
-    });
+    boxtitle_list_normal.addEventListener("click", alterar_titulo);
     box_display_list_normal.appendChild(boxtitle_list_normal);
     //titulo da tarefa
     title_task_normal.setAttribute("id", "titletasknormal");
@@ -521,13 +585,22 @@ document.addEventListener("DOMContentLoaded", () => {
     //caixa categorias
     boxcategorias_list_normal.setAttribute("class", "boxcategorias");
     boxtitle_list_normal.appendChild(boxcategorias_list_normal);
+
     //seletor categorias
     boxcategorias_list_normal.appendChild(seletor_categorias_normal);
+    seletor_categorias_normal.value = "Categorias";
+    seletor_categorias_normal.addEventListener("change", () => {
+      deixar_entrada_normal();
+      infolista("alterada");
+    });
     //itens da categorias
+    caterianormal1.setAttribute("value", "Categorias");
     caterianormal1.innerHTML = "Categorias";
     seletor_categorias_normal.appendChild(caterianormal1);
+    caterianormal2.setAttribute("value", "Lista_de_tarefas");
     caterianormal2.innerHTML = "Lista de tarefas";
     seletor_categorias_normal.appendChild(caterianormal2);
+    caterianormal3.setAttribute("value", "Projetos");
     caterianormal3.innerHTML = "Projetos";
     seletor_categorias_normal.appendChild(caterianormal3);
     //icone da caixa categorias
@@ -536,6 +609,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
     //linha divisória
     box_display_list_normal.appendChild(linha_lista_normal);
+
+    //listas
+    boxTasklistnormal.setAttribute("class", "boxTasklistnormal");
+    box_display_list_normal.appendChild(boxTasklistnormal);
+
     inputlistnormal.focus();
   }
 
@@ -550,12 +628,17 @@ document.addEventListener("DOMContentLoaded", () => {
   }
   function adicionar_tarefa() {
     contador_tarefas++;
-    tarefas.push({
-      id: contador_tarefas,
-      tarefa: inputlistnormal.value.trim(),
-      descricao: "Descrição...",
-      estatos: false,
-    });
+    detalhes_da_descricao.push({
+      texto: "......",
+      alturaDaCaixa: 54,
+    }),
+      tarefas.push({
+        id: contador_tarefas,
+        tarefa: inputlistnormal.value.trim(),
+        descricao: detalhes_da_descricao[contador_tarefas - 1],
+        estatos: false,
+      });
+    console.log(tarefas);
     apresentar_tarefas();
   }
   function evento_do_input_lista_normal(e) {
@@ -572,27 +655,43 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
   function salvar_lista() {
-    listas.push({
+    listas[lista_aberta] = {
       titulo_lista: title_task_normal.textContent,
-      categoria: "listadetarefa",
+      categoria: seletor_categorias_normal.value,
       num_tarefas: contador_tarefas,
       tarefas: tarefas,
-      id: ids,
-    });
-    contador_listas++;
-    ids++;
+      descricao: detalhes_da_descricao,
+    };
+    dados_salvo_no_arrey = true;
+    console.log("a lista está no arrey");
+    console.log(`lista numero ${lista_aberta} salva.`);
+    console.log(listas);
+    deixar_entrada_normal();
+    infolista("salvo");
+  }
+  function evento_de_foco_da_descricao(e, i) {
+    detalhes_da_descricao[i] = {
+      texto: e.target.value,
+      alturaDaCaixa: e.target.scrollHeight,
+    };
+    tarefas[i].descricao = detalhes_da_descricao[i];
+    console.log(detalhes_da_descricao);
+    console.log(tarefas);
+    apresentar_tarefas();
   }
 
   //processamento de dados
   function verificacao_modal_inicial() {
     if (!ativar) {
       modal_inicio();
+      modal_tipo_lista();
+      modal_salvar_lista();
     } else {
-      /* janela_principal();
-      cor_menu_pagina_inicial();
-      pagina_inicial(); */
+      modal_tipo_lista();
+      modal_salvar_lista();
       janela_principal();
-      lista_normal();
+      cor_menu_pagina_inicial();
+      pagina_inicial();
     }
   }
   function abrir_pagina_inicial() {
@@ -605,8 +704,7 @@ document.addEventListener("DOMContentLoaded", () => {
       menu_ativo_pagina_inicial();
     }
     if (menu_activo == "lista_normal") {
-      remover_elemento_da_tela(WindowMain, secao_direita_list_normal);
-      menu_ativo_pagina_inicial();
+      verificar_da_Saida_da_lista("paginaincial");
     }
   }
   function abrir_configuracoes() {
@@ -619,8 +717,7 @@ document.addEventListener("DOMContentLoaded", () => {
       menu_ativo_configuracoes();
     }
     if (menu_activo == "lista_normal") {
-      remover_elemento_da_tela(WindowMain, secao_direita_list_normal);
-      menu_ativo_configuracoes();
+      verificar_da_Saida_da_lista("configuracao");
     }
   }
   function abrir_sobre_app() {
@@ -633,15 +730,21 @@ document.addEventListener("DOMContentLoaded", () => {
       menu_ativo_sobre_app();
     }
     if (menu_activo == "lista_normal") {
-      remover_elemento_da_tela(WindowMain, secao_direita_list_normal);
-      menu_ativo_sobre_app();
+      verificar_da_Saida_da_lista("ajuda");
     }
   }
   function abrir_lista_normal() {
-    botao_cancelar_modal_tipo_de_lista();
     remover_elemento_da_tela(WindowMain, secao_direita_pagina_inicial);
+    limpar_tarefas();
     lista_normal();
     menu_activo = "lista_normal";
+    contador_listas++;
+    lista_aberta=contador_listas-1;
+    dados_salvo_no_arrey = false;
+    console.log("a lista não está no arrey");
+    infolista("inicio");
+    console.log(`Abriu a lista de tarefas normal.`);
+    console.log(`lista numero ${lista_aberta} criada.`);
   }
   function menu_ativo_pagina_inicial() {
     cor_menu_pagina_inicial();
@@ -669,30 +772,33 @@ document.addEventListener("DOMContentLoaded", () => {
       janela_principal();
       pagina_inicial();
       cor_menu_pagina_inicial();
+      console.log(`Usuario ${nome_user} registrado.`);
     }
-  }
-  function botao_cancelar_modal_tipo_de_lista() {
-    modaltypelist.remove(boxtypelist);
   }
   function deletar_lista() {
     limpar_tarefas();
     tarefas.splice(0, tarefas.length);
+    detalhes_da_descricao.splice(0, detalhes_da_descricao.length);
     contador_tarefas = 0;
+    console.log(`tarefas da lista numero ${contador_listas} deletadas.`);
     atualizar_num_listas();
+    deixar_entrada_normal();
+    infolista("alterada");
   }
   function alterar_titulo(e) {
     if (e.target.id === "titletasknormal") {
       editar.setAttribute("class", "editar_campo");
       evento_de_troca_de_elemento_do_titulo();
       editar.addEventListener("blur", evento_de_foco_do_titulo);
-      editar.addEventListener("keydown", function (e) {
-        terminar_edicao_do_titulo_lista_normal(e);
-      });
+      editar.addEventListener(
+        "keydown",
+        terminar_edicao_do_titulo_lista_normal
+      );
     }
   }
   function verificacao_para_adicionar_tarefa() {
-    if (inputlistnormal.value == "") {
-      erro_do_input_da_lista_normal();
+    if (inputlistnormal.value.trim() == "") {
+      deixar_entrada_normal();
     } else {
       adicionar_tarefa();
       deixar_entrada_normal();
@@ -701,9 +807,11 @@ document.addEventListener("DOMContentLoaded", () => {
   function apresentar_tarefas() {
     limpar_tarefas();
     atualizar_num_listas();
+    infolista("alterada");
     tarefas.forEach((tarefas, i) => {
       criacao_da_tarefas(tarefas, i);
     });
+    deixar_entrada_normal();
   }
   function caixas_de_verificacao() {
     var caixas_check = document.querySelectorAll(".checkbox");
@@ -743,6 +851,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
   function deletar_tarefa_selecionada(i) {
     tarefas.splice(i, 1);
+    detalhes_da_descricao.splice(i, 1);
     contador_tarefas -= 1;
     apresentar_tarefas();
   }
@@ -813,9 +922,9 @@ document.addEventListener("DOMContentLoaded", () => {
             troca_de_elemento(entrada_edicao, texto_tarefa);
             guardar_tarefa_editada(entrada_edicao, texto_tarefa, index);
           }
-        })
+        });
         entrada_edicao.addEventListener("keydown", (e) => {
-          if(e.key=="Enter"){
+          if (e.key == "Enter") {
             if (entrada_edicao.value == "") {
               erro_entrada_edicao(entrada_edicao);
             } else {
@@ -833,6 +942,76 @@ document.addEventListener("DOMContentLoaded", () => {
     filho.textContent = pai.value;
     tarefas[i].tarefa = pai.value;
     apresentar_tarefas();
+  }
+  function verificar_modal_salvar_lista() {
+    if (estatos_modal_salvar_lista) {
+      salvar_lista();
+      sair_da_modal_salvar_lista();
+      sairDaLista();
+    } else {
+      contador_listas--;
+      sair_da_modal_salvar_lista();
+      sairDaLista();
+    }
+  }
+  function verificar_da_Saida_da_lista(e) {
+    pagina_que_a_lista_vai_remover = e;
+    if (confirmacao_de_lista_salva && dados_salvo_no_arrey == false) {
+      contador_listas--;
+      sairDaLista();
+    } else {
+      if (confirmacao_de_lista_salva) {
+        sairDaLista();
+      } else {
+        abrir_modal_salvar_lista();
+      }
+    }
+  }
+  function sairDaLista() {
+    tarefas = [];
+    detalhes_da_descricao = [];
+    contador_tarefas = 0;
+    lista_aberta=-1,
+    remover_lista_normal(pagina_que_a_lista_vai_remover);
+    console.log("saio da lista");
+    console.log("nenhuma lista aberta "+ lista_aberta);
+  }
+  function remover_lista_normal(e) {
+    switch (e) {
+      case "paginaincial":
+        remover_elemento_da_tela(WindowMain, secao_direita_list_normal);
+        menu_ativo_pagina_inicial();
+        break;
+      case "configuracao":
+        remover_elemento_da_tela(WindowMain, secao_direita_list_normal);
+        menu_ativo_configuracoes();
+        break;
+      case "ajuda":
+        remover_elemento_da_tela(WindowMain, secao_direita_list_normal);
+        menu_ativo_sobre_app();
+        break;
+      default:
+        console.log("ação solicitada invalida");
+        break;
+    }
+  }
+  function identificar_descricao() {
+    let descricoes = [...document.querySelectorAll(".txtDescricao")];
+    descricoes.forEach((item) => {
+      item.addEventListener("click", (e) => {
+        console.log(detalhes_da_descricao);
+        for (let index = 0; index < contador_tarefas; index++) {
+          if (e.target.id == `txtDescricao${index}`) {
+            e.target.addEventListener("keydown", (ele) => {
+              editar_descricao(ele);
+            });
+            e.target.addEventListener("blur", (ele) => {
+              evento_de_foco_da_descricao(ele, index);
+            });
+          }
+        }
+      });
+    });
   }
 
   //saida de dados
@@ -876,15 +1055,17 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("inputNome").focus();
   }
   function apresentar_listas_na_pagina_inicial() {
-    listas.forEach((e) => {
-      //lista
-      list1.setAttribute("class", "list");
-      display_list.appendChild(list1);
-      //titulo da lista
-      title_list1.setAttribute("class", "title_list");
-      title_list1.innerHTML = `${e.titulo_lista}`;
-      list1.appendChild(title_list1);
+    //lista
+    display_list.innerHTML = `<div style="position:absolute"></div>`;
+    listas.forEach((e, i) => {
+      display_list.innerHTML =
+        `
+      <div id="lista${i}" chave=${i} class="list">
+        <h4 class="title_list">${e.titulo_lista}</h4>
+      </div>
+      ` + display_list.innerHTML;
     });
+    verificar_lista_selecionada();
   }
   function remover_elemento_da_tela(pai, filho) {
     pai.removeChild(filho);
@@ -897,9 +1078,15 @@ document.addEventListener("DOMContentLoaded", () => {
     pai.replaceWith(filho);
   }
   function evento_de_foco_do_titulo() {
-    title_task_normal.textContent = editar.value;
-    troca_de_elemento(editar, title_task_normal);
-    inputlistnormal.focus();
+    if (editar.value == "") {
+      editar.focus();
+    } else {
+      infolista("alterada");
+      title_task_normal.textContent = editar.value;
+      boxtitle_list_normal.appendChild(title_task_normal);
+      editar.replaceWith(title_task_normal);
+      inputlistnormal.focus();
+    }
   }
   function evento_de_troca_de_elemento_do_titulo() {
     editar.value = title_task_normal.textContent;
@@ -908,11 +1095,6 @@ document.addEventListener("DOMContentLoaded", () => {
   }
   function deixar_entrada_normal() {
     inputlistnormal.value = "";
-    inputlistnormal.placeholder = "Digite uma tarefa";
-    inputlistnormal.focus();
-  }
-  function erro_do_input_da_lista_normal() {
-    inputlistnormal.placeholder = "Digite uma tarefa antes de adicionar";
     inputlistnormal.focus();
   }
   function limpar_tarefas() {
@@ -929,28 +1111,43 @@ document.addEventListener("DOMContentLoaded", () => {
     e.value = tarefas[i].tarefa;
     e.focus();
   }
-
-  
-  
-  function editar_descricao() {
-    if (txtDescricao.innerHTML == "Discrição...") {
-      txtDescricao.innerHTML = "";
-    } else {
-      txtDescricao.innerHTML = `${tarefas[i].descricao}`;
+  function infolista(e) {
+    estatos_lista.style.display = "flex";
+    switch (e) {
+      case "inicio":
+        confirmacao_de_lista_salva = true;
+        estatos_lista.innerHTML = "<b>Estado:</b>lista aberta";
+        console.log("lista aberta");
+        break;
+      case "salvo":
+        confirmacao_de_lista_salva = true;
+        estatos_lista.innerHTML = "<b>Estado:</b>Lista salva";
+        console.log("lista salva");
+        break;
+      case "alterada":
+        confirmacao_de_lista_salva = false;
+        estatos_lista.innerHTML = "<b>Estado:</b>*Salve a lista";
+        console.log("lista salva");
+        break;
+      default:
+        console.log("Nenhuma ação solicitada");
+        break;
     }
   }
-  function evento_de_foco_da_descricao() {
-    tarefas[i].descricao = txtDescricao.innerText;
+  function sair_da_modal_salvar_lista() {
+    modalsalvalista.style.display = "none";
   }
-
-  
-  
+  function abrir_modal_salvar_lista() {
+    modalsalvalista.style.display = "flex";
+  }
+  function editar_descricao(e) {
+    e.target.style.height = `auto`;
+    e.target.style.height = `${e.target.scrollHeight}px`;
+    console.log(e.target.scrollHeight);
+  }
   function criacao_da_tarefas(tarefas, i) {
     //caixa principal das tarefas
-    boxTasklistnormal.setAttribute("class", "boxTasklistnormal");
-    box_display_list_normal.appendChild(boxTasklistnormal);
     boxTasklistnormal.innerHTML =
-      boxTasklistnormal.innerHTML +
       `
     <div class="boxTask">
       <div class="boxTask1">
@@ -967,27 +1164,46 @@ document.addEventListener("DOMContentLoaded", () => {
       </div>
     </div>
     <div class="descricaoTask">
-      <textarea id="txtDescricao${i}" class="txtDescricao">${
-        tarefas.descricao
-      } </textarea>
-     </div>`;
+      <textarea id="txtDescricao${i}" class="txtDescricao" style="height:${
+        tarefas.descricao.alturaDaCaixa
+      }px;">${tarefas.descricao.texto}</textarea> 
+     </div>` + boxTasklistnormal.innerHTML;
 
     //função das checkbox
     caixas_de_verificacao();
     deletar_uma_tarefa();
     editar_uma_tarefas();
+    identificar_descricao();
+  }
 
-   /* 
-    //descrição da tarefa
-    descricaoTask.setAttribute("class", "descricaoTask");
-    boxTasklistnormal.appendChild(descricaoTask);
-    //itens da descrição
-    txtDescricao.setAttribute("class", "txtDescricao");
-    txtDescricao.setAttribute("contenteditable", "true");
-    txtDescricao.innerHTML = `${tarefas.descricao}`;
-    txtDescricao.addEventListener("click", editar_descricao);
-    txtDescricao.addEventListener("blur",evento_de_foco_da_descricao);
-    descricaoTask.appendChild(txtDescricao); */
+  function verificar_lista_selecionada() {
+    let listas_elementos = [...document.querySelectorAll(`.list`)];
+    listas_elementos.forEach((item)=>{
+      item.addEventListener("click",(e)=>{
+        for (let index = 0; index < contador_listas; index++) {
+          if (e.target.id == `lista${index}`) {
+            abrir_lista_normal_pela_pagina_inicial(index)
+          }
+          
+        }
+      });
+    });
+  }
+  function abrir_lista_normal_pela_pagina_inicial(i) {
+    remover_elemento_da_tela(WindowMain, secao_direita_pagina_inicial);
+    lista_normal();
+    limpar_tarefas();
+    menu_activo = "lista_normal";
+    lista_aberta =i;
+    dados_salvo_no_arrey = true;
+    tarefas = listas[lista_aberta].tarefas;
+    detalhes_da_descricao = listas[lista_aberta].descricao;
+    contador_tarefas= `${listas[lista_aberta].num_tarefas}`;
+    seletor_categorias_normal.value = `${listas[lista_aberta].categoria}`;
+    title_task_normal.innerHTML = `${listas[lista_aberta].titulo_lista}`;
+    apresentar_tarefas();
+    infolista("inicio");
+    console.log(`lista numero ${lista_aberta} aberta`);
   }
 
   verificacao_modal_inicial();
