@@ -12,6 +12,7 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    user-select: none;
 }
 
 #main{
@@ -317,6 +318,19 @@ janela pagina inicial */
 }
 .list:hover:active{
     background-color: var(--roxo-main);
+}
+.discelecionado{
+    background-color: #765380c9;
+    color: #3535359d;
+}
+.discelecionado:hover{
+    background-color: var(--roxo-main);
+    color: var(--preto);
+}
+.selecionado{
+    border: #5d35f2 solid 3px;
+    background-color: var(--roxo-main);
+    color: var(--roxo-secund);
 }
 
 
