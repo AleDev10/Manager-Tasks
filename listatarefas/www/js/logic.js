@@ -293,7 +293,8 @@ function modal_tipo_lista() {
   btnsmodallist_normal.setAttribute("class", "btnsmodallist");
   btnsmodallist_normal.addEventListener("click", () => {
     modaltypelist.style.display = "none";
-    abrir_lista_normal();
+    /* abrir_lista_normal(); */
+    //só vou ativar esta opção quanto a lista tipo tabela estiver pronta.
   });
   btnsmodallist_normal.innerText = "Normal";
   boxmodallist.appendChild(btnsmodallist_normal);
@@ -358,13 +359,19 @@ function pagina_inicial() {
   btn_new_list.setAttribute("id", "btn_new_list");
   btn_new_list.innerHTML = "Nova lista";
   btn_new_list.addEventListener("click", () => {
-    modaltypelist.style.display = "flex";
+    //comando responsável por ativar a modal tipo de lista que está com display=none
+    /* modaltypelist.style.display = "flex"; */
+    abrir_lista_normal();
   });
   boxtoolbar.appendChild(btn_new_list);
   btn_delete_list.setAttribute("class", "btn_clean");
   btn_delete_list.innerHTML = "Deletar listas";
   btn_delete_list.addEventListener("click", deletar_todas_listas);
   boxtoolbar.appendChild(btn_delete_list);
+  //btn deletar seleção
+  btn_deletar_slc.setAttribute("class","btn_clean");
+  btn_deletar_slc.innerHTML="Deletar seleção";
+  btn_deletar_slc.addEventListener("click",deletar_selecao);
   info_count_list.innerHTML = `${contador_listas} listas`;
   boxtoolbar.appendChild(info_count_list);
   btn_select.innerHTML = "Selecionar";
@@ -567,7 +574,7 @@ function lista_normal() {
   box_btns_list_normal.appendChild(btn_cancel_list_normal);
   //botão salvar
   btn_save_list_normal.setAttribute("class", "btnListNormal");
-  btn_save_list_normal.addEventListener("click", salvar_lista);
+  btn_save_list_normal.addEventListener("click", verificar_se_a_lista_existe);
   btn_save_list_normal.innerHTML = "Salvar";
   box_btns_list_normal.appendChild(btn_save_list_normal);
 
@@ -1066,6 +1073,84 @@ function abrir_lista_normal_pela_pagina_inicial(i) {
   infolista("inicio");
   console.log(`lista numero ${lista_aberta} aberta`);
 }
+function ativar_btn_deletar_selecao(ele) {
+  if (ele=="Selecionar") {
+    btn_delete_list.replaceWith(btn_deletar_slc);
+  } else {
+    btn_deletar_slc.replaceWith(btn_delete_list);
+  }
+}
+function deletar_todas_listas() {
+  listas.splice(0, contador_listas);
+  contador_listas = 0;
+  actualizar_contador_de_listas();
+  apresentar_listas_na_pagina_inicial();
+}
+function deletar_selecao() {
+  let todaslistas = [...document.querySelectorAll(".selecionado")];
+  contador_listas-=todaslistas.length;
+  todaslistas.forEach((item)=>{
+    listas.splice(parseInt(item.id),1);
+  });
+  actualizar_contador_de_listas();
+  ativar_btn_deletar_selecao("Cancelar-seleção");
+  mudar_texto_do_btn_selecionar("Selecionar");
+  evento_de_entrada_na_lista=true;
+  apresentar_listas_na_pagina_inicial();
+}
+function selecionar_lista(e) {
+  let index=parseInt(e.target.id);
+  e.target.classList.toggle("selecionado");
+  if (e.target.classList.contains("selecionado")) {
+    console.log("Selecionei a lista "+ index);
+  } else {
+    console.log("deselecionei a lista "+ index);
+  }
+}
+function verificar_selecao() {
+  let todaslistas = [...document.querySelectorAll(".list")];
+  if (todaslistas.length != 0) {
+    if (!todaslistas[0].classList.contains("discelecionado")) {
+      listas_selecionadas = [];
+      evento_de_entrada_na_lista = true;
+      apresentar_listas_na_pagina_inicial();
+    }
+  }
+}
+function ativar_modo_selecionar() {
+  let todaslistas = [...document.querySelectorAll(".list")];
+  todaslistas.forEach((item) => {
+    item.classList.toggle("discelecionado");
+    item.addEventListener("click", selecionar_lista);
+  });
+  evento_de_entrada_na_lista = todaslistas[0].classList.contains(
+    "discelecionado"
+  )
+    ? false
+    : true;
+  todaslistas[0].classList.contains("discelecionado")
+    ? (mudar_texto_do_btn_selecionar("Cancelar-seleção"))
+    : (mudar_texto_do_btn_selecionar("Selecionar"));
+  todaslistas[0].classList.contains("discelecionado")
+    ? (ativar_btn_deletar_selecao("Selecionar"))
+    : (ativar_btn_deletar_selecao("Cancelar-seleção"));
+  verificar_selecao();
+  console.log(evento_de_entrada_na_lista);
+}
+function trava_do_modo_selecao() {
+  if (listas.length != 0) {
+    ativar_modo_selecionar();
+  }
+}
+function verificar_se_a_lista_existe() {
+  let resultado=listas.findIndex((item)=>item.titulo_lista==title_task_normal.textContent);
+  if (resultado==-1) {
+    salvar_lista();
+  } else {
+    title_task_normal.textContent=`Titulo ${contador_listas}`;
+    salvar_lista();
+  }
+}
 
 //saida de dados
 function cor_menu_pagina_inicial() {
@@ -1227,85 +1312,19 @@ function criacao_da_tarefas(tarefas, i) {
   editar_uma_tarefas();
   identificar_descricao();
 }
-
 function actualizar_contador_de_listas() {
   info_count_list.innerHTML = `${contador_listas} listas`;
 }
-
-function ativar_btn_deletar_selecao(ele) {
-  if (ele==="Selecionar") {
-    btn_deletar_slc.setAttribute("class","btn_clean");
-    btn_deletar_slc.innerHTML="Deletar seleção";
-    btn_deletar_slc.addEventListener("click",deletar_selecao);
-    btn_deletar_slc.replaceWith(btn_delete_list);
+function mudar_texto_do_btn_selecionar(texto) {
+  if (texto=="Selecionar") {
+    btn_select.innerHTML = "Selecionar";
   } else {
-    btn_delete_list.replaceWith(btn_deletar_slc);
+    btn_select.innerHTML = "Cancelar seleção";
   }
 }
 
-function deletar_todas_listas() {
-  listas.splice(0, contador_listas);
-  contador_listas = 0;
-  actualizar_contador_de_listas();
-  apresentar_listas_na_pagina_inicial();
-}
 
-function deletar_selecao() {
-  let todaslistas = [...document.querySelectorAll(".selecionado")];
-  todaslistas.forEach((item)=>{
-    listas.splice(parseInt(item.id),1);
-  });
-  apresentar_listas_na_pagina_inicial();
-}
 
-function selecionar_lista(e) {
-  let index=parseInt(e.target.id);
-  e.target.classList.toggle("selecionado");
-  if (e.target.classList.contains("selecionado")) {
-    console.log("Selecionei a lista "+ index);
-  } else {
-    console.log("deselecionei a lista "+ index);
-  }
-}
 
-function verificar_selecao() {
-  let todaslistas = [...document.querySelectorAll(".list")];
-  if (todaslistas.length != 0) {
-    if (!todaslistas[0].classList.contains("discelecionado")) {
-      listas_selecionadas = [];
-      evento_de_entrada_na_lista = true;
-      apresentar_listas_na_pagina_inicial();
-    }
-  }
-}
-
-function ativar_modo_selecionar() {
-  let todaslistas = [...document.querySelectorAll(".list")];
-  todaslistas.forEach((item) => {
-    item.classList.toggle("discelecionado");
-    item.addEventListener("click", selecionar_lista);
-  });
-  evento_de_entrada_na_lista = todaslistas[0].classList.contains(
-    "discelecionado"
-  )
-    ? false
-    : true;
-  todaslistas[0].classList.contains("discelecionado")
-    ? (btn_select.innerHTML = "Cancelar seleção")
-    : (btn_select.innerHTML = "Selecionar");
-  todaslistas[0].classList.contains("discelecionado")
-    ? (ativar_btn_deletar_selecao("Cancelar seleção"))
-    : (ativar_btn_deletar_selecao("Selecionar"));
-  verificar_selecao();
-  console.log(evento_de_entrada_na_lista);
-}
-
-function trava_do_modo_selecao() {
-  if (listas.length != 0) {
-    ativar_modo_selecionar();
-  }
-}
 
 verificacao_modal_inicial();
-
-document.addEventListener("DOMContentLoaded", () => {});

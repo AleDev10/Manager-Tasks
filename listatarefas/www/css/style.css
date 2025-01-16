@@ -662,6 +662,7 @@ modal type list */
     font-size: 2rem;
     font-weight: 900;
     margin-left: .2rem;
+    cursor: text;
 }
 .editar_campo{
     outline: none;
