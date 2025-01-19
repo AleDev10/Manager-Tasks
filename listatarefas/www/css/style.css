@@ -459,6 +459,11 @@ janela pagina inicial */
 }
 
 /* estilização da aria direta da pagina sobre */
+#boxhelp{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
 #boxversao{
     padding: 1em;
 }
@@ -483,6 +488,9 @@ janela pagina inicial */
 #boxredes{
     padding-right: 1rem;
    padding-left: 1rem;
+}
+#boxredes h3{
+    font-weight: 400;
 }
 #boxredes p{
     padding: .5rem;

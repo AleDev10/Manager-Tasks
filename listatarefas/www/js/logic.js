@@ -1,6 +1,12 @@
 //seleções gerais
 const main = document.getElementById("main");
 
+document.addEventListener("keydown",(e)=>{
+  if (e.key==="Tab") {
+    e.preventDefault();
+  }
+})
+
 //aria das variaveis globais
 var nome_user = "";
 var ativar = false;
@@ -20,7 +26,8 @@ var detalhes_da_descricao = [];
 var lista_aberta = 0;
 var numero_de_salvamento = 0;
 var evento_de_entrada_na_lista = true;
-var listas_selecionadas = [];
+var titulo_iguais = 0;
+var modo_da_lista = "";
 
 /*declaração dos elementos
  de maneira global*/
@@ -69,7 +76,7 @@ const info_title = document.createElement("p");
 const boxtoolbar = document.createElement("div");
 const btn_new_list = document.createElement("button");
 const btn_delete_list = document.createElement("button");
-const btn_deletar_slc=document.createElement("button");
+const btn_deletar_slc = document.createElement("button");
 const info_count_list = document.createElement("p");
 const btn_select = document.createElement("button");
 const boxsearch = document.createElement("div");
@@ -369,9 +376,9 @@ function pagina_inicial() {
   btn_delete_list.addEventListener("click", deletar_todas_listas);
   boxtoolbar.appendChild(btn_delete_list);
   //btn deletar seleção
-  btn_deletar_slc.setAttribute("class","btn_clean");
-  btn_deletar_slc.innerHTML="Deletar seleção";
-  btn_deletar_slc.addEventListener("click",deletar_selecao);
+  btn_deletar_slc.setAttribute("class", "btn_clean");
+  btn_deletar_slc.innerHTML = "Deletar seleção";
+  btn_deletar_slc.addEventListener("click", deletar_selecao);
   info_count_list.innerHTML = `${contador_listas} listas`;
   boxtoolbar.appendChild(info_count_list);
   btn_select.innerHTML = "Selecionar";
@@ -508,12 +515,12 @@ function sobre_app() {
      </p>
    </div>
    <div id="boxredes">
-     <h3>Redes:</h3>
+     <h3><b>Redes:</b> (click para copiar um link)</h3>
      <p>
-     LinkedIn: <a href="https://www.linkedin.com/in/alexandre-junqueiro/" target="_blank" rel="noopener noreferrer">Perfil do criador</a><br>
-     GitHub: <a href="https://github.com/AleDev10/Manager-Tasks" target="_blank" rel="noopener noreferrer">Reportório do projeto</a><br>
-     Instagram: <a href="https://www.instagram.com/alexandre_junqueiro/" target="_blank" rel="noopener noreferrer">Perfil do criador</a><br>
-     Facebook: <a href="https://web.facebook.com/profile.php?id=100008443771463" target="_blank" rel="noopener noreferrer">Perfil do criador</a><br>
+     LinkedIn: <a href="https://www.linkedin.com/in/alexandre-junqueiro/" class="links" >Perfil do criador</a><br>
+     GitHub: <a href="https://github.com/AleDev10/Manager-Tasks" class="links" >Reportório do projeto</a><br>
+     Instagram: <a href="https://www.instagram.com/alexandre_junqueiro/" class="links" >Perfil do criador</a><br>
+     Facebook: <a href="https://web.facebook.com/profile.php?id=100008443771463" class="links" >Perfil do criador</a><br>
      </p>
    </div>
    <div id="dica">
@@ -521,6 +528,7 @@ function sobre_app() {
    </div>
 
  `;
+ copiar_links_pagina_sobre();
 }
 //janela lista normal
 function lista_normal() {
@@ -724,6 +732,7 @@ function abrir_pagina_inicial() {
 }
 function abrir_configuracoes() {
   if (menu_activo == "paginaincial") {
+    desativar_modo_selecao();
     remover_elemento_da_tela(WindowMain, secao_direita_pagina_inicial);
     menu_ativo_configuracoes();
   }
@@ -737,6 +746,7 @@ function abrir_configuracoes() {
 }
 function abrir_sobre_app() {
   if (menu_activo == "paginaincial") {
+    desativar_modo_selecao();
     remover_elemento_da_tela(WindowMain, secao_direita_pagina_inicial);
     menu_ativo_sobre_app();
   }
@@ -749,6 +759,7 @@ function abrir_sobre_app() {
   }
 }
 function abrir_lista_normal() {
+  desativar_modo_selecao();
   remover_elemento_da_tela(WindowMain, secao_direita_pagina_inicial);
   limpar_tarefas();
   lista_normal();
@@ -757,8 +768,7 @@ function abrir_lista_normal() {
   lista_aberta = contador_listas - 1;
   numero_de_salvamento = 0;
   dados_salvo_no_arrey = false;
-  evento_de_entrada_na_lista = true;
-  listas_selecionadas = [];
+  modo_da_lista = "nova_lista";
   console.log("a lista não está no arrey");
   infolista("inicio");
   console.log(`Abriu a lista de tarefas normal.`);
@@ -996,6 +1006,7 @@ function sairDaLista() {
   lista_aberta = -1;
   numero_de_salvamento = 0;
   copia_das_tarefas = [];
+  modo_da_lista = "";
   remover_lista_normal(pagina_que_a_lista_vai_remover);
   console.log("saio da lista");
   console.log("nenhuma lista aberta " + lista_aberta);
@@ -1067,18 +1078,11 @@ function abrir_lista_normal_pela_pagina_inicial(i) {
   seletor_categorias_normal.value = `${listas[lista_aberta].categoria}`;
   title_task_normal.innerHTML = `${listas[lista_aberta].titulo_lista}`;
   numero_de_salvamento = listas[lista_aberta].lisa_salva;
-
+  modo_da_lista = "lista_existente";
   console.log(numero_de_salvamento);
   apresentar_tarefas();
   infolista("inicio");
   console.log(`lista numero ${lista_aberta} aberta`);
-}
-function ativar_btn_deletar_selecao(ele) {
-  if (ele=="Selecionar") {
-    btn_delete_list.replaceWith(btn_deletar_slc);
-  } else {
-    btn_deletar_slc.replaceWith(btn_delete_list);
-  }
 }
 function deletar_todas_listas() {
   listas.splice(0, contador_listas);
@@ -1088,30 +1092,31 @@ function deletar_todas_listas() {
 }
 function deletar_selecao() {
   let todaslistas = [...document.querySelectorAll(".selecionado")];
-  contador_listas-=todaslistas.length;
-  todaslistas.forEach((item)=>{
-    listas.splice(parseInt(item.id),1);
+  contador_listas -= todaslistas.length;
+  todaslistas.forEach((item) => {
+    listas.splice(parseInt(item.id), 1);
   });
   actualizar_contador_de_listas();
   ativar_btn_deletar_selecao("Cancelar-seleção");
   mudar_texto_do_btn_selecionar("Selecionar");
-  evento_de_entrada_na_lista=true;
+  evento_de_entrada_na_lista = true;
   apresentar_listas_na_pagina_inicial();
 }
 function selecionar_lista(e) {
-  let index=parseInt(e.target.id);
-  e.target.classList.toggle("selecionado");
-  if (e.target.classList.contains("selecionado")) {
-    console.log("Selecionei a lista "+ index);
-  } else {
-    console.log("deselecionei a lista "+ index);
+  if (!e.target.classList.contains("title_list")) {
+    let index = parseInt(e.target.id);
+    e.target.classList.toggle("selecionado");
+    if (e.target.classList.contains("selecionado")) {
+      console.log("Selecionei a lista " + index);
+    } else {
+      console.log("deselecionei a lista " + index);
+    }
   }
 }
 function verificar_selecao() {
   let todaslistas = [...document.querySelectorAll(".list")];
   if (todaslistas.length != 0) {
     if (!todaslistas[0].classList.contains("discelecionado")) {
-      listas_selecionadas = [];
       evento_de_entrada_na_lista = true;
       apresentar_listas_na_pagina_inicial();
     }
@@ -1129,11 +1134,11 @@ function ativar_modo_selecionar() {
     ? false
     : true;
   todaslistas[0].classList.contains("discelecionado")
-    ? (mudar_texto_do_btn_selecionar("Cancelar-seleção"))
-    : (mudar_texto_do_btn_selecionar("Selecionar"));
+    ? mudar_texto_do_btn_selecionar("Cancelar-seleção")
+    : mudar_texto_do_btn_selecionar("Selecionar");
   todaslistas[0].classList.contains("discelecionado")
-    ? (ativar_btn_deletar_selecao("Selecionar"))
-    : (ativar_btn_deletar_selecao("Cancelar-seleção"));
+    ? ativar_btn_deletar_selecao("Selecionar")
+    : ativar_btn_deletar_selecao("Cancelar-seleção");
   verificar_selecao();
   console.log(evento_de_entrada_na_lista);
 }
@@ -1143,13 +1148,39 @@ function trava_do_modo_selecao() {
   }
 }
 function verificar_se_a_lista_existe() {
-  let resultado=listas.findIndex((item)=>item.titulo_lista==title_task_normal.textContent);
-  if (resultado==-1) {
+  let resultado = listas.findIndex(
+    (item) => item.titulo_lista === title_task_normal.textContent
+  );
+  if (resultado == -1) {
+    salvar_lista();
+  } else if (modo_da_lista === "lista_existente") {
     salvar_lista();
   } else {
-    title_task_normal.textContent=`Titulo ${contador_listas}`;
+    titulo_iguais++;
+    title_task_normal.textContent = `Titulo${titulo_iguais}`;
     salvar_lista();
   }
+}
+function desativar_modo_selecao() {
+  evento_de_entrada_na_lista = true;
+  mudar_texto_do_btn_selecionar("Selecionar");
+  ativar_btn_deletar_selecao("Cancelar-seleção");
+}
+function copiar_links_pagina_sobre() {
+  let todoslinks = document.querySelectorAll(".links");
+  let link;
+  todoslinks.forEach((item)=>{
+    item.addEventListener("click",async (e)=>{
+      e.preventDefault();
+      link=e.target.href;
+      try{
+        await navigator.clipboard.writeText(link);
+        console.log("link copiado");
+      }catch(erro){
+        console.log("erro nos links")
+      }
+    });
+  });
 }
 
 //saida de dados
@@ -1316,14 +1347,19 @@ function actualizar_contador_de_listas() {
   info_count_list.innerHTML = `${contador_listas} listas`;
 }
 function mudar_texto_do_btn_selecionar(texto) {
-  if (texto=="Selecionar") {
+  if (texto == "Selecionar") {
     btn_select.innerHTML = "Selecionar";
   } else {
     btn_select.innerHTML = "Cancelar seleção";
   }
 }
-
-
+function ativar_btn_deletar_selecao(ele) {
+  if (ele == "Selecionar") {
+    btn_delete_list.replaceWith(btn_deletar_slc);
+  } else {
+    btn_deletar_slc.replaceWith(btn_delete_list);
+  }
+}
 
 
 
