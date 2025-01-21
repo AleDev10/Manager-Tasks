@@ -154,6 +154,11 @@ const caixa_botoes_salvar_lista = document.createElement("div");
 const botao_sim_salvar_lista = document.createElement("button");
 const botao_nao_salvar_lista = document.createElement("button");
 
+//declaração dos elementos da modal mensagens
+var caixa_modal_mensagens= document.createElement("div");
+var modal_mensagens = document.createElement("div");
+var mensagens = document.createElement("span");
+
 //janela principal
 function janela_principal() {
   //caixa principal do programa
@@ -310,6 +315,7 @@ function modal_tipo_lista() {
   btnsmodallist_tabela.innerText = "Tabela";
   boxmodallist.appendChild(btnsmodallist_tabela);
 }
+//janela modal de confirmação para salvar
 function modal_salvar_lista() {
   //elemento principal
   modalsalvalista.setAttribute("id", "modalsalvalista");
@@ -340,6 +346,20 @@ function modal_salvar_lista() {
   });
   botao_nao_salvar_lista.innerHTML = "Não";
   caixa_botoes_salvar_lista.appendChild(botao_nao_salvar_lista);
+}
+//janela modal de mensagem de aviso
+function modalMensagem() {
+  caixa_modal_mensagens.setAttribute("id","caixa_modal_mensagens");
+  caixa_modal_mensagens.style.display="none";
+  main.appendChild(caixa_modal_mensagens);
+
+  modal_mensagens.setAttribute("class","modal_mensagens");
+  caixa_modal_mensagens.appendChild(modal_mensagens);
+
+  mensagens.setAttribute("class","mensagens");
+  mensagens.innerHTML = "Mensagem";
+  modal_mensagens.appendChild(mensagens);
+
 }
 //janela pagina inicial
 function pagina_inicial() {
@@ -686,6 +706,7 @@ function salvar_lista() {
     lisa_salva: numero_de_salvamento,
   };
   dados_salvo_no_arrey = true;
+  modo_da_lista = "lista_existente";
   console.log("a lista está no arrey");
   console.log(`lista numero ${lista_aberta} salva.`);
   console.log(listas);
@@ -709,9 +730,11 @@ function verificacao_modal_inicial() {
     modal_inicio();
     modal_tipo_lista();
     modal_salvar_lista();
+    modalMensagem();
   } else {
     modal_tipo_lista();
     modal_salvar_lista();
+    modalMensagem();
     janela_principal();
     cor_menu_pagina_inicial();
     pagina_inicial();
@@ -1153,12 +1176,15 @@ function verificar_se_a_lista_existe() {
   );
   if (resultado == -1) {
     salvar_lista();
+    ativar_modalMensagem("Lista salva");
   } else if (modo_da_lista === "lista_existente") {
     salvar_lista();
+    ativar_modalMensagem("Lista salva");
   } else {
     titulo_iguais++;
     title_task_normal.textContent = `Titulo${titulo_iguais}`;
     salvar_lista();
+    ativar_modalMensagem("Lista salva");
   }
 }
 function desativar_modo_selecao() {
@@ -1175,8 +1201,10 @@ function copiar_links_pagina_sobre() {
       link=e.target.href;
       try{
         await navigator.clipboard.writeText(link);
+        ativar_modalMensagem("link copiado");
         console.log("link copiado");
       }catch(erro){
+        ativar_modalMensagem("erro nos links");
         console.log("erro nos links")
       }
     });
@@ -1360,6 +1388,14 @@ function ativar_btn_deletar_selecao(ele) {
     btn_deletar_slc.replaceWith(btn_delete_list);
   }
 }
+function ativar_modalMensagem(texto) {
+  caixa_modal_mensagens.style.display="flex";
+  mensagens.innerHTML = texto;
+  setTimeout(()=>{
+    caixa_modal_mensagens.style.display="none";
+  },3000);
+}
+
 
 
 

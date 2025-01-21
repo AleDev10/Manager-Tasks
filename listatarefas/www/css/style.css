@@ -290,7 +290,7 @@ janela pagina inicial */
     border-radius: .5rem;
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
-    grid-template-rows: repeat(auto, 1fr);
+    grid-template-rows: 1fr 1fr 1fr;
     overflow-y: scroll;
     padding: 1rem;
     height: 100%;
@@ -830,6 +830,31 @@ de confirmação de lista salva */
     background-color: var(--roxo-main);
 }
 
+/* estilização da modal 
+mensagens */
+#caixa_modal_mensagens{
+    width: 100vw;
+    height: 100vh; 
+    display: flex;
+    flex-direction: column;
+    justify-content: end;
+    align-items: center;
+    padding: 3%;
+    position: absolute;
+    z-index: 1000;
+}
+.modal_mensagens{
+    background-color: var(--preto);
+    color: var(--branco);
+    padding: 1.4rem;
+    border-radius: 3rem;
+    width: 70%;
+    height: 1rem;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
 
 /* aria da responsividade com media query */
 @media screen and (max-width:2000px){
