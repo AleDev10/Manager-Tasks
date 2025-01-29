@@ -28,6 +28,8 @@ var numero_de_salvamento = 0;
 var evento_de_entrada_na_lista = true;
 var titulo_iguais = 0;
 var modo_da_lista = "";
+var acesso_a_descricao=true;
+var contador_de_listas_selecionadas=0;
 
 /*declaração dos elementos
  de maneira global*/
@@ -172,6 +174,7 @@ function janela_principal() {
   //logo aria esquerda
   logo.setAttribute("src", "img/logo/logoapp.png");
   logo.setAttribute("class", "logoPq");
+  logo.addEventListener("click",abrir_pagina_inicial);
   secao_esquerda.appendChild(logo);
 
   //caixa do menu
@@ -399,8 +402,10 @@ function pagina_inicial() {
   btn_deletar_slc.setAttribute("class", "btn_clean");
   btn_deletar_slc.innerHTML = "Deletar seleção";
   btn_deletar_slc.addEventListener("click", deletar_selecao);
+  //contador de listas
   info_count_list.innerHTML = `${contador_listas} listas`;
   boxtoolbar.appendChild(info_count_list);
+  //btn selecionar
   btn_select.innerHTML = "Selecionar";
   btn_select.setAttribute("class", "btn_clean");
   btn_select.setAttribute("id", "btnslecionarlist");
@@ -551,7 +556,7 @@ function sobre_app() {
  copiar_links_pagina_sobre();
 }
 //janela lista normal
-function lista_normal() {
+function lista_normal() {        
   item_menu_home.style.backgroundColor = "";
   logo_home.style.backgroundColor = "";
   item_menu_home.style.color = "";
@@ -721,6 +726,7 @@ function evento_de_foco_da_descricao(e, i) {
   tarefas[i].descricao = detalhes_da_descricao[i];
   console.log(detalhes_da_descricao);
   console.log(tarefas);
+  console.log(e.target.scrollHeight);
   apresentar_tarefas();
 }
 
@@ -1057,15 +1063,25 @@ function identificar_descricao() {
   let descricoes = [...document.querySelectorAll(".txtDescricao")];
   descricoes.forEach((item) => {
     item.addEventListener("click", (e) => {
-      console.log(detalhes_da_descricao);
-      for (let index = 0; index < contador_tarefas; index++) {
-        if (e.target.id == `txtDescricao${index}`) {
-          e.target.addEventListener("keydown", (ele) => {
-            editar_descricao(ele);
-          });
-          e.target.addEventListener("blur", (ele) => {
-            evento_de_foco_da_descricao(ele, index);
-          });
+      if (acesso_a_descricao) {
+        console.log(detalhes_da_descricao);
+        console.log(e.target.style.height)
+        acesso_a_descricao=false;
+        for (let index = 0; index < contador_tarefas; index++) {
+          if (e.target.id == `txtDescricao${index}`) {
+            e.target.addEventListener("keydown", (ele) => {
+              editar_descricao(ele);
+            });
+            e.target.addEventListener("blur", (ele) => {
+              if (e.target.value==='') {
+                e.target.value='......';
+                e.target.style.height='auto';
+              }else{
+                evento_de_foco_da_descricao(ele, index);
+                acesso_a_descricao=true;
+              }
+            });
+          }
         }
       }
     });
@@ -1130,8 +1146,12 @@ function selecionar_lista(e) {
     let index = parseInt(e.target.id);
     e.target.classList.toggle("selecionado");
     if (e.target.classList.contains("selecionado")) {
+      contador_de_listas_selecionadas++;
+      actualizar_contador_de_listas_selecionadas();
       console.log("Selecionei a lista " + index);
     } else {
+      contador_de_listas_selecionadas--;
+      actualizar_contador_de_listas_selecionadas();
       console.log("deselecionei a lista " + index);
     }
   }
@@ -1162,6 +1182,9 @@ function ativar_modo_selecionar() {
   todaslistas[0].classList.contains("discelecionado")
     ? ativar_btn_deletar_selecao("Selecionar")
     : ativar_btn_deletar_selecao("Cancelar-seleção");
+  todaslistas[0].classList.contains("discelecionado")
+    ? ativar_contador_de_listas_selecionadas("Selecionar")
+    : ativar_contador_de_listas_selecionadas("Cancelar-seleção");
   verificar_selecao();
   console.log(evento_de_entrada_na_lista);
 }
@@ -1189,8 +1212,10 @@ function verificar_se_a_lista_existe() {
 }
 function desativar_modo_selecao() {
   evento_de_entrada_na_lista = true;
+  contador_de_listas_selecionadas=0;
   mudar_texto_do_btn_selecionar("Selecionar");
   ativar_btn_deletar_selecao("Cancelar-seleção");
+  ativar_contador_de_listas_selecionadas("Cancelar-seleção");
 }
 function copiar_links_pagina_sobre() {
   let todoslinks = document.querySelectorAll(".links");
@@ -1337,9 +1362,13 @@ function abrir_modal_salvar_lista() {
   modalsalvalista.style.display = "flex";
 }
 function editar_descricao(e) {
-  e.target.style.height = `auto`;
-  e.target.style.height = `${e.target.scrollHeight}px`;
-  console.log(e.target.scrollHeight);
+  if (e.key==='Tab') {
+    e.target.value+='    ';
+  } else {
+    e.target.style.height = `auto`;
+    e.target.style.height = `${e.target.scrollHeight}px`;
+    console.log(e.target.scrollHeight);
+  }
 }
 function criacao_da_tarefas(tarefas, i) {
   //caixa principal das tarefas
@@ -1374,6 +1403,9 @@ function criacao_da_tarefas(tarefas, i) {
 function actualizar_contador_de_listas() {
   info_count_list.innerHTML = `${contador_listas} listas`;
 }
+function actualizar_contador_de_listas_selecionadas() {
+  info_count_list.innerHTML = `${contador_de_listas_selecionadas} listas selecionadas`;
+}
 function mudar_texto_do_btn_selecionar(texto) {
   if (texto == "Selecionar") {
     btn_select.innerHTML = "Selecionar";
@@ -1388,12 +1420,19 @@ function ativar_btn_deletar_selecao(ele) {
     btn_deletar_slc.replaceWith(btn_delete_list);
   }
 }
+function ativar_contador_de_listas_selecionadas(ele) {
+  if (ele == "Selecionar") {
+    info_count_list.innerHTML=`${contador_de_listas_selecionadas} listas selecionadas`;
+  } else {
+    info_count_list.innerHTML=`${contador_listas} listas`;
+  }
+}
 function ativar_modalMensagem(texto) {
   caixa_modal_mensagens.style.display="flex";
   mensagens.innerHTML = texto;
   setTimeout(()=>{
     caixa_modal_mensagens.style.display="none";
-  },3000);
+  },1500);
 }
 
 
