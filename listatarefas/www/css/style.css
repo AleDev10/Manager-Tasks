@@ -1,26 +1,32 @@
 :root{
-    --preto: #353535;
-    --roxo-main: #c935f2;
-    --roxo-secund:#4c1a59;
-    --cinza: #f0f0f0;
-    --branco: #ffffff;
-    --cinza-escuro:#b1b1b1;
-    --azul:#5d35f2;
-    --vermelho:#f2355e;
+    --cor-do-texto: #353535;
+    --cor-main: #c935f2;
+    --cor-secund:#4c1a59;
+    --modo-segunda-cor: #f0f0f0;
+    --modo-primeira-cor: #ffffff;
+    --modo-terceira-cor:#7c7c7c;
+    --cor-de-realce:#5d35f2;
+    --cor-para-erros:#f2355e;
+    --primeira-cor-do-modo-selecao:#4f4552a6;
+    --segunda-cor-do-modo-selecao:#0f0f0fc7;
+    --tamanho-principal-da-fonte: 17px;
 }
 *{
     margin: 0;
     padding: 0;
     box-sizing: border-box;
     user-select: none;
+    font-size: var(--tamanho-principal-da-fonte);
+    color: var(--cor-do-texto);
 }
+
+
 
 #main{
     width: 100vw;
     height: 100vh;
-    font-size: 100%;
     font-family: "Montserrat";
-    background-color: var(--cinza);
+    background-color: var(--modo-segunda-cor);
 }
 /* estilização da caixa modal da pagina inicial */
 #modalbox{
@@ -38,7 +44,7 @@
     
 }
 #modalbox .box1{
-    background-color: var(--branco);
+    background-color: var(--modo-primeira-cor);
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -55,6 +61,7 @@
 }
 .boxinfo{
     text-align: center;
+    color: var(--cor-do-texto);
 }
 #modalbox input{
     font-family: "Montserrat_medium";
@@ -62,14 +69,14 @@
     padding: 0.5rem;
     border-radius: 1rem;
     border: none;
-    background-color: var(--roxo-main);
+    background-color: var(--cor-main);
     text-align: center;
-    outline-color: #5d35f2;
+    outline-color: var(--cor-de-realce);
     font-size: 1rem;
-    color: var(--branco);
+    color: var(--cor-do-texto);
 }
 #modalbox input::placeholder{
-    color: var(--preto);
+    color: var(--cor-do-texto);
     text-align: center;
     font-family: "Montserrat_medium";
 }
@@ -78,20 +85,20 @@
     height: 2rem;
     border-radius: 2rem;
     outline: none;
-    border: var(--roxo-main) solid;
+    border: var(--cor-main) solid;
     background-color: transparent;
     font-family: "Montserrat_medium";
-    color: var(--roxo-main);
+    color: var(--cor-main);
     cursor: pointer;
 
 }
 #modalbox button:hover{
-    color: var(--preto);
+    color: var(--cor-do-texto);
     border: none;
-    background-color: var(--roxo-main);
+    background-color: var(--cor-main);
 }
 #modalbox button:hover:active{
-    background-color: #d574f0;
+    background-color: var(--cor-main);
 }
 
 /* estilização da pagina principal */
@@ -103,7 +110,7 @@
 
 /* estilização da aria esquerda geral de todas as janelas */
 #secao_esquerda{
-    background-color: var(--branco);
+    background-color: var(--modo-primeira-cor);
     height: 100vh;
     padding: 1rem;
     display: flex;
@@ -118,7 +125,7 @@
     cursor: pointer;
 }
 #boxmenu{
-    background-color: var(--cinza);
+    background-color: var(--modo-segunda-cor);
     border-radius: 10%;
     padding: .5rem;
     margin-bottom: 1.5rem;
@@ -138,10 +145,11 @@
     border-radius: .3rem;
 }
 .boxmenuitems:hover{
-    background-color: var(--cinza-escuro);
+    background-color: var(--modo-terceira-cor);
+    color: var(--modo-segunda-cor);
 }
 .boxmenuitems:hover:active{
-    background-color: var(--cinza);
+    background-color: var(--modo-segunda-cor);
 }
 .boxmenuitems img{
     width: 15%;
@@ -149,25 +157,23 @@
     border-radius: .2rem;
 }
 #boxfilter{
-    background-color: var(--cinza);
+    background-color: var(--modo-segunda-cor);
     border-radius: 10%;
     padding: .8rem;
     height: 100%;
     box-shadow: 3px 3px 4px rgba(0, 0, 0, 0.171);
 }
 #filter{
-    background-color: var(--branco);
+    background-color: var(--modo-primeira-cor);
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: .4rem;
     border-radius: .8rem;
-    border: var(--roxo-main) solid;
+    border: var(--cor-main) solid 2px;
 }
 #filter img{
-    width: 1.8%;
-    position: absolute;
-    left: 9.5%;
+    width: 1.3rem;
 }
 #filterlist{
     border: none;
@@ -177,7 +183,7 @@
     position: relative;
     background-color: transparent;
     z-index: 999;
-    color: var(--cinza-escuro);
+    color: var(--cor-do-texto);
 }
 #displayfilter{
     padding: .8rem;
@@ -194,13 +200,14 @@
     font-family: "Montserrat_medium";
     border-radius: .3rem;
     transition: .4s ease;
+    background-color: transparent;
 }
 .display_filter_itens:hover{
-    background-color: var(--cinza-escuro);
+    background-color: var(--modo-terceira-cor);
     padding: .3rem;
 }
 .display_filter_itens:hover:active{
-    background-color: var(--cinza);
+    background-color: var(--modo-segunda-cor);
 }
 
 /* começo da estilização da 
@@ -218,15 +225,17 @@ janela pagina inicial */
 }
 #boxtitle h1{
     font-weight: 900;
+    font-size: 2rem;
 }
 #boxtitle p{
     display: flex;
     align-items: end;
     margin-bottom: .3rem;
     margin-left: 0.3rem;
+    font-size: 1rem;
 }
 #boxtoolbar{
-    border: var(--roxo-main) solid;
+    border: var(--cor-main) solid;
     display: flex;
     padding: .5rem;
     border-radius: 5rem;
@@ -234,21 +243,21 @@ janela pagina inicial */
     gap: 2rem;
 }
 #btn_new_list{
-    background-color: var(--roxo-main);
+    background-color: var(--cor-main);
     outline: none;
     border: none;
     cursor: pointer;
-    color: var(--preto);
+    color: var(--cor-do-texto);
     width: 30%;
     border-radius: 5rem;
     font-size: 2rem;
     font-family: "Montserrat_black";
 }
 #btn_new_list:hover{
-    color: var(--branco);
+    color: var(--modo-primeira-cor);
 }
 #btn_new_list:hover:active{
-    background-color: var(--roxo-secund);
+    background-color: var(--cor-secund);
 }
 .btn_clean{
     border: none;
@@ -258,18 +267,20 @@ janela pagina inicial */
     text-decoration: underline;
     cursor: pointer;
     font-size: 1rem;
+    font-family: "Montserrat_regular";
+    background-color: transparent;
 }
 .btn_clean:hover{
-    background-color: var(--cinza-escuro);
+    background-color: var(--modo-terceira-cor);
 }
 .btn_clean:hover:active{
-    background-color: var(--cinza);
+    background-color: var(--modo-segunda-cor);
 }
 #boxtoolbar p{
     font-size: 1rem;
 }
 #boxsearch{
-    background-color: var(--branco);
+    background-color: var(--modo-primeira-cor);
     width: 20%;
     display: flex;
     justify-content: space-between;
@@ -281,12 +292,16 @@ janela pagina inicial */
     border: none;
     outline: none;
     width: 100%;
+    background-color: transparent;
+}
+#input_search::placeholder{
+    color: var(--cor-do-texto);
 }
 #boxsearch img{
     width: 5%;
 }
 #display_list{
-    background-color: var(--branco);
+    background-color: var(--modo-primeira-cor);
     margin-top: 1rem;
     border-radius: .5rem;
     display: grid;
@@ -302,7 +317,7 @@ janela pagina inicial */
     display: none;
 }
 .list{
-    background-color: var(--roxo-main);
+    background-color: var(--cor-main);
     border-radius: 2rem;
     padding: 1.5rem;
     display: flex;
@@ -312,26 +327,26 @@ janela pagina inicial */
     cursor: pointer;
     margin: 1rem;
     height: 120px;
+    color: #ffff;
 }
 .list:hover{
-    background-color: var(--roxo-secund);
-    color: var(--branco);
+    background-color: var(--cor-secund);
 }
 .list:hover:active{
-    background-color: var(--roxo-main);
+    background-color: var(--cor-main);
 }
 .discelecionado{
-    background-color: #765380c9;
-    color: #3535359d;
+    background-color: var(--primeira-cor-do-modo-selecao);
+    color: var(--segunda-cor-do-modo-selecao);
 }
 .discelecionado:hover{
-    background-color: var(--roxo-main);
-    color: var(--preto);
+    background-color: var(--cor-main);
+    color: var(--cor-do-texto);
 }
 .selecionado{
-    border: #5d35f2 solid 3px;
-    background-color: var(--roxo-main);
-    color: var(--roxo-secund);
+    border: var(--cor-de-realce) solid 3px;
+    background-color: var(--cor-main);
+    color: var(--cor-secund);
 }
 
 
@@ -343,13 +358,13 @@ janela pagina inicial */
     flex-direction: column;
 }
 #title_config, #title_help{
-    color: var(--roxo-main);
+    color: var(--cor-main);
     text-align: center;
     font-family: "Montserrat_black";
     font-size: 3.5rem;
 }
 #boxconfig,#boxhelp{
-    background-color: var(--branco);
+    background-color: var(--modo-primeira-cor);
     border-radius: .5rem;
     height: 100%;
     box-shadow: 3px 3px 4px rgba(0, 0, 0, 0.171);
@@ -358,11 +373,17 @@ janela pagina inicial */
     font-size: .9rem;
 }
 /* estilização da aria direta da pagina configurações */
+#boxconfig{
+    display: flex;
+    flex-direction: column;
+    gap: .5rem;
+    justify-content: space-between;
+}
 #boxaparencia{
     padding: 1em;
 }
 #boxaparencia h3{
-    color: var(--roxo-main);
+    color: var(--cor-main);
 }
 #boxaparenciacor{
     margin: .5rem;
@@ -382,23 +403,32 @@ janela pagina inicial */
     border: rgba(0, 0, 0, 0.726) solid 1px;
 }
 #btnCor1{
-    background-color: var(--roxo-main)
+    background-color: #c935f2;
 }
 #btnCor2{
-    background-color: var(--azul)
+    background-color: #5d35f2;
 }
-#btnCor3{
-    background-color: var(--vermelho);
+.claro{
+    background-color: #353535;
+}
+.escuro{
+    background-color: #ffff;
 }
 #boxfont{
-    margin: .5rem; 
+    gap: 1rem;
+    margin: .5rem;
+    display: flex; 
 }
 #inputfont{
-    margin-left: .5rem;
-    margin-right: .5rem;
-    width: 10%;
-    outline: none;
-    font-family: "Montserrat_medium";
+    width: 20%;
+}
+#boxfont span{
+    background-color: var(--cor-main);
+    color: var(--cor-do-texto);
+    text-align: center;
+    padding: 2px 1rem;
+    border-radius: .3rem;
+    font-weight: bold;
 }
 .gerenciador{
     margin-left: .5rem;
@@ -406,19 +436,27 @@ janela pagina inicial */
 .nome_do_gerencidor{
     margin-left: .5rem;
     font-size: 1rem;
-    outline: none;
-    width: 12%;
+    outline: var(--cor-de-realce);
+    border: none;
+    width: 20%;
+    padding: .8rem;
     font-family: "Montserrat_medium";
+    background-color: var(--cor-main);
+    border-radius: .7rem;
+    -webkit-border-radius: .7rem;
+    -moz-border-radius: .7rem;
+    -ms-border-radius: .7rem;
+    -o-border-radius: .7rem;
 }
 #boxstorage{
     padding: 1rem;
 }
 #boxstorage h3{
-    color: var(--roxo-main);
+    color: var(--cor-main);
 }
 #boxstorage button{
-    color: var(--roxo-main);
-    background-color: var(--preto);
+    color: var(--modo-primeira-cor);
+    background-color: var(--cor-do-texto);
     width: 20%;
     padding: .6rem;
     border: none;
@@ -428,11 +466,11 @@ janela pagina inicial */
     font-family: "Montserrat_medium";
 }
 #boxstorage button:hover{
-    background-color: var(--roxo-main);
-    color: var(--branco);
+    background-color: var(--cor-main);
+    color: var(--modo-primeira-cor);
 }
 #boxstorage button:hover:active{
-    background-color: var(--roxo-secund);
+    background-color: var(--cor-secund);
 }
 #btnsconfig{
     display: flex;
@@ -447,16 +485,16 @@ janela pagina inicial */
     border-radius: 3rem;
     border: none;
     outline: none;
-    background-color: var(--preto);
-    color: var(--branco);
+    background-color: var(--cor-do-texto);
+    color: var(--modo-primeira-cor);
     font-family: "Montserrat_medium";
     cursor: pointer;
 }
 #btnsconfig button:hover{
-    background-color: var(--roxo-main);
+    background-color: var(--cor-main);
 }
 #btnsconfig button:hover:active{
-    background-color: var(--roxo-secund);
+    background-color: var(--cor-secund);
 }
 
 /* estilização da aria direta da pagina sobre */
@@ -474,10 +512,10 @@ janela pagina inicial */
     gap: .3rem;
 }
 #boxversao #versaotitle{
-    color: var(--roxo-main);
+    color: var(--cor-main);
 }
 #boxversao h3{
-    color: var(--preto);
+    color: var(--cor-do-texto);
 }
 #boxdescricao{
    padding-right: 1rem;
@@ -523,7 +561,7 @@ modal type list */
     top: 0rem;
 }
 #boxtypelist{
-    background-color: var(--branco);
+    background-color: var(--modo-primeira-cor);
     padding: 5%;
     width: 48%;
     height: 90%;
@@ -536,20 +574,20 @@ modal type list */
     height: 30px;
     border-radius: 50%;
     border: none;
-    background-color: var(--roxo-main);
+    background-color: var(--cor-main);
     position: absolute;
     top: 12%;
     right: 27.4%;
     cursor: pointer;
     font-size: 1rem;
-    color: var(--branco);
+    color: var(--modo-primeira-cor);
     font-family: "Montserrat_black";
 }
 #btnCancel:hover{
-    background-color: var(--roxo-secund);
+    background-color: var(--cor-secund);
 }
 #btnCancel:hover:active{
-    background-color: var(--roxo-main);
+    background-color: var(--cor-main);
 }
 #imgmodallist{
     display: flex;
@@ -565,7 +603,7 @@ modal type list */
     font-size: 1.5rem;
 }
 #modallistinfo h1{
-    color: var(--roxo-main);
+    color: var(--cor-main);
 }
 #boxmodallist{
     display: flex;
@@ -580,30 +618,30 @@ modal type list */
     font-size: 1rem;
     padding: .5rem;
     border-radius: 1rem;
-    background-color: var(--roxo-secund);
-    color: var(--branco);
+    background-color: var(--cor-secund);
+    color: var(--modo-primeira-cor);
     border: none;
     outline: none;
     cursor: pointer;
 }
 .btnsmodallist:hover{
-    background-color: var(--roxo-main);
+    background-color: var(--cor-main);
 }
 .btnsmodallist:hover:active{
-    background-color: var(--roxo-secund);
+    background-color: var(--cor-secund);
 }
 
 /* estilização da janela de lista normal */
 #boxlistinputnormal{
     display: flex;
     align-items: center;
-    border: var(--roxo-main) solid 3px;
+    border: var(--cor-main) solid 3px;
     border-radius: 4rem;
     padding: .2rem;
     
 }
 #inputlistnormal{
-    background-color: var(--roxo-main);
+    background-color: var(--cor-main);
     height: 3rem;
     border-radius: 4rem;
     border: none;
@@ -616,7 +654,7 @@ modal type list */
     
 }
 #inputlistnormal::placeholder{
-    color: var(--branco);
+    color: var(--cor-do-texto);
 }
 #btn_delet_tasks{
     margin-right: 1.5rem;
@@ -625,24 +663,24 @@ modal type list */
     padding: 1rem;
     display: flex;
     flex-direction: row;
+    align-items: center;
 }
 .btnListNormal{
     width: 15%;
     height: 30px;
     margin: 0px .5rem;
-    background-color: var(--roxo-main);
+    background-color: var(--cor-main);
     border: none;
     border-radius: 1rem;
     font-family: "Montserrat_bold";
     font-size: 1rem;
-    color: var(--preto);
+    color: #ffff
 }
 .btnListNormal:hover{
-    background-color: var(--roxo-secund);
-    color: var(--branco);
+    background-color: var(--cor-secund);
 }
 .btnListNormal:hover:active{
-    background-color: var(--roxo-main);
+    background-color: var(--cor-main);
 }
 .estatos_lista{
     padding: .3rem;
@@ -652,7 +690,7 @@ modal type list */
     margin-right: .5rem;
 }
 #boxdisplaylistnormal{
-    background-color: var(--branco);
+    background-color: var(--modo-primeira-cor);
     height: 100%;
     padding: 1rem;
     border-radius: .5rem;
@@ -667,7 +705,7 @@ modal type list */
     justify-content: space-between;
 }
 #boxdisplaylistnormal #boxtitle_list_normal h1{
-    color: var(--roxo-secund);
+    color: var(--cor-main);
     font-size: 2rem;
     font-weight: 900;
     margin-left: .2rem;
@@ -683,26 +721,23 @@ modal type list */
     font-size: 2rem;
     font-family: "Montserrat_black";
     font-weight: 900;
-    color: var(--roxo-secund);
+    color: var(--cor-main);
 }
 .boxcategorias{
     border-radius: 3rem;
-    border: var(--roxo-main) solid 5px;
+    border: var(--cor-main) solid 5px;
     display: flex;
     align-items: center;
     justify-content: space-between;
     padding: .3rem;
-    -webkit-border-radius: 3rem;
-    -moz-border-radius: 3rem;
-    -ms-border-radius: 3rem;
-    -o-border-radius: 3rem;
 }
 .boxcategorias select{
     border: none;
     outline: none;
     appearance: none;
     width: 90%;
-    color: var(--cinza-escuro);
+    color: var(--cor-do-texto);
+    background-color: transparent;
 }
 .boxcategorias img{
     width: 9%;
@@ -742,14 +777,15 @@ modal type list */
     height: 1.2rem;
 }
 .concluido{
-    background-color: var(--roxo-main);
+    background-color: var(--cor-main);
     border-radius: 3rem;
     text-decoration: line-through;
-    width: 50rem;
+    width: 30vw;
 }
 .entrada_edicao{
     font-family: "Montserrat_bold";
     padding: 1rem;
+    background-color: transparent;
 }
 .boxTask2{
     display: flex;
@@ -772,9 +808,9 @@ modal type list */
     border: none;
     font-size: 1rem;
     font-family: "Montserrat_medium";
-    outline-color: #5d35f2;
+    outline-color: var(--cor-de-realce);
     padding: .5rem;
-    
+    background-color: transparent;
 }
 textarea::-webkit-scrollbar{
     width: 0px;
@@ -797,7 +833,7 @@ de confirmação de lista salva */
     top: 0rem;
 }
 #info_salvar_lista{
-    background-color: var(--branco);
+    background-color: var(--modo-primeira-cor);
     padding: 5%;
     width: 40%;
     height: 60%;
@@ -819,24 +855,25 @@ de confirmação de lista salva */
     width: 8rem;
     height: 2rem;
     border: none;
-    background-color: var(--roxo-main);
-    color: var(--branco);
+    background-color: var(--cor-main);
+    color: var(--cor-do-texto);
     font-family: "Montserrat_bold";
     cursor: pointer;
     border-radius: 1rem;
 }
 #caixa_botoes_salvar_lista button:hover{
-    background-color: var(--roxo-secund);
+    background-color: var(--cor-secund);
+    color: #ffff;
 }
 #caixa_botoes_salvar_lista button:hover:active{
-    background-color: var(--roxo-main);
+    background-color: var(--cor-main);
 }
 
 /* estilização da modal 
 mensagens */
 #caixa_modal_mensagens{
     width: 100vw;
-    height: 100vh; 
+    height: 100vh;
     display: flex;
     flex-direction: column;
     justify-content: end;
@@ -844,10 +881,11 @@ mensagens */
     padding: 3%;
     position: absolute;
     z-index: 1000;
+    transition: ease-in-out;
 }
 .modal_mensagens{
-    background-color: var(--preto);
-    color: var(--branco);
+    background-color: var(--cor-main);
+    color: var(--cor-do-texto);
     padding: 1.4rem;
     border-radius: 3rem;
     width: 70%;
@@ -858,6 +896,55 @@ mensagens */
     justify-content: center;
 }
 
+/* estilização da modal 
+salvar configurações */
+#caixa_modal_salvar_configuracoes{
+    width: 100vw;
+    height: 100vh; 
+    background-color: rgb(0, 0, 0, 0.7);
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 5%;
+    position: absolute;
+    z-index: 1000;
+    top: 0rem;
+}
+.modal_salvar_configuracoes{
+    background-color: var(--modo-primeira-cor);
+    color: var(--cor-do-texto);
+    width: 50%;
+    height: 50%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.3rem;
+}
+.caixa_btns_modal_salvar_configuracoes{
+    padding: 1rem;
+    display: flex;
+    gap: 1rem;
+}
+.caixa_btns_modal_salvar_configuracoes button{
+    width: 8rem;
+    height: 2rem;
+    border: none;
+    background-color: var(--cor-main);
+    color: var(--cor-do-texto);
+    font-family: "Montserrat_bold";
+    cursor: pointer;
+    border-radius: 1rem;
+}
+.caixa_btns_modal_salvar_configuracoes button:hover{
+    background-color: var(--cor-secund);
+    color: #ffff;
+}
+.caixa_btns_modal_salvar_configuracoes button:hover:active{
+    background-color: var(--cor-main);
+}
 /* aria da responsividade com media query */
 @media screen and (max-width:2000px){
     /* #secao_direita_list_normal{
