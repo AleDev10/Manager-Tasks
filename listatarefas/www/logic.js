@@ -31,10 +31,12 @@ var configuracoes_salvas=true;
 var pagina_que_configuracoes_vai_remover="";
 var dados_das_configuracoes={
   nome_user:"",
-  cor_sistema:"#c935f2",
-  cor_modo_do_sistema:"#ffff",
-  percentagem_da_fonte:11
+  cor_sistema:"#5d35f2",
+  cor_modo_do_sistema:"escuro",
+  percentagem_da_fonte:10,
+  logo:"img/logo/logoapp.png"
 };
+var copia_dos_dados_das_configuracoes={};
 
 /*declaração dos elementos
  de maneira global*/
@@ -100,9 +102,13 @@ const BoxConfig = document.createElement("div");
 const boxaparencia = document.createElement("div");
 const tituloaparencia = document.createElement("h3");
 const boxaparenciarCor = document.createElement("div");
+const boxbtnCor1 = document.createElement("div");
 const btn_cor1 = document.createElement("button");
 const btn_cor2 = document.createElement("button");
+const boxbtnCor2 = document.createElement("div");
 const btn_cor3 = document.createElement("button");
+const btn_cor4 = document.createElement("button");
+const btn_cor5 = document.createElement("button");
 const boxfont = document.createElement("div");
 const inputfont = document.createElement("input");
 const informacao_da_parcentagem_da_fonte = document.createElement("span");
@@ -186,8 +192,8 @@ function janela_principal() {
   WindowMain.appendChild(secao_esquerda);
 
   //logo aria esquerda
-  logo.setAttribute("src", "img/logo/logoapp.png");
   logo.setAttribute("class", "logoPq");
+  logo.src=dados_das_configuracoes.logo;
   logo.addEventListener("click", abrir_pagina_inicial);
   secao_esquerda.appendChild(logo);
 
@@ -278,12 +284,11 @@ function modal_inicio() {
   //evento do input da janela modal
   document.getElementById("inputNome").addEventListener("keydown", (e) => {
     verificacao_input_modal_inicial_com_tecla(e.key);
+    alteracoes_salvas();
   });
 
   //evento do botão da modal
-  document
-    .getElementById("btn_avancar")
-    .addEventListener("click", verificacao_modal_inicial_com_botao);
+  document.getElementById("btn_avancar").addEventListener("click", verificacao_modal_inicial_com_botao);
 }
 //janela modal tipo de lista
 function modal_tipo_lista() {
@@ -408,10 +413,7 @@ function modalSalvarConfiguracoes() {
     "btn1_modal_salvar_configuracoes"
   );
   btn1_modal_salvar_configuracoes.innerHTML = "sim";
-  btn1_modal_salvar_configuracoes.addEventListener("click",()=>{
-    configuracoes_salvas_sim();
-    caixa_modal_salvar_configuracoes.style.display = "none";
-  });
+  btn1_modal_salvar_configuracoes.addEventListener("click",modal_configuracoes_btn_sim);
   caixa_btns_modal_salvar_configuracoes.appendChild(btn1_modal_salvar_configuracoes);
 
   btn2_modal_salvar_configuracoes.setAttribute(
@@ -419,10 +421,7 @@ function modalSalvarConfiguracoes() {
     "btn2_modal_salvar_configuracoes"
   );
   btn2_modal_salvar_configuracoes.innerHTML = "não";
-  btn2_modal_salvar_configuracoes.addEventListener("click",()=>{
-    configuracoes_salvas_nao();
-    caixa_modal_salvar_configuracoes.style.display = "none";
-  });
+  btn2_modal_salvar_configuracoes.addEventListener("click",modal_configuracoes_btn_nao);
   caixa_btns_modal_salvar_configuracoes.appendChild(btn2_modal_salvar_configuracoes);
 }
 //janela pagina inicial
@@ -514,32 +513,61 @@ function configuracoes() {
   boxaparencia.appendChild(tituloaparencia);
   //caixa aparência mudar cor
   boxaparenciarCor.setAttribute("id", "boxaparenciacor");
-  boxaparenciarCor.innerHTML = "Mudar cor:";
   boxaparencia.appendChild(boxaparenciarCor);
+  //boxbtn1
+  boxbtnCor1.setAttribute("class","boxbtnCor");
+  boxbtnCor1.innerHTML = "<b>Mudar cor:</b>";
+  boxaparenciarCor.appendChild(boxbtnCor1);
   //botões das cores
   btn_cor1.setAttribute("class", "btnCorlors");
   btn_cor1.setAttribute("id", "btnCor1");
+  btn_cor1.innerHTML="Violeta";
   btn_cor1.addEventListener("click", () => {
     cor_do_sistema_escolhida("#c935f2");
     configuracoes_alteradas();
   });
-  boxaparenciarCor.appendChild(btn_cor1);
+  boxbtnCor1.appendChild(btn_cor1);
   btn_cor2.setAttribute("class", "btnCorlors");
   btn_cor2.setAttribute("id", "btnCor2");
+  btn_cor2.innerHTML="Azul";
   btn_cor2.addEventListener("click", () => {
     cor_do_sistema_escolhida("#5d35f2");
     configuracoes_alteradas();
   });
-  boxaparenciarCor.appendChild(btn_cor2);
-  btn_cor3.setAttribute("class", "btnCorlors claro");
+  boxbtnCor1.appendChild(btn_cor2);
+
+  //boxbtn2
+  boxbtnCor2.setAttribute("class","boxbtnCor");
+  boxbtnCor2.innerHTML = "<b>Mudar tema:</b>";
+  boxaparenciarCor.appendChild(boxbtnCor2);
+  btn_cor3.setAttribute("class", "btnCorlors");
   btn_cor3.setAttribute("id", "btnCor3");
-  btn_cor3.addEventListener("click", (e) => {
+  btn_cor3.innerHTML="Claro";
+  btn_cor3.addEventListener("click", () => {
+    escolher_tema("claro");
+    console.log("claro");
     configuracoes_alteradas();
-    btn_cor3.classList.toggle("escuro");
-    verificacao_modo_claro_ou_escuro(e.target);
+  });
+  boxbtnCor2.appendChild(btn_cor3);
+  btn_cor4.setAttribute("class", "btnCorlors");
+  btn_cor4.setAttribute("id", "btnCor4");
+  btn_cor4.innerHTML="Escuro";
+  btn_cor4.addEventListener("click", () => {
+    escolher_tema("escuro");
+    console.log("escuro");
+    configuracoes_alteradas();
     
   });
-  boxaparenciarCor.appendChild(btn_cor3);
+  boxbtnCor2.appendChild(btn_cor4);
+  btn_cor5.setAttribute("class", "btnCorlors");
+  btn_cor5.setAttribute("id", "btnCor5");
+  btn_cor5.innerHTML="Sistema";
+  btn_cor5.addEventListener("click", () => {
+    escolher_tema_automaticamente();
+    console.log("system");
+    
+  });
+  /* boxbtnCor2.appendChild(btn_cor5); */
 
   //caixa de configurações de tamanho da font
   boxfont.setAttribute("id", "boxfont");
@@ -581,11 +609,11 @@ function configuracoes() {
   btnsConfig.setAttribute("id", "btnsconfig");
   BoxConfig.appendChild(btnsConfig);
   //botões
-  btnSalveconfig.innerHTML = "Salvar";
-  btnSalveconfig.addEventListener("click",configuracoes_salvas_sim);
+  btnSalveconfig.innerHTML = "Salvo";
+  btnSalveconfig.addEventListener("click",salvar_configuracoes);
   btnsConfig.appendChild(btnSalveconfig);
   btnCancelconfig.innerHTML = "Cancelar";
-  btnCancelconfig.addEventListener("click",configuracoes_salvas_nao)
+  btnCancelconfig.addEventListener("click",cancelar_alteracoes_das_configuracoes)
   btnsConfig.appendChild(btnCancelconfig);
 }
 //janela sobre app
@@ -815,6 +843,16 @@ function evento_de_foco_da_descricao(e, i) {
   console.log(e.target.scrollHeight);
   apresentar_tarefas();
 }
+function salvar_configuracoes() {
+  dados_das_configuracoes={
+    nome_user:`${nome_do_gerencidor.value}`,
+    cor_sistema:dados_das_configuracoes.cor_sistema,
+    cor_modo_do_sistema:dados_das_configuracoes.cor_modo_do_sistema,
+    percentagem_da_fonte:inputfont.value,
+    logo:dados_das_configuracoes.logo
+  };
+  alteracoes_salvas();
+}
 
 //processamento de dados
 function verificacao_modal_inicial() {
@@ -833,9 +871,10 @@ function verificacao_modal_inicial() {
     cor_menu_pagina_inicial();
     pagina_inicial();
   }
+  escolher_tema(dados_das_configuracoes.cor_modo_do_sistema);
+  cor_do_sistema_escolhida(dados_das_configuracoes.cor_sistema);
   alterar_tamanho_da_fonte();
-  configuracoes_salvas=true;
-  /* verificacao_modo_claro_ou_escuro(); */
+  alteracoes_salvas();
 }
 function abrir_pagina_inicial() {
   if (menu_activo == "configuracao") {
@@ -919,6 +958,7 @@ function verificacao_modal_inicial_com_botao() {
     pagina_inicial();
     cor_menu_pagina_inicial();
     console.log(`Usuario ${dados_das_configuracoes.nome_user} registrado.`);
+    alteracoes_salvas();
   }
 }
 function deletar_lista() {
@@ -1325,6 +1365,59 @@ function copiar_links_pagina_sobre() {
     });
   });
 }
+function verificacao_do_salvamento_das_configuracoes(texto) {
+  if (configuracoes_salvas) {
+    sair_das_configuracoes(texto);
+  } else {
+    estado_da_modal_salvar_configuracoes("flex");
+    pagina_que_configuracoes_vai_remover=texto;
+  }
+}
+function sair_das_configuracoes(texto) {
+  switch (texto) {
+    case "paginaincial":
+      remover_elemento_da_tela(WindowMain, secao_direita_config);
+      menu_ativo_pagina_inicial();
+      break;
+    case "ajuda":
+      remover_elemento_da_tela(WindowMain, secao_direita_config);
+      menu_ativo_sobre_app();
+      break;
+    default:
+      break;
+  }
+  
+}
+function modal_configuracoes_btn_sim() {
+  salvar_configuracoes();
+  estado_da_modal_salvar_configuracoes("none");
+  sair_das_configuracoes(pagina_que_configuracoes_vai_remover);
+  console.log("sim");
+}
+function modal_configuracoes_btn_nao() {
+  cancelar_alteracoes_das_configuracoes();
+  estado_da_modal_salvar_configuracoes("none");
+  sair_das_configuracoes(pagina_que_configuracoes_vai_remover);
+  console.log("não");
+}
+function alteracoes_salvas() {
+  btnSalveconfig.innerHTML = "Salvo";
+  copia_dos_dados_das_configuracoes=JSON.parse(JSON.stringify(dados_das_configuracoes));
+  configuracoes_salvas=true;
+}
+function cancelar_alteracoes_das_configuracoes() {
+  dados_das_configuracoes.nome_user=copia_dos_dados_das_configuracoes.nome_user;
+  dados_das_configuracoes.cor_sistema=copia_dos_dados_das_configuracoes.cor_sistema;
+  dados_das_configuracoes.cor_modo_do_sistema=copia_dos_dados_das_configuracoes.cor_modo_do_sistema;
+  inputfont.value=copia_dos_dados_das_configuracoes.percentagem_da_fonte;
+  dados_das_configuracoes.percentagem_da_fonte=inputfont.value;
+  dados_das_configuracoes.logo=copia_dos_dados_das_configuracoes.logo;
+
+  escolher_tema(dados_das_configuracoes.cor_modo_do_sistema);
+  cor_do_sistema_escolhida(dados_das_configuracoes.cor_sistema);
+  alterar_tamanho_da_fonte();
+  alteracoes_salvas();
+}
 
 //saida de dados
 function cor_menu_pagina_inicial() {
@@ -1529,27 +1622,18 @@ function novo_tamanho_da_fonte(e) {
   informacao_da_parcentagem_da_fonte.innerHTML = `${dados_das_configuracoes.percentagem_da_fonte}px`;
 }
 function alterar_tamanho_da_fonte() {
-  document.documentElement.style.setProperty(
-    "--tamanho-principal-da-fonte",
-    `${dados_das_configuracoes.percentagem_da_fonte}px`
-  );
+  document.documentElement.style.setProperty("--tamanho-principal-da-fonte",`${dados_das_configuracoes.percentagem_da_fonte}px`);
   configuracoes_alteradas();
 }
-function cor_do_sistema_escolhida(texto) {
-  switch (texto) {
+function cor_do_sistema_escolhida(cor) {
+  switch (cor) {
     case "#c935f2":
       document.documentElement.style.setProperty("--cor-main", "#c935f2");
       document.documentElement.style.setProperty("--cor-secund", "#4c1a59");
       document.documentElement.style.setProperty("--cor-de-realce", "#5d35f2");
       document.documentElement.style.setProperty("--cor-para-erros", "#f2355e");
-      document.documentElement.style.setProperty(
-        "--primeira-cor-do-modo-selecao",
-        "#765380c9"
-      );
-      document.documentElement.style.setProperty(
-        "--segunda-cor-do-modo-selecao",
-        "#3535359d"
-      );
+      document.documentElement.style.setProperty("--primeira-cor-do-modo-selecao","#765380c9");
+      document.documentElement.style.setProperty("--segunda-cor-do-modo-selecao","#3535359d");
       dados_das_configuracoes.cor_sistema = "#c935f2";
       cor_menu_configuracoes();
       console.log("feito1");
@@ -1557,19 +1641,10 @@ function cor_do_sistema_escolhida(texto) {
     case "#5d35f2":
       document.documentElement.style.setProperty("--cor-main", "#5d35f2");
       document.documentElement.style.setProperty("--cor-secund", "#201a59");
-      document.documentElement.style.setProperty(
-        "--cor-de-realce",
-        "#120b3fd8"
-      );
+      document.documentElement.style.setProperty("--cor-de-realce","#b148f3");
       document.documentElement.style.setProperty("--cor-para-erros", "#f2355e");
-      document.documentElement.style.setProperty(
-        "--primeira-cor-do-modo-selecao",
-        "#4f4552a6"
-      );
-      document.documentElement.style.setProperty(
-        "--segunda-cor-do-modo-selecao",
-        "#0f0f0fc7"
-      );
+      document.documentElement.style.setProperty("--primeira-cor-do-modo-selecao","#4f4552a6");
+      document.documentElement.style.setProperty("--segunda-cor-do-modo-selecao","#0f0f0fc7");
       dados_das_configuracoes.cor_sistema = "#5d35f2";
       cor_menu_configuracoes();
       console.log("feito2");
@@ -1579,107 +1654,58 @@ function cor_do_sistema_escolhida(texto) {
       break;
   }
 }
-function verificacao_modo_claro_ou_escuro(e) {
-  if (e.classList.contains("escuro")) {
-    dados_das_configuracoes.cor_modo_do_sistema = "escuro";
-    document.documentElement.style.setProperty(
-      "--modo-primeira-cor",
-      "#353535"
-    );
-    document.documentElement.style.setProperty("--modo-segunda-cor", "#7c7c7c");
-    document.documentElement.style.setProperty(
-      "--modo-terceira-cor",
-      "#c0bfbf"
-    );
-    document.documentElement.style.setProperty("--cor-do-texto", "#ffff");
-    document.documentElement.style.setProperty(
-      "--primeira-cor-do-modo-selecao",
-      "#4f4552a6"
-    );
-    document.documentElement.style.setProperty(
-      "--segunda-cor-do-modo-selecao",
-      "#0f0f0fc7"
-    );
-    logo.src = "img/logo/logoapp5.png";
-    api.modo1();
-  } else {
-    dados_das_configuracoes.cor_modo_do_sistema = "#353535";
-    document.documentElement.style.setProperty(
-      "--modo-primeira-cor",
-      "#ffffff"
-    );
-    document.documentElement.style.setProperty("--modo-segunda-cor", "#f0f0f0");
-    document.documentElement.style.setProperty(
-      "--modo-terceira-cor",
-      "#b1b1b1"
-    );
-    document.documentElement.style.setProperty("--cor-do-texto", "#353535");
-    document.documentElement.style.setProperty(
-      "--primeira-cor-do-modo-selecao",
-      "#4f4552a6"
-    );
-    document.documentElement.style.setProperty(
-      "--segunda-cor-do-modo-selecao",
-      "#0f0f0fc7"
-    );
-    logo.src = "img/logo/logoapp.png";
-    api.modo2();
+function escolher_tema(e) {
+  switch (e) {
+    case "escuro":
+      dados_das_configuracoes.cor_modo_do_sistema = "escuro";
+      api.temaEscuro();
+      document.documentElement.style.setProperty("--modo-primeira-cor","#353535");
+      document.documentElement.style.setProperty("--modo-segunda-cor", "#7c7c7c");
+      document.documentElement.style.setProperty("--modo-terceira-cor","#c0bfbf");
+      document.documentElement.style.setProperty("--cor-do-texto", "#ffff");
+      document.documentElement.style.setProperty("--primeira-cor-do-modo-selecao","#4f4552a6");
+      document.documentElement.style.setProperty("--segunda-cor-do-modo-selecao","#0f0f0fc7");
+      dados_das_configuracoes.logo="img/logo/logoapp5.png";
+      logo.src = dados_das_configuracoes.logo;
+      break;
+    case "claro":
+      api.temaClaro();
+      dados_das_configuracoes.cor_modo_do_sistema = "claro";
+      document.documentElement.style.setProperty("--modo-primeira-cor","#ffffff");
+      document.documentElement.style.setProperty("--modo-segunda-cor", "#f0f0f0");
+      document.documentElement.style.setProperty("--modo-terceira-cor","#b1b1b1");
+      document.documentElement.style.setProperty("--cor-do-texto", "#353535");
+      document.documentElement.style.setProperty("--primeira-cor-do-modo-selecao","#4f4552a6");
+      document.documentElement.style.setProperty("--segunda-cor-do-modo-selecao","#0f0f0fc7");
+      dados_das_configuracoes.logo="img/logo/logoapp.png";
+      logo.src = dados_das_configuracoes.logo;
+      break;
+  
+    default:
+      console.log("opção invalida");
+      break;
   }
 }
-
+function estado_da_modal_salvar_configuracoes(texto) {
+  if (texto==="flex") {
+    caixa_modal_salvar_configuracoes.style.display = "flex";
+  } else {
+    caixa_modal_salvar_configuracoes.style.display = "none";
+  }
+}
 function configuracoes_alteradas() {
-  btnSalveconfig.innerHTML = "*Salvar-Alterações";
+  btnSalveconfig.innerHTML = "**Salvar";
   configuracoes_salvas=false;
 }
-function alteracoes_salvas() {
-  btnSalveconfig.innerHTML = "Salvar";
-  configuracoes_salvas=true;
-}
 
-function verificacao_do_salvamento_das_configuracoes(texto) {
-  if (configuracoes_salvas) {
-    sair_das_configuracoes(texto);
-  } else {
-    caixa_modal_salvar_configuracoes.style.display = "flex";
-    pagina_que_configuracoes_vai_remover=texto;
-  }
-}
 
-function sair_das_configuracoes(texto) {
-  switch (texto) {
-    case "paginaincial":
-      remover_elemento_da_tela(WindowMain, secao_direita_config);
-      menu_ativo_pagina_inicial();
-      break;
-    case "ajuda":
-      remover_elemento_da_tela(WindowMain, secao_direita_config);
-    menu_ativo_sobre_app();
-      break;
-    default:
-      break;
-  }
-  
-}
 
-function configuracoes_salvas_sim() {
-  dados_das_configuracoes={
-    nome_user:`${nome_do_gerencidor.value}`,
-    cor_sistema:dados_das_configuracoes.cor_sistema,
-    cor_modo_do_sistema:dados_das_configuracoes.cor_modo_do_sistema,
-    percentagem_da_fonte:inputfont.value
-  };
-  alteracoes_salvas();
-  sair_das_configuracoes(pagina_que_configuracoes_vai_remover);
-  console.log("sim");
-}
 
-function configuracoes_salvas_nao() {
-  nome_do_gerencidor.value=dados_das_configuracoes.nome_user;
-  inputfont.value=dados_das_configuracoes.percentagem_da_fonte;
-  cor_do_sistema_escolhida(dados_das_configuracoes.cor_sistema);
-  verificacao_modo_claro_ou_escuro(btn_cor3);
-  alteracoes_salvas();
-  sair_das_configuracoes(pagina_que_configuracoes_vai_remover);
+function escolher_tema_automaticamente() {
+  api.temaAutomatico();
+  api.respostaTemaAutomatico((event,mensagem)=>{
+    console.log(`tema do app está: ${mensagem}`);
+  });
 }
 
 verificacao_modal_inicial();

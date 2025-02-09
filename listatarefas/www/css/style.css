@@ -17,6 +17,7 @@
     box-sizing: border-box;
     user-select: none;
     font-size: var(--tamanho-principal-da-fonte);
+    font-family: "Montserrat_regular";
     color: var(--cor-do-texto);
 }
 
@@ -73,10 +74,10 @@
     text-align: center;
     outline-color: var(--cor-de-realce);
     font-size: 1rem;
-    color: var(--cor-do-texto);
+    color: #ffff;
 }
 #modalbox input::placeholder{
-    color: var(--cor-do-texto);
+    color: #ffff;
     text-align: center;
     font-family: "Montserrat_medium";
 }
@@ -126,7 +127,7 @@
 }
 #boxmenu{
     background-color: var(--modo-segunda-cor);
-    border-radius: 10%;
+    border-radius: 1rem;
     padding: .5rem;
     margin-bottom: 1.5rem;
     box-shadow: 3px 3px 4px rgba(0, 0, 0, 0.171);
@@ -158,7 +159,7 @@
 }
 #boxfilter{
     background-color: var(--modo-segunda-cor);
-    border-radius: 10%;
+    border-radius: 1rem;
     padding: .8rem;
     height: 100%;
     box-shadow: 3px 3px 4px rgba(0, 0, 0, 0.171);
@@ -226,6 +227,7 @@ janela pagina inicial */
 #boxtitle h1{
     font-weight: 900;
     font-size: 2rem;
+    font-family: "Montserrat_black";
 }
 #boxtitle p{
     display: flex;
@@ -331,9 +333,14 @@ janela pagina inicial */
 }
 .list:hover{
     background-color: var(--cor-secund);
+    color: #ffff;
 }
 .list:hover:active{
     background-color: var(--cor-main);
+}
+.title_list{
+    color: #ffff;
+    font-family: "Montserrat_bold";
 }
 .discelecionado{
     background-color: var(--primeira-cor-do-modo-selecao);
@@ -341,12 +348,12 @@ janela pagina inicial */
 }
 .discelecionado:hover{
     background-color: var(--cor-main);
-    color: var(--cor-do-texto);
+    color: #ffff;
 }
 .selecionado{
     border: var(--cor-de-realce) solid 3px;
     background-color: var(--cor-main);
-    color: var(--cor-secund);
+    color: #ffff;
 }
 
 
@@ -388,31 +395,51 @@ janela pagina inicial */
 #boxaparenciacor{
     margin: .5rem;
     display: flex;
-    align-items: center;
+    gap: 30%;
+}
+.boxbtnCor{
+    display: flex;
+    flex-direction: column;
+    width: 30%;
 }
 .btnCorlors{
-    margin: .5rem;
-    width: 5%;
-    height: 35px;
+    margin: .2rem;
+    width: 70%;
+    height: 2rem;
     border: none;
     outline: none;
     cursor: pointer;
-    transition: .5s ease;
 }
-.btnCorlors:hover{
-    border: rgba(0, 0, 0, 0.726) solid 1px;
+.btnCorlors:hover:active{
+    border: rgba(0, 0, 0, 0.726) solid 1.5px;
 }
 #btnCor1{
     background-color: #c935f2;
+    color: var(--cor-do-texto);
 }
 #btnCor2{
     background-color: #5d35f2;
+    color: var(--cor-do-texto);
 }
-.claro{
-    background-color: #353535;
-}
-.escuro{
+#btnCor3{
     background-color: #ffff;
+    border: #353535 solid 1.5px;
+    color: #353535;
+}
+#btnCor3:hover:active{
+    border: #353535 solid 2px;
+}
+#btnCor4{
+    background-color: #353535;
+    color: #ffff;
+    border: #ffff solid 1px;
+}
+#btnCor4:hover:active{
+    border: #ffff solid 2px;
+}
+#btnCor5{
+    background-color: #f0f0f0;
+    color: #353535;
 }
 #boxfont{
     gap: 1rem;
@@ -436,17 +463,13 @@ janela pagina inicial */
 .nome_do_gerencidor{
     margin-left: .5rem;
     font-size: 1rem;
-    outline: var(--cor-de-realce);
+    outline-color: var(--cor-de-realce);
     border: none;
     width: 20%;
     padding: .8rem;
     font-family: "Montserrat_medium";
     background-color: var(--cor-main);
     border-radius: .7rem;
-    -webkit-border-radius: .7rem;
-    -moz-border-radius: .7rem;
-    -ms-border-radius: .7rem;
-    -o-border-radius: .7rem;
 }
 #boxstorage{
     padding: 1rem;
@@ -457,7 +480,7 @@ janela pagina inicial */
 #boxstorage button{
     color: var(--modo-primeira-cor);
     background-color: var(--cor-do-texto);
-    width: 20%;
+    width: 40%;
     padding: .6rem;
     border: none;
     border-radius: 2rem;
@@ -476,12 +499,12 @@ janela pagina inicial */
     display: flex;
     justify-content: end;
     align-items: end;
-    height: 40%;
+    height: 5%;
 }
 #btnsconfig button{
     margin-left: 1rem;
-    width: 15%;
-    height: 20%;
+    width: 30%;
+    height: 100%;
     border-radius: 3rem;
     border: none;
     outline: none;
@@ -651,10 +674,11 @@ modal type list */
     margin-right: 1rem;
     font-size: 1rem;
     font-family: "Montserrat_medium";
+    color: #ffff;
     
 }
 #inputlistnormal::placeholder{
-    color: var(--cor-do-texto);
+    color: #ffff;
 }
 #btn_delet_tasks{
     margin-right: 1.5rem;
@@ -710,6 +734,7 @@ modal type list */
     font-weight: 900;
     margin-left: .2rem;
     cursor: text;
+    font-family: "Montserrat_black";
 }
 .editar_campo{
     outline: none;
@@ -885,7 +910,7 @@ mensagens */
 }
 .modal_mensagens{
     background-color: var(--cor-main);
-    color: var(--cor-do-texto);
+    color:#ffff;
     padding: 1.4rem;
     border-radius: 3rem;
     width: 70%;
@@ -894,6 +919,11 @@ mensagens */
     display: flex;
     flex-direction: column;
     justify-content: center;
+    font-family: "Montserrat_bold";
+}
+.mensagens{
+    font-family: "Montserrat_bold";
+    color: var(--cor-do-texto);
 }
 
 /* estilização da modal 
