@@ -567,7 +567,7 @@ function configuracoes() {
     console.log("system");
     
   });
-  /* boxbtnCor2.appendChild(btn_cor5); */
+  boxbtnCor2.appendChild(btn_cor5);
 
   //caixa de configurações de tamanho da font
   boxfont.setAttribute("id", "boxfont");
@@ -1704,6 +1704,7 @@ function configuracoes_alteradas() {
 function escolher_tema_automaticamente() {
   api.temaAutomatico();
   api.respostaTemaAutomatico((event,mensagem)=>{
+    escolher_tema(mensagem);
     console.log(`tema do app está: ${mensagem}`);
   });
 }
