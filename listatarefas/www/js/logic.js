@@ -1353,15 +1353,9 @@ function copiar_links_pagina_sobre() {
   todoslinks.forEach((item) => {
     item.addEventListener("click", async (e) => {
       e.preventDefault();
-      link = e.target.href;
-      try {
-        await navigator.clipboard.writeText(link);
-        ativar_modalMensagem("link copiado");
-        console.log("link copiado");
-      } catch (erro) {
-        ativar_modalMensagem("erro nos links");
-        console.log("erro nos links");
-      }
+      console.log(e.target.href);
+      api.abrirLinkEmNavegadorExterno(e.target.href);
+      
     });
   });
 }

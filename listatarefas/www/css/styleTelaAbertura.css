@@ -1,0 +1,47 @@
+:root{
+    --cor-do-texto: #353535;
+    --cor-main: #c935f2;
+    --modo-primeira-cor: #ffffff;
+    --tamanho-principal-da-fonte: 17px;
+}
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    user-select: none;
+    font-family: "Montserrat_regular";
+    color: var(--cor-do-texto);
+}
+#main_tela_de_abertura {
+    width: 100vw;
+    height: 100vh;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+}
+#caixa_esquerdo_tela_abertura {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 1rem;
+    gap: 1.5rem;
+}
+#logo_tela_abertura {
+    width: 90%;
+}
+#caixa_direita_tela_abertura {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    background-color: #c935f2;
+    padding: 1rem;
+}
+#titulo_direita_tela_abertura {
+    font-size: 2rem;
+    font-family: "Montserrat_bold";
+}
+#info_direita_tela_abertura {
+    text-align: center;
+}
