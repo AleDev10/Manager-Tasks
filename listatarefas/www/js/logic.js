@@ -31,10 +31,11 @@ var configuracoes_salvas=true;
 var pagina_que_configuracoes_vai_remover="";
 var dados_das_configuracoes={
   nome_user:"",
-  cor_sistema:"#5d35f2",
+  cor_sistema:"#c935f2",
   cor_modo_do_sistema:"escuro",
   percentagem_da_fonte:10,
-  logo:"img/logo/logoapp.png"
+  logo:"img/logo/logoapp.png",
+  logo2:"img/logo/logoapp2.png"
 };
 var copia_dos_dados_das_configuracoes={};
 
@@ -270,7 +271,7 @@ function modal_inicio() {
   modalBox.appendChild(box1);
   box1.innerHTML = `
    <div class="boximg">
-     <img src="img/logo/logoapp.png" alt="logo">
+     <img id="logomodaliniciar" src="${dados_das_configuracoes.logo2}" alt="logo">
    </div> 
    <div class="boxinfo">
      <p>Seja Bem Vindo,<br>o <b>Manager Tasks</b> é um<br>gerenciador de tarefas simples e<br>fácil de usar, projetado para te ajudar na tua<br>produtividade, tenha um bom proveito e<br> muito obrigado por usar o nosso app.</p>
@@ -1629,6 +1630,8 @@ function cor_do_sistema_escolhida(cor) {
       document.documentElement.style.setProperty("--primeira-cor-do-modo-selecao","#765380c9");
       document.documentElement.style.setProperty("--segunda-cor-do-modo-selecao","#3535359d");
       dados_das_configuracoes.cor_sistema = "#c935f2";
+      dados_das_configuracoes.logo2=(dados_das_configuracoes.cor_modo_do_sistema==="escuro")?"img/logo/logoapp4.png":"img/logo/logoapp2.png";
+      document.getElementById("logomodaliniciar").src=dados_das_configuracoes.logo2;
       cor_menu_configuracoes();
       console.log("feito1");
       break;
@@ -1640,6 +1643,8 @@ function cor_do_sistema_escolhida(cor) {
       document.documentElement.style.setProperty("--primeira-cor-do-modo-selecao","#4f4552a6");
       document.documentElement.style.setProperty("--segunda-cor-do-modo-selecao","#0f0f0fc7");
       dados_das_configuracoes.cor_sistema = "#5d35f2";
+      dados_das_configuracoes.logo2=(dados_das_configuracoes.cor_modo_do_sistema==="escuro")?"img/logo/logoapp4-1.png":"img/logo/logoapp2-1.png";
+      document.getElementById("logomodaliniciar").src=dados_das_configuracoes.logo2;
       cor_menu_configuracoes();
       console.log("feito2");
       break;
@@ -1702,5 +1707,6 @@ function escolher_tema_automaticamente() {
     console.log(`tema do app está: ${mensagem}`);
   });
 }
+
 
 verificacao_modal_inicial();

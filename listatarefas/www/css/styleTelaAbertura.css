@@ -10,6 +10,7 @@
     box-sizing: border-box;
     user-select: none;
     font-family: "Montserrat_regular";
+    font-size: var(--tamanho-principal-da-fonte);
     color: var(--cor-do-texto);
 }
 #main_tela_de_abertura {
@@ -25,6 +26,7 @@
     align-items: center;
     padding: 1rem;
     gap: 1.5rem;
+    background-color: var(--modo-primeira-cor);
 }
 #logo_tela_abertura {
     width: 90%;
@@ -35,7 +37,7 @@
     align-items: center;
     justify-content: center;
     gap: 1rem;
-    background-color: #c935f2;
+    background-color: var(--cor-main);
     padding: 1rem;
 }
 #titulo_direita_tela_abertura {
