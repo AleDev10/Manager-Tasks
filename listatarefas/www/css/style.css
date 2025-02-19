@@ -17,7 +17,7 @@
     box-sizing: border-box;
     user-select: none;
     font-size: var(--tamanho-principal-da-fonte);
-    font-family: "Montserrat_regular";
+    font-family: "Montserrat_medium";
     color: var(--cor-do-texto);
 }
 

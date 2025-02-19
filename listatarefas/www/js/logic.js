@@ -33,7 +33,7 @@ var dados_das_configuracoes={
   nome_user:"",
   cor_sistema:"#c935f2",
   cor_modo_do_sistema:"escuro",
-  percentagem_da_fonte:10,
+  percentagem_da_fonte:13,
   logo:"img/logo/logoapp.png",
   logo2:"img/logo/logoapp2.png"
 };
@@ -560,15 +560,14 @@ function configuracoes() {
     
   });
   boxbtnCor2.appendChild(btn_cor4);
-  btn_cor5.setAttribute("class", "btnCorlors");
+  /* btn_cor5.setAttribute("class", "btnCorlors");
   btn_cor5.setAttribute("id", "btnCor5");
   btn_cor5.innerHTML="Sistema";
   btn_cor5.addEventListener("click", () => {
-    escolher_tema_automaticamente();
     console.log("system");
     
   });
-  boxbtnCor2.appendChild(btn_cor5);
+  boxbtnCor2.appendChild(btn_cor5); */
 
   //caixa de configurações de tamanho da font
   boxfont.setAttribute("id", "boxfont");
@@ -668,7 +667,7 @@ function sobre_app() {
    </div>
 
  `;
-  copiar_links_pagina_sobre();
+  abrir_links_da_pagina_sobre();
 }
 //janela lista normal
 function lista_normal() {
@@ -1348,15 +1347,13 @@ function desativar_modo_selecao() {
   ativar_btn_deletar_selecao("Cancelar-seleção");
   ativar_contador_de_listas_selecionadas("Cancelar-seleção");
 }
-function copiar_links_pagina_sobre() {
+function abrir_links_da_pagina_sobre() {
   let todoslinks = document.querySelectorAll(".links");
-  let link;
   todoslinks.forEach((item) => {
     item.addEventListener("click", async (e) => {
       e.preventDefault();
-      console.log(e.target.href);
+      ativar_modalMensagem("Abrindo link no navegador");
       api.abrirLinkEmNavegadorExterno(e.target.href);
-      
     });
   });
 }
@@ -1402,10 +1399,12 @@ function alteracoes_salvas() {
 }
 function cancelar_alteracoes_das_configuracoes() {
   dados_das_configuracoes.nome_user=copia_dos_dados_das_configuracoes.nome_user;
+  nome_do_gerencidor.value = dados_das_configuracoes.nome_user;
   dados_das_configuracoes.cor_sistema=copia_dos_dados_das_configuracoes.cor_sistema;
   dados_das_configuracoes.cor_modo_do_sistema=copia_dos_dados_das_configuracoes.cor_modo_do_sistema;
   inputfont.value=copia_dos_dados_das_configuracoes.percentagem_da_fonte;
   dados_das_configuracoes.percentagem_da_fonte=inputfont.value;
+  informacao_da_parcentagem_da_fonte.innerHTML = `${inputfont.value}px`;
   dados_das_configuracoes.logo=copia_dos_dados_das_configuracoes.logo;
 
   escolher_tema(dados_das_configuracoes.cor_modo_do_sistema);
@@ -1697,16 +1696,6 @@ function configuracoes_alteradas() {
   configuracoes_salvas=false;
 }
 
-
-
-
-function escolher_tema_automaticamente() {
-  api.temaAutomatico();
-  api.respostaTemaAutomatico((event,mensagem)=>{
-    escolher_tema(mensagem);
-    console.log(`tema do app está: ${mensagem}`);
-  });
-}
 
 
 verificacao_modal_inicial();
