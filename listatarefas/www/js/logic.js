@@ -479,6 +479,8 @@ function pagina_inicial() {
   //entrada da caixa de pesquisa
   input_search.setAttribute("id", "input_search");
   input_search.setAttribute("placeholder", "Pesquisa");
+  input_search.value="";
+  input_search.addEventListener("input",(e)=>{obter_valor_a_ser_pesquisado(e.target.value)});
   boxsearch.appendChild(input_search);
   //icon da barra de pesquisa
   icon_search.setAttribute("src", "img/icons/search.png");
@@ -1458,7 +1460,7 @@ function apresentar_listas_na_pagina_inicial() {
   listas.forEach((e, i) => {
     display_list.innerHTML =
       `
-     <div id="${i}lista" chave=${i} class="list">
+     <div id="${i}lista" class="list">
        <h4 class="title_list">${e.titulo_lista}</h4>
      </div>
      ` + display_list.innerHTML;
@@ -1599,6 +1601,7 @@ function ativar_btn_deletar_selecao(ele) {
 }
 function ativar_contador_de_listas_selecionadas(ele) {
   if (ele == "Selecionar") {
+    contador_de_listas_selecionadas=0;
     info_count_list.innerHTML = `${contador_de_listas_selecionadas} listas selecionadas`;
   } else {
     info_count_list.innerHTML = `${contador_listas} listas`;
@@ -1697,5 +1700,28 @@ function configuracoes_alteradas() {
 }
 
 
+function obter_valor_a_ser_pesquisado(texto) {
+  console.log(texto+" pesquisado");
+  pesquisar_lista(texto);
+}
+function pesquisar_lista(texto) {
+  let listas_apresentadas = document.querySelectorAll('.list');
+  listas_apresentadas.forEach((lista,index)=>{
+    if (lista.children[0].textContent.toLowerCase().trim().includes(texto.toLowerCase().trim())) {
+      lista.style.display="flex";
+    }else if(texto==""){
+      lista.style.display="flex";
+    }else{
+      lista.style.display="none";
+    }
+  });
+  /* listas.forEach((lista,index)=>{
+    if (lista.titulo_lista.toLowerCase().includes(texto.toLowerCase())) {
+      console.log(texto+" existe no titulo "+ lista.titulo_lista);
+      return;
+    }
+  }); */
+
+}
 
 verificacao_modal_inicial();

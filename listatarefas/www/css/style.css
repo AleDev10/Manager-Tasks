@@ -923,7 +923,7 @@ mensagens */
 }
 .mensagens{
     font-family: "Montserrat_bold";
-    color: var(--cor-do-texto);
+    color: #ffff;
 }
 
 /* estilização da modal 
