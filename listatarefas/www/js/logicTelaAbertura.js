@@ -76,6 +76,9 @@ function tema_da_tela_de_abertura(tema) {
   }
 }
 
-tela_de_abertura();
-tema_da_tela_de_abertura(dados_das_configuracoes.cor_modo_do_sistema);
-cor_da_tela_de_abertura(dados_das_configuracoes.cor_sistema);
+
+window.onload=()=>{
+  tela_de_abertura();
+  tema_da_tela_de_abertura(dados_das_configuracoes.cor_modo_do_sistema);
+  cor_da_tela_de_abertura(dados_das_configuracoes.cor_sistema);
+};

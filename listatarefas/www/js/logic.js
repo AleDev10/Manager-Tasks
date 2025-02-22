@@ -27,17 +27,17 @@ var titulo_iguais = 0;
 var modo_da_lista = "";
 var acesso_a_descricao = true;
 var contador_de_listas_selecionadas = 0;
-var configuracoes_salvas=true;
-var pagina_que_configuracoes_vai_remover="";
-var dados_das_configuracoes={
-  nome_user:"",
-  cor_sistema:"#c935f2",
-  cor_modo_do_sistema:"escuro",
-  percentagem_da_fonte:13,
-  logo:"img/logo/logoapp.png",
-  logo2:"img/logo/logoapp2.png"
+var configuracoes_salvas = true;
+var pagina_que_configuracoes_vai_remover = "";
+var dados_das_configuracoes = {
+  nome_user: "",
+  cor_sistema: "#c935f2",
+  cor_modo_do_sistema: "escuro",
+  percentagem_da_fonte: 13,
+  logo: "img/logo/logoapp.png",
+  logo2: "img/logo/logoapp2.png",
 };
-var copia_dos_dados_das_configuracoes={};
+var copia_dos_dados_das_configuracoes = {};
 
 /*declaração dos elementos
  de maneira global*/
@@ -55,10 +55,11 @@ const logo_settings = document.createElement("img");
 const logo_help = document.createElement("img");
 const boxfilter = document.createElement("div");
 const filter = document.createElement("div");
-const filter_list = document.createElement("select");
-const item_filter_list1 = document.createElement("option");
-const item_filter_list2 = document.createElement("option");
-const item_filter_list3 = document.createElement("option");
+const filter_list = document.createElement("span");
+const filter_list_opcoes = document.createElement("div");
+const opcao_filter_list1 = document.createElement("span");
+const opcao_filter_list2 = document.createElement("span");
+const opcao_filter_list3 = document.createElement("span");
 const icon_list_filter = document.createElement("img");
 const display_filter = document.createElement("div");
 const display_filter_item1 = document.createElement("button");
@@ -194,7 +195,7 @@ function janela_principal() {
 
   //logo aria esquerda
   logo.setAttribute("class", "logoPq");
-  logo.src=dados_das_configuracoes.logo;
+  logo.src = dados_das_configuracoes.logo;
   logo.addEventListener("click", abrir_pagina_inicial);
   secao_esquerda.appendChild(logo);
 
@@ -232,33 +233,51 @@ function janela_principal() {
   //caixa do filtro
   boxfilter.setAttribute("id", "boxfilter");
   secao_esquerda.appendChild(boxfilter);
+
   //barra do filtro
   filter.setAttribute("id", "filter");
+  filter.addEventListener("click", (e) => {
+    ativar_ou_desativar_opcoes1("flex");
+    e.stopPropagation();
+    sair_do_filtro_de_opcoes();
+  });
   boxfilter.appendChild(filter);
   //filtro
   filter_list.setAttribute("id", "filterlist");
+  filter_list.innerHTML = "Todas";
   filter.appendChild(filter_list);
-  //itens da lista de filtro
-  item_filter_list1.innerHTML = "Todos";
-  filter_list.appendChild(item_filter_list1);
-  item_filter_list2.innerHTML = "To do list";
-  filter_list.appendChild(item_filter_list2);
-  item_filter_list3.innerHTML = "Projetos";
-  filter_list.appendChild(item_filter_list3);
   //icone lista de filtros
   icon_list_filter.setAttribute("src", "img/icons/filterlist.png");
   filter.appendChild(icon_list_filter);
 
+  //modal de opções do filtro
+  filter_list_opcoes.setAttribute("id", "filter_list_opcoes");
+  filter_list_opcoes.style.display = "none";
+  boxfilter.appendChild(filter_list_opcoes);
+  //poções
+  opcao_filter_list1.setAttribute("class", "opcao_filter_list");
+  opcao_filter_list1.addEventListener("click", () => {
+    obter_opcao_selecionada("Todas");
+  });
+  opcao_filter_list1.innerHTML = "Todas";
+  filter_list_opcoes.appendChild(opcao_filter_list1);
+  opcao_filter_list2.setAttribute("class", "opcao_filter_list");
+  opcao_filter_list2.addEventListener("click", () => {
+    obter_opcao_selecionada("Listas");
+  });
+  opcao_filter_list2.innerHTML = "Listas de tarefas";
+  filter_list_opcoes.appendChild(opcao_filter_list2);
+  opcao_filter_list3.setAttribute("class", "opcao_filter_list");
+  opcao_filter_list3.addEventListener("click", () => {
+    obter_opcao_selecionada("Projetos");
+  });
+  opcao_filter_list3.innerHTML = "Projetos";
+  filter_list_opcoes.appendChild(opcao_filter_list3);
+
   //aria de apresentação do resultado do filtro
   display_filter.setAttribute("id", "displayfilter");
   boxfilter.appendChild(display_filter);
-  //itens do display filter
-  display_filter_item1.innerHTML = "começo";
-  display_filter_item1.setAttribute("class", "display_filter_itens");
-  display_filter.appendChild(display_filter_item1);
-  display_filter_item2.innerHTML = "mercado";
-  display_filter_item2.setAttribute("class", "display_filter_itens");
-  display_filter.appendChild(display_filter_item2);
+  obter_opcao_selecionada("Todas");
 }
 //janela modal inicial
 function modal_inicio() {
@@ -289,7 +308,9 @@ function modal_inicio() {
   });
 
   //evento do botão da modal
-  document.getElementById("btn_avancar").addEventListener("click", verificacao_modal_inicial_com_botao);
+  document
+    .getElementById("btn_avancar")
+    .addEventListener("click", verificacao_modal_inicial_com_botao);
 }
 //janela modal tipo de lista
 function modal_tipo_lista() {
@@ -406,7 +427,10 @@ function modalSalvarConfiguracoes() {
     "Deseja salvar as alterações feita nas configurações.";
   modal_salvar_configuracoes.appendChild(info_modal_salvar_configuracoes);
 
-  caixa_btns_modal_salvar_configuracoes.setAttribute("class","caixa_btns_modal_salvar_configuracoes");
+  caixa_btns_modal_salvar_configuracoes.setAttribute(
+    "class",
+    "caixa_btns_modal_salvar_configuracoes"
+  );
   modal_salvar_configuracoes.appendChild(caixa_btns_modal_salvar_configuracoes);
 
   btn1_modal_salvar_configuracoes.setAttribute(
@@ -414,16 +438,26 @@ function modalSalvarConfiguracoes() {
     "btn1_modal_salvar_configuracoes"
   );
   btn1_modal_salvar_configuracoes.innerHTML = "sim";
-  btn1_modal_salvar_configuracoes.addEventListener("click",modal_configuracoes_btn_sim);
-  caixa_btns_modal_salvar_configuracoes.appendChild(btn1_modal_salvar_configuracoes);
+  btn1_modal_salvar_configuracoes.addEventListener(
+    "click",
+    modal_configuracoes_btn_sim
+  );
+  caixa_btns_modal_salvar_configuracoes.appendChild(
+    btn1_modal_salvar_configuracoes
+  );
 
   btn2_modal_salvar_configuracoes.setAttribute(
     "class",
     "btn2_modal_salvar_configuracoes"
   );
   btn2_modal_salvar_configuracoes.innerHTML = "não";
-  btn2_modal_salvar_configuracoes.addEventListener("click",modal_configuracoes_btn_nao);
-  caixa_btns_modal_salvar_configuracoes.appendChild(btn2_modal_salvar_configuracoes);
+  btn2_modal_salvar_configuracoes.addEventListener(
+    "click",
+    modal_configuracoes_btn_nao
+  );
+  caixa_btns_modal_salvar_configuracoes.appendChild(
+    btn2_modal_salvar_configuracoes
+  );
 }
 //janela pagina inicial
 function pagina_inicial() {
@@ -479,8 +513,10 @@ function pagina_inicial() {
   //entrada da caixa de pesquisa
   input_search.setAttribute("id", "input_search");
   input_search.setAttribute("placeholder", "Pesquisa");
-  input_search.value="";
-  input_search.addEventListener("input",(e)=>{obter_valor_a_ser_pesquisado(e.target.value)});
+  input_search.value = "";
+  input_search.addEventListener("input", (e) => {
+    obter_valor_a_ser_pesquisado(e.target.value);
+  });
   boxsearch.appendChild(input_search);
   //icon da barra de pesquisa
   icon_search.setAttribute("src", "img/icons/search.png");
@@ -518,13 +554,13 @@ function configuracoes() {
   boxaparenciarCor.setAttribute("id", "boxaparenciacor");
   boxaparencia.appendChild(boxaparenciarCor);
   //boxbtn1
-  boxbtnCor1.setAttribute("class","boxbtnCor");
+  boxbtnCor1.setAttribute("class", "boxbtnCor");
   boxbtnCor1.innerHTML = "<b>Mudar cor:</b>";
   boxaparenciarCor.appendChild(boxbtnCor1);
   //botões das cores
   btn_cor1.setAttribute("class", "btnCorlors");
   btn_cor1.setAttribute("id", "btnCor1");
-  btn_cor1.innerHTML="Violeta";
+  btn_cor1.innerHTML = "Violeta";
   btn_cor1.addEventListener("click", () => {
     cor_do_sistema_escolhida("#c935f2");
     configuracoes_alteradas();
@@ -532,7 +568,7 @@ function configuracoes() {
   boxbtnCor1.appendChild(btn_cor1);
   btn_cor2.setAttribute("class", "btnCorlors");
   btn_cor2.setAttribute("id", "btnCor2");
-  btn_cor2.innerHTML="Azul";
+  btn_cor2.innerHTML = "Azul";
   btn_cor2.addEventListener("click", () => {
     cor_do_sistema_escolhida("#5d35f2");
     configuracoes_alteradas();
@@ -540,12 +576,12 @@ function configuracoes() {
   boxbtnCor1.appendChild(btn_cor2);
 
   //boxbtn2
-  boxbtnCor2.setAttribute("class","boxbtnCor");
+  boxbtnCor2.setAttribute("class", "boxbtnCor");
   boxbtnCor2.innerHTML = "<b>Mudar tema:</b>";
   boxaparenciarCor.appendChild(boxbtnCor2);
   btn_cor3.setAttribute("class", "btnCorlors");
   btn_cor3.setAttribute("id", "btnCor3");
-  btn_cor3.innerHTML="Claro";
+  btn_cor3.innerHTML = "Claro";
   btn_cor3.addEventListener("click", () => {
     escolher_tema("claro");
     console.log("claro");
@@ -554,12 +590,11 @@ function configuracoes() {
   boxbtnCor2.appendChild(btn_cor3);
   btn_cor4.setAttribute("class", "btnCorlors");
   btn_cor4.setAttribute("id", "btnCor4");
-  btn_cor4.innerHTML="Escuro";
+  btn_cor4.innerHTML = "Escuro";
   btn_cor4.addEventListener("click", () => {
     escolher_tema("escuro");
     console.log("escuro");
     configuracoes_alteradas();
-    
   });
   boxbtnCor2.appendChild(btn_cor4);
   /* btn_cor5.setAttribute("class", "btnCorlors");
@@ -580,7 +615,7 @@ function configuracoes() {
   inputfont.setAttribute("type", "range");
   inputfont.setAttribute("min", "10");
   inputfont.setAttribute("max", "16");
-  inputfont.value=dados_das_configuracoes.percentagem_da_fonte;
+  inputfont.value = dados_das_configuracoes.percentagem_da_fonte;
   inputfont.addEventListener("input", novo_tamanho_da_fonte);
   inputfont.addEventListener("change", alterar_tamanho_da_fonte);
   boxfont.appendChild(inputfont);
@@ -592,9 +627,9 @@ function configuracoes() {
   boxaparencia.appendChild(gerenciador);
   nome_do_gerencidor.setAttribute("class", "nome_do_gerencidor");
   nome_do_gerencidor.value = dados_das_configuracoes.nome_user;
-  nome_do_gerencidor.addEventListener("input",()=>{
+  nome_do_gerencidor.addEventListener("input", () => {
     configuracoes_alteradas();
-  })
+  });
   gerenciador.appendChild(nome_do_gerencidor);
 
   //caixa de configurações armazenamento
@@ -612,10 +647,13 @@ function configuracoes() {
   BoxConfig.appendChild(btnsConfig);
   //botões
   btnSalveconfig.innerHTML = "Salvo";
-  btnSalveconfig.addEventListener("click",salvar_configuracoes);
+  btnSalveconfig.addEventListener("click", salvar_configuracoes);
   btnsConfig.appendChild(btnSalveconfig);
   btnCancelconfig.innerHTML = "Cancelar";
-  btnCancelconfig.addEventListener("click",cancelar_alteracoes_das_configuracoes)
+  btnCancelconfig.addEventListener(
+    "click",
+    cancelar_alteracoes_das_configuracoes
+  );
   btnsConfig.appendChild(btnCancelconfig);
 }
 //janela sobre app
@@ -756,7 +794,7 @@ function lista_normal() {
     infolista("alterada");
   });
   //itens da categorias
-  caterianormal1.setAttribute("value", "Categorias");
+  caterianormal1.setAttribute("value", "Todas_listas");
   caterianormal1.innerHTML = "Categorias";
   seletor_categorias_normal.appendChild(caterianormal1);
   caterianormal2.setAttribute("value", "Lista_de_tarefas");
@@ -832,6 +870,7 @@ function salvar_lista() {
   console.log(`lista numero ${lista_aberta} salva.`);
   console.log(listas);
   deixar_entrada_normal();
+  verificar_filtro_selecionado();
   infolista("salvo");
 }
 function evento_de_foco_da_descricao(e, i) {
@@ -846,12 +885,12 @@ function evento_de_foco_da_descricao(e, i) {
   apresentar_tarefas();
 }
 function salvar_configuracoes() {
-  dados_das_configuracoes={
-    nome_user:`${nome_do_gerencidor.value}`,
-    cor_sistema:dados_das_configuracoes.cor_sistema,
-    cor_modo_do_sistema:dados_das_configuracoes.cor_modo_do_sistema,
-    percentagem_da_fonte:inputfont.value,
-    logo:dados_das_configuracoes.logo
+  dados_das_configuracoes = {
+    nome_user: `${nome_do_gerencidor.value}`,
+    cor_sistema: dados_das_configuracoes.cor_sistema,
+    cor_modo_do_sistema: dados_das_configuracoes.cor_modo_do_sistema,
+    percentagem_da_fonte: inputfont.value,
+    logo: dados_das_configuracoes.logo,
   };
   alteracoes_salvas();
 }
@@ -911,7 +950,7 @@ function abrir_sobre_app() {
     menu_ativo_sobre_app();
   }
   if (menu_activo == "configuracao") {
-    verificacao_do_salvamento_das_configuracoes("ajuda")
+    verificacao_do_salvamento_das_configuracoes("ajuda");
   }
   if (menu_activo == "lista_normal") {
     verificar_da_Saida_da_lista("ajuda");
@@ -953,7 +992,8 @@ function verificacao_modal_inicial_com_botao() {
   if (nome == "") {
     erro_do_input_da_modal_inicial();
   } else {
-    dados_das_configuracoes.nome_user = nome.charAt(0).toUpperCase() + nome.slice(1).toLowerCase();
+    dados_das_configuracoes.nome_user =
+      nome.charAt(0).toUpperCase() + nome.slice(1).toLowerCase();
     ativar = true;
     modalBox.style.display = "none";
     janela_principal();
@@ -1364,7 +1404,7 @@ function verificacao_do_salvamento_das_configuracoes(texto) {
     sair_das_configuracoes(texto);
   } else {
     estado_da_modal_salvar_configuracoes("flex");
-    pagina_que_configuracoes_vai_remover=texto;
+    pagina_que_configuracoes_vai_remover = texto;
   }
 }
 function sair_das_configuracoes(texto) {
@@ -1380,7 +1420,6 @@ function sair_das_configuracoes(texto) {
     default:
       break;
   }
-  
 }
 function modal_configuracoes_btn_sim() {
   salvar_configuracoes();
@@ -1396,18 +1435,23 @@ function modal_configuracoes_btn_nao() {
 }
 function alteracoes_salvas() {
   btnSalveconfig.innerHTML = "Salvo";
-  copia_dos_dados_das_configuracoes=JSON.parse(JSON.stringify(dados_das_configuracoes));
-  configuracoes_salvas=true;
+  copia_dos_dados_das_configuracoes = JSON.parse(
+    JSON.stringify(dados_das_configuracoes)
+  );
+  configuracoes_salvas = true;
 }
 function cancelar_alteracoes_das_configuracoes() {
-  dados_das_configuracoes.nome_user=copia_dos_dados_das_configuracoes.nome_user;
+  dados_das_configuracoes.nome_user =
+    copia_dos_dados_das_configuracoes.nome_user;
   nome_do_gerencidor.value = dados_das_configuracoes.nome_user;
-  dados_das_configuracoes.cor_sistema=copia_dos_dados_das_configuracoes.cor_sistema;
-  dados_das_configuracoes.cor_modo_do_sistema=copia_dos_dados_das_configuracoes.cor_modo_do_sistema;
-  inputfont.value=copia_dos_dados_das_configuracoes.percentagem_da_fonte;
-  dados_das_configuracoes.percentagem_da_fonte=inputfont.value;
+  dados_das_configuracoes.cor_sistema =
+    copia_dos_dados_das_configuracoes.cor_sistema;
+  dados_das_configuracoes.cor_modo_do_sistema =
+    copia_dos_dados_das_configuracoes.cor_modo_do_sistema;
+  inputfont.value = copia_dos_dados_das_configuracoes.percentagem_da_fonte;
+  dados_das_configuracoes.percentagem_da_fonte = inputfont.value;
   informacao_da_parcentagem_da_fonte.innerHTML = `${inputfont.value}px`;
-  dados_das_configuracoes.logo=copia_dos_dados_das_configuracoes.logo;
+  dados_das_configuracoes.logo = copia_dos_dados_das_configuracoes.logo;
 
   escolher_tema(dados_das_configuracoes.cor_modo_do_sistema);
   cor_do_sistema_escolhida(dados_das_configuracoes.cor_sistema);
@@ -1418,17 +1462,21 @@ function obter_valor_a_ser_pesquisado(texto) {
   pesquisar_lista(texto);
 }
 function pesquisar_lista(texto) {
-  let listas_apresentadas = document.querySelectorAll('.list');
-  listas_apresentadas.forEach((lista,index)=>{
-    if (lista.children[0].textContent.toLowerCase().trim().includes(texto.toLowerCase().trim())) {
-      actulizar_display_das_listas(lista,"flex");
-    }else if(texto==""){
-      actulizar_display_das_listas(lista,"flex");
-    }else{
-      actulizar_display_das_listas(lista,"none");
+  let listas_apresentadas = document.querySelectorAll(".list");
+  listas_apresentadas.forEach((lista, index) => {
+    if (
+      lista.children[0].textContent
+        .toLowerCase()
+        .trim()
+        .includes(texto.toLowerCase().trim())
+    ) {
+      actulizar_display_das_listas(lista, "flex");
+    } else if (texto == "") {
+      actulizar_display_das_listas(lista, "flex");
+    } else {
+      actulizar_display_das_listas(lista, "none");
     }
   });
-
 }
 
 //saida de dados
@@ -1508,6 +1556,7 @@ function evento_de_troca_de_elemento_do_titulo() {
   editar.value = title_task_normal.textContent;
   troca_de_elemento(title_task_normal, editar);
   editar.focus();
+  editar.select();
 }
 function deixar_entrada_normal() {
   inputlistnormal.value = "";
@@ -1617,7 +1666,7 @@ function ativar_btn_deletar_selecao(ele) {
 }
 function ativar_contador_de_listas_selecionadas(ele) {
   if (ele == "Selecionar") {
-    contador_de_listas_selecionadas=0;
+    contador_de_listas_selecionadas = 0;
     info_count_list.innerHTML = `${contador_de_listas_selecionadas} listas selecionadas`;
   } else {
     info_count_list.innerHTML = `${contador_listas} listas`;
@@ -1635,7 +1684,10 @@ function novo_tamanho_da_fonte(e) {
   informacao_da_parcentagem_da_fonte.innerHTML = `${dados_das_configuracoes.percentagem_da_fonte}px`;
 }
 function alterar_tamanho_da_fonte() {
-  document.documentElement.style.setProperty("--tamanho-principal-da-fonte",`${dados_das_configuracoes.percentagem_da_fonte}px`);
+  document.documentElement.style.setProperty(
+    "--tamanho-principal-da-fonte",
+    `${dados_das_configuracoes.percentagem_da_fonte}px`
+  );
   configuracoes_alteradas();
 }
 function cor_do_sistema_escolhida(cor) {
@@ -1645,24 +1697,44 @@ function cor_do_sistema_escolhida(cor) {
       document.documentElement.style.setProperty("--cor-secund", "#4c1a59");
       document.documentElement.style.setProperty("--cor-de-realce", "#5d35f2");
       document.documentElement.style.setProperty("--cor-para-erros", "#f2355e");
-      document.documentElement.style.setProperty("--primeira-cor-do-modo-selecao","#765380c9");
-      document.documentElement.style.setProperty("--segunda-cor-do-modo-selecao","#3535359d");
+      document.documentElement.style.setProperty(
+        "--primeira-cor-do-modo-selecao",
+        "#765380c9"
+      );
+      document.documentElement.style.setProperty(
+        "--segunda-cor-do-modo-selecao",
+        "#3535359d"
+      );
       dados_das_configuracoes.cor_sistema = "#c935f2";
-      dados_das_configuracoes.logo2=(dados_das_configuracoes.cor_modo_do_sistema==="escuro")?"img/logo/logoapp4.png":"img/logo/logoapp2.png";
-      document.getElementById("logomodaliniciar").src=dados_das_configuracoes.logo2;
+      dados_das_configuracoes.logo2 =
+        dados_das_configuracoes.cor_modo_do_sistema === "escuro"
+          ? "img/logo/logoapp4.png"
+          : "img/logo/logoapp2.png";
+      document.getElementById("logomodaliniciar").src =
+        dados_das_configuracoes.logo2;
       cor_menu_configuracoes();
       console.log("feito1");
       break;
     case "#5d35f2":
       document.documentElement.style.setProperty("--cor-main", "#5d35f2");
       document.documentElement.style.setProperty("--cor-secund", "#201a59");
-      document.documentElement.style.setProperty("--cor-de-realce","#b148f3");
+      document.documentElement.style.setProperty("--cor-de-realce", "#b148f3");
       document.documentElement.style.setProperty("--cor-para-erros", "#f2355e");
-      document.documentElement.style.setProperty("--primeira-cor-do-modo-selecao","#4f4552a6");
-      document.documentElement.style.setProperty("--segunda-cor-do-modo-selecao","#0f0f0fc7");
+      document.documentElement.style.setProperty(
+        "--primeira-cor-do-modo-selecao",
+        "#4f4552a6"
+      );
+      document.documentElement.style.setProperty(
+        "--segunda-cor-do-modo-selecao",
+        "#0f0f0fc7"
+      );
       dados_das_configuracoes.cor_sistema = "#5d35f2";
-      dados_das_configuracoes.logo2=(dados_das_configuracoes.cor_modo_do_sistema==="escuro")?"img/logo/logoapp4-1.png":"img/logo/logoapp2-1.png";
-      document.getElementById("logomodaliniciar").src=dados_das_configuracoes.logo2;
+      dados_das_configuracoes.logo2 =
+        dados_das_configuracoes.cor_modo_do_sistema === "escuro"
+          ? "img/logo/logoapp4-1.png"
+          : "img/logo/logoapp2-1.png";
+      document.getElementById("logomodaliniciar").src =
+        dados_das_configuracoes.logo2;
       cor_menu_configuracoes();
       console.log("feito2");
       break;
@@ -1676,35 +1748,65 @@ function escolher_tema(e) {
     case "escuro":
       dados_das_configuracoes.cor_modo_do_sistema = "escuro";
       api.temaEscuro();
-      document.documentElement.style.setProperty("--modo-primeira-cor","#353535");
-      document.documentElement.style.setProperty("--modo-segunda-cor", "#7c7c7c");
-      document.documentElement.style.setProperty("--modo-terceira-cor","#c0bfbf");
+      document.documentElement.style.setProperty(
+        "--modo-primeira-cor",
+        "#353535"
+      );
+      document.documentElement.style.setProperty(
+        "--modo-segunda-cor",
+        "#7c7c7c"
+      );
+      document.documentElement.style.setProperty(
+        "--modo-terceira-cor",
+        "#c0bfbf"
+      );
       document.documentElement.style.setProperty("--cor-do-texto", "#ffff");
-      document.documentElement.style.setProperty("--primeira-cor-do-modo-selecao","#4f4552a6");
-      document.documentElement.style.setProperty("--segunda-cor-do-modo-selecao","#0f0f0fc7");
-      dados_das_configuracoes.logo="img/logo/logoapp5.png";
+      document.documentElement.style.setProperty(
+        "--primeira-cor-do-modo-selecao",
+        "#4f4552a6"
+      );
+      document.documentElement.style.setProperty(
+        "--segunda-cor-do-modo-selecao",
+        "#0f0f0fc7"
+      );
+      dados_das_configuracoes.logo = "img/logo/logoapp5.png";
       logo.src = dados_das_configuracoes.logo;
       break;
     case "claro":
       api.temaClaro();
       dados_das_configuracoes.cor_modo_do_sistema = "claro";
-      document.documentElement.style.setProperty("--modo-primeira-cor","#ffffff");
-      document.documentElement.style.setProperty("--modo-segunda-cor", "#f0f0f0");
-      document.documentElement.style.setProperty("--modo-terceira-cor","#b1b1b1");
+      document.documentElement.style.setProperty(
+        "--modo-primeira-cor",
+        "#ffffff"
+      );
+      document.documentElement.style.setProperty(
+        "--modo-segunda-cor",
+        "#f0f0f0"
+      );
+      document.documentElement.style.setProperty(
+        "--modo-terceira-cor",
+        "#b1b1b1"
+      );
       document.documentElement.style.setProperty("--cor-do-texto", "#353535");
-      document.documentElement.style.setProperty("--primeira-cor-do-modo-selecao","#4f4552a6");
-      document.documentElement.style.setProperty("--segunda-cor-do-modo-selecao","#0f0f0fc7");
-      dados_das_configuracoes.logo="img/logo/logoapp.png";
+      document.documentElement.style.setProperty(
+        "--primeira-cor-do-modo-selecao",
+        "#4f4552a6"
+      );
+      document.documentElement.style.setProperty(
+        "--segunda-cor-do-modo-selecao",
+        "#0f0f0fc7"
+      );
+      dados_das_configuracoes.logo = "img/logo/logoapp.png";
       logo.src = dados_das_configuracoes.logo;
       break;
-  
+
     default:
       console.log("opção invalida");
       break;
   }
 }
 function estado_da_modal_salvar_configuracoes(texto) {
-  if (texto==="flex") {
+  if (texto === "flex") {
     caixa_modal_salvar_configuracoes.style.display = "flex";
   } else {
     caixa_modal_salvar_configuracoes.style.display = "none";
@@ -1712,10 +1814,50 @@ function estado_da_modal_salvar_configuracoes(texto) {
 }
 function configuracoes_alteradas() {
   btnSalveconfig.innerHTML = "**Salvar";
-  configuracoes_salvas=false;
+  configuracoes_salvas = false;
 }
-function actulizar_display_das_listas(elemento,texto) {
-  (texto=="flex")?elemento.style.display="flex":elemento.style.display="none";
+function actulizar_display_das_listas(elemento, texto) {
+  texto == "flex"
+    ? (elemento.style.display = "flex")
+    : (elemento.style.display = "none");
 }
 
-verificacao_modal_inicial();
+function ativar_ou_desativar_opcoes1(texto) {
+  if (texto == "flex") {
+    filter_list_opcoes.style.display = "flex";
+  } else {
+    filter_list_opcoes.style.display = "none";
+  }
+}
+function obter_opcao_selecionada(texto) {
+  filter_list.innerHTML = texto;
+  ativar_ou_desativar_opcoes1("none");
+  apresentar_listas_no_display_do_filtro(texto);
+}
+function apresentar_listas_no_display_do_filtro(texto) {
+  if (texto == "Todas") {
+    display_filter.innerHTML = ``;
+    listas.forEach((lista, index) => {
+      display_filter.innerHTML += `
+        <div id="${index}listaNoFiltro" class="display_filter_itens">${lista.titulo_lista}</div>
+      `;
+    });
+  }
+}
+function verificar_filtro_selecionado() {
+  if (filter_list.textContent == "Todas") {
+    obter_opcao_selecionada("Todas");
+  }
+}
+function sair_do_filtro_de_opcoes() {
+  document.addEventListener("click", (e) => {
+    let elemento1 = document.querySelector("#filter_list_opcoes");
+    if (!elemento1.contains(e.target)) {
+      ativar_ou_desativar_opcoes1("none");
+    }
+  });
+}
+
+window.onload = () => {
+  verificacao_modal_inicial();
+};

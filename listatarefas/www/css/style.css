@@ -170,6 +170,7 @@
     justify-content: space-between;
     align-items: center;
     padding: .4rem;
+    margin: .4rem;
     border-radius: .8rem;
     border: var(--cor-main) solid 2px;
 }
@@ -177,14 +178,35 @@
     width: 1.3rem;
 }
 #filterlist{
-    border: none;
-    outline: none;
-    appearance: none;
     width: 100%;
-    position: relative;
     background-color: transparent;
-    z-index: 999;
     color: var(--cor-do-texto);
+}
+#filter_list_opcoes {
+    position: absolute;
+    z-index: 1000;
+    height: 30%;
+    width: 30%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    color: var(--cor-do-texto);
+    background-color: var(--modo-primeira-cor);
+    box-shadow: 3px 3px 4px rgba(0, 0, 0, 0.171);
+    border-radius: 1rem;
+    padding: 1em;
+}
+.opcao_filter_list{
+    height: 3rem;
+    display: flex;
+    align-items: center;
+    padding: .5rem;
+}
+.opcao_filter_list:hover{
+    background-color: var(--modo-segunda-cor);
+}
+.opcao_filter_list:hover:active{
+    background-color: transparent;
 }
 #displayfilter{
     padding: .8rem;
