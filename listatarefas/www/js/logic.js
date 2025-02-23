@@ -142,11 +142,13 @@ const estatos_lista = document.createElement("span");
 const box_display_list_normal = document.createElement("div");
 const boxtitle_list_normal = document.createElement("div");
 const title_task_normal = document.createElement("h1");
+const caixa_das_opcoes_e_das_categorias = document.createElement("div");
+const box_opcoes__das_categorias_da_list_normal = document.createElement("div");
 const boxcategorias_list_normal = document.createElement("div");
-const seletor_categorias_normal = document.createElement("select");
-const caterianormal1 = document.createElement("option");
-const caterianormal2 = document.createElement("option");
-const caterianormal3 = document.createElement("option");
+const seletor_categorias_normal = document.createElement("span");
+const caterianormal1 = document.createElement("span");
+const caterianormal2 = document.createElement("span");
+const caterianormal3 = document.createElement("span");
 const iconCategoriaNormal = document.createElement("img");
 const linha_lista_normal = document.createElement("hr");
 const boxTasklistnormal = document.createElement("div");
@@ -236,6 +238,7 @@ function janela_principal() {
 
   //barra do filtro
   filter.setAttribute("id", "filter");
+  filter.setAttribute("title", "caixa de filtros");
   filter.addEventListener("click", (e) => {
     ativar_ou_desativar_opcoes1("flex");
     e.stopPropagation();
@@ -482,6 +485,7 @@ function pagina_inicial() {
   secao_direita_pagina_inicial.appendChild(boxtoolbar);
   //botões e item da barra de ferramenta
   btn_new_list.setAttribute("id", "btn_new_list");
+  btn_new_list.setAttribute("title", "Criar nova lista");
   btn_new_list.innerHTML = "Nova lista";
   btn_new_list.addEventListener("click", () => {
     //comando responsável por ativar a modal tipo de lista que está com display=none
@@ -782,27 +786,72 @@ function lista_normal() {
   title_task_normal.setAttribute("id", "titletasknormal");
   title_task_normal.innerHTML = "Titulo";
   boxtitle_list_normal.appendChild(title_task_normal);
-  //caixa categorias
-  boxcategorias_list_normal.setAttribute("class", "boxcategorias");
-  boxtitle_list_normal.appendChild(boxcategorias_list_normal);
 
-  //seletor categorias
-  boxcategorias_list_normal.appendChild(seletor_categorias_normal);
-  seletor_categorias_normal.value = "Categorias";
-  seletor_categorias_normal.addEventListener("change", () => {
+  //caixa das categorias e suas opções
+  caixa_das_opcoes_e_das_categorias.setAttribute(
+    "id",
+    "caixa_das_opcoes_e_das_categorias"
+  );
+  boxtitle_list_normal.appendChild(caixa_das_opcoes_e_das_categorias);
+
+  //caixa das opções das categorias
+  box_opcoes__das_categorias_da_list_normal.setAttribute(
+    "id",
+    "box_opcoes__das_categorias_da_list_normal"
+  );
+  box_opcoes__das_categorias_da_list_normal.style.display = "none";
+  caixa_das_opcoes_e_das_categorias.appendChild(
+    box_opcoes__das_categorias_da_list_normal
+  );
+  //opções
+  caterianormal1.setAttribute("class", "opcoes_lista_normal");
+  caterianormal1.addEventListener("click", () => {
+    obter_opcao_selecionada(
+      "Categoria",
+      box_opcoes__das_categorias_da_list_normal
+    );
     deixar_entrada_normal();
     infolista("alterada");
   });
-  //itens da categorias
-  caterianormal1.setAttribute("value", "Todas_listas");
-  caterianormal1.innerHTML = "Categorias";
-  seletor_categorias_normal.appendChild(caterianormal1);
-  caterianormal2.setAttribute("value", "Lista_de_tarefas");
-  caterianormal2.innerHTML = "Lista de tarefas";
-  seletor_categorias_normal.appendChild(caterianormal2);
-  caterianormal3.setAttribute("value", "Projetos");
-  caterianormal3.innerHTML = "Projetos";
-  seletor_categorias_normal.appendChild(caterianormal3);
+  caterianormal1.innerHTML = "Nenhuma";
+  box_opcoes__das_categorias_da_list_normal.appendChild(caterianormal1);
+  caterianormal2.setAttribute("class", "opcoes_lista_normal");
+  caterianormal2.addEventListener("click", () => {
+    obter_opcao_selecionada(
+      "Lista de tarefa",
+      box_opcoes__das_categorias_da_list_normal
+    );
+    deixar_entrada_normal();
+    infolista("alterada");
+  });
+  caterianormal2.innerHTML = "Lista de tarefa";
+  box_opcoes__das_categorias_da_list_normal.appendChild(caterianormal2);
+  caterianormal3.setAttribute("class", "opcoes_lista_normal");
+  caterianormal3.addEventListener("click", () => {
+    obter_opcao_selecionada(
+      "Projeto",
+      box_opcoes__das_categorias_da_list_normal
+    );
+    deixar_entrada_normal();
+    infolista("alterada");
+  });
+  caterianormal3.innerHTML = "Projeto";
+  box_opcoes__das_categorias_da_list_normal.appendChild(caterianormal3);
+
+  //caixa categorias
+  boxcategorias_list_normal.setAttribute("class", "boxcategorias");
+  boxcategorias_list_normal.addEventListener("click", (e) => {
+    ativar_ou_desativar_opcoes1(
+      "flex",
+      box_opcoes__das_categorias_da_list_normal
+    );
+    e.stopPropagation();
+    sair_do_filtro_de_opcoes("box_opcoes__das_categorias_da_list_normal");
+  });
+  caixa_das_opcoes_e_das_categorias.appendChild(boxcategorias_list_normal);
+  //seletor categorias
+  seletor_categorias_normal.innerHTML = "Categoria";
+  boxcategorias_list_normal.appendChild(seletor_categorias_normal);
   //icone da caixa categorias
   iconCategoriaNormal.setAttribute("src", "img/icons/filter.png");
   boxcategorias_list_normal.appendChild(iconCategoriaNormal);
@@ -858,7 +907,7 @@ function salvar_lista() {
   numero_de_salvamento++;
   listas[lista_aberta] = {
     titulo_lista: title_task_normal.textContent,
-    categoria: seletor_categorias_normal.value,
+    categoria: seletor_categorias_normal.textContent,
     num_tarefas: contador_tarefas,
     tarefas: tarefas,
     descricao: detalhes_da_descricao,
@@ -1395,7 +1444,9 @@ function abrir_links_da_pagina_sobre() {
     item.addEventListener("click", async (e) => {
       e.preventDefault();
       ativar_modalMensagem("Abrindo link no navegador");
-      api.abrirLinkEmNavegadorExterno(e.target.href);
+      setTimeout(() => {
+        api.abrirLinkEmNavegadorExterno(e.target.href);
+      }, 1500);
     });
   });
 }
@@ -1475,6 +1526,36 @@ function pesquisar_lista(texto) {
       actulizar_display_das_listas(lista, "flex");
     } else {
       actulizar_display_das_listas(lista, "none");
+    }
+  });
+}
+function obter_opcao_selecionada(texto, elemento = filter_list_opcoes) {
+  if (elemento == filter_list_opcoes) {
+    filter_list.innerHTML = texto;
+    ativar_ou_desativar_opcoes1("none");
+    apresentar_listas_no_display_do_filtro(texto);
+  } else {
+    seletor_categorias_normal.innerHTML = texto;
+    ativar_ou_desativar_opcoes1("none", elemento);
+  }
+}
+function verificar_filtro_selecionado() {
+  if (filter_list.textContent == "Todas") {
+    obter_opcao_selecionada("Todas");
+  }
+}
+function sair_do_filtro_de_opcoes(elemento = "filter_list_opcoes") {
+  document.addEventListener("click", (e) => {
+    let elemento1 = document.querySelector(`#${elemento}`);
+    if (!elemento1.contains(e.target)) {
+      if (elemento == "box_opcoes__das_categorias_da_list_normal") {
+        ativar_ou_desativar_opcoes1(
+          "none",
+          box_opcoes__das_categorias_da_list_normal
+        );
+      } else {
+        ativar_ou_desativar_opcoes1("none");
+      }
     }
   });
 }
@@ -1821,42 +1902,52 @@ function actulizar_display_das_listas(elemento, texto) {
     ? (elemento.style.display = "flex")
     : (elemento.style.display = "none");
 }
-
-function ativar_ou_desativar_opcoes1(texto) {
+function ativar_ou_desativar_opcoes1(texto, elemento = filter_list_opcoes) {
   if (texto == "flex") {
-    filter_list_opcoes.style.display = "flex";
+    elemento.style.display = "flex";
   } else {
-    filter_list_opcoes.style.display = "none";
+    elemento.style.display = "none";
   }
-}
-function obter_opcao_selecionada(texto) {
-  filter_list.innerHTML = texto;
-  ativar_ou_desativar_opcoes1("none");
-  apresentar_listas_no_display_do_filtro(texto);
 }
 function apresentar_listas_no_display_do_filtro(texto) {
-  if (texto == "Todas") {
-    display_filter.innerHTML = ``;
-    listas.forEach((lista, index) => {
-      display_filter.innerHTML += `
+  switch (texto) {
+    case "Todas":
+      display_filter.innerHTML = ``;
+      listas.forEach((lista, index) => {
+        display_filter.innerHTML = `
         <div id="${index}listaNoFiltro" class="display_filter_itens">${lista.titulo_lista}</div>
-      `;
-    });
+      `+display_filter.innerHTML ;
+      });
+      break;
+    case "Listas":
+      display_filter.innerHTML = ``;
+      listas.forEach((lista, index) => {
+        if (lista.categoria=="Lista de tarefa") {
+          display_filter.innerHTML = `
+          <div id="${index}listaNoFiltro" class="display_filter_itens">${lista.titulo_lista}</div>
+        `+display_filter.innerHTML ;
+        }
+      });
+      break;
+    case "Projetos":
+      display_filter.innerHTML = ``;
+      listas.forEach((lista, index) => {
+        if (lista.categoria=="Projeto") {
+          display_filter.innerHTML = `
+          <div id="${index}listaNoFiltro" class="display_filter_itens">${lista.titulo_lista}</div>
+        `+display_filter.innerHTML ;
+        }
+      });
+      break;
+
+    default:
+      console.log("opção invalida");
+      break;
   }
 }
-function verificar_filtro_selecionado() {
-  if (filter_list.textContent == "Todas") {
-    obter_opcao_selecionada("Todas");
-  }
-}
-function sair_do_filtro_de_opcoes() {
-  document.addEventListener("click", (e) => {
-    let elemento1 = document.querySelector("#filter_list_opcoes");
-    if (!elemento1.contains(e.target)) {
-      ativar_ou_desativar_opcoes1("none");
-    }
-  });
-}
+
+
+
 
 window.onload = () => {
   verificacao_modal_inicial();

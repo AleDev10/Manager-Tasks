@@ -181,6 +181,7 @@
     width: 100%;
     background-color: transparent;
     color: var(--cor-do-texto);
+    cursor: pointer;
 }
 #filter_list_opcoes {
     position: absolute;
@@ -192,7 +193,7 @@
     justify-content: space-around;
     color: var(--cor-do-texto);
     background-color: var(--modo-primeira-cor);
-    box-shadow: 3px 3px 4px rgba(0, 0, 0, 0.171);
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.171);
     border-radius: 1rem;
     padding: 1em;
 }
@@ -770,21 +771,43 @@ modal type list */
     font-weight: 900;
     color: var(--cor-main);
 }
+#caixa_das_opcoes_e_das_categorias {
+    width: 20%;
+    cursor: pointer;
+}
+#box_opcoes__das_categorias_da_list_normal {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    padding: 1rem;
+    margin-top: 2.5rem;
+    border-radius: 1rem;
+    width: 12rem;
+    height: 20%;
+    background-color: var(--modo-primeira-cor);
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.171);
+
+}
+.opcoes_lista_normal {
+    height: 2rem;
+    display: flex;
+    align-items: center;
+    padding: .5rem;
+}
+.opcoes_lista_normal:hover {
+    background-color: var(--modo-segunda-cor);
+}
+.opcoes_lista_normal:hover:active {
+    background-color: transparent;
+}
 .boxcategorias{
     border-radius: 3rem;
-    border: var(--cor-main) solid 5px;
+    border: var(--cor-main) solid 3px;
     display: flex;
     align-items: center;
     justify-content: space-between;
     padding: .3rem;
-}
-.boxcategorias select{
-    border: none;
-    outline: none;
-    appearance: none;
-    width: 90%;
-    color: var(--cor-do-texto);
-    background-color: transparent;
 }
 .boxcategorias img{
     width: 9%;
