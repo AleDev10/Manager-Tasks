@@ -38,6 +38,8 @@ var dados_das_configuracoes = {
   logo2: "img/logo/logoapp2.png",
 };
 var copia_dos_dados_das_configuracoes = {};
+var posicao_da_lista_filtrada_que_vai_ser_aberta = 0;
+var modal_salvar_lista_ativada_por = "";
 
 /*declaração dos elementos
  de maneira global*/
@@ -382,7 +384,7 @@ function modal_salvar_lista() {
   botao_sim_salvar_lista.setAttribute("id", "botao_sim_salvar_lista");
   botao_sim_salvar_lista.addEventListener("click", () => {
     estatos_modal_salvar_lista = true;
-    verificar_se_a_lista_existe()
+    verificar_se_a_lista_existe();
     verificar_modal_salvar_lista();
   });
   botao_sim_salvar_lista.innerHTML = "Sim";
@@ -719,6 +721,12 @@ function lista_normal() {
   item_menu_home.style.backgroundColor = "";
   logo_home.style.backgroundColor = "";
   item_menu_home.style.color = "";
+  item_menu_settings.style.backgroundColor = ``;
+  logo_settings.style.backgroundColor = "";
+  item_menu_settings.style.color = "";
+  item_menu_help.style.backgroundColor = "";
+  logo_help.style.backgroundColor = "";
+  item_menu_help.style.color = "";
 
   //caixa principal da janela lista normal
   secao_direita_list_normal.setAttribute("id", "secao_direita_list_normal");
@@ -1220,36 +1228,69 @@ function verificar_modal_salvar_lista() {
   if (estatos_modal_salvar_lista) {
     salvar_lista();
     sair_da_modal_salvar_lista();
-    sairDaLista();
+    sairDaLista(
+      modal_salvar_lista_ativada_por != "lista_filtrada"
+        ? "lista_normal"
+        : "lista_filtrada"
+    );
+    modal_salvar_lista_ativada_por != "lista_filtrada"
+      ? ""
+      : abrir_lista_filtrada(posicao_da_lista_filtrada_que_vai_ser_aberta);
+    modal_salvar_lista_ativada_por = "";
     console.log("sim");
   } else {
     if (numero_de_salvamento > 0) {
       listas[lista_aberta].tarefas = copia_das_tarefas;
       sair_da_modal_salvar_lista();
-      sairDaLista();
+      sairDaLista(
+        modal_salvar_lista_ativada_por != "lista_filtrada"
+          ? "lista_normal"
+          : "lista_filtrada"
+      );
+      modal_salvar_lista_ativada_por != "lista_filtrada"
+        ? ""
+        : abrir_lista_filtrada(posicao_da_lista_filtrada_que_vai_ser_aberta);
+      modal_salvar_lista_ativada_por = "";
       console.log("sim sim");
     } else {
-      contador_listas--;
+      modal_salvar_lista_ativada_por != "lista_filtrada"
+        ? contador_listas--
+        : "";
       sair_da_modal_salvar_lista();
-      sairDaLista();
+      sairDaLista(
+        modal_salvar_lista_ativada_por != "lista_filtrada"
+          ? "lista_normal"
+          : "lista_filtrada"
+      );
+      modal_salvar_lista_ativada_por != "lista_filtrada"
+        ? ""
+        : abrir_lista_filtrada(posicao_da_lista_filtrada_que_vai_ser_aberta);
+      modal_salvar_lista_ativada_por = "";
       console.log("sim sim sim");
     }
   }
 }
-function verificar_da_Saida_da_lista(e="paginaincial") {
-  pagina_que_a_lista_vai_remover = e;
+function verificar_da_Saida_da_lista(texto, ativado_por = "lista_normal") {
+  pagina_que_a_lista_vai_remover = texto;
   if (confirmacao_de_lista_salva && dados_salvo_no_arrey == false) {
-    contador_listas--;
-    sairDaLista();
+    ativado_por != "lista_filtrada" ? contador_listas-- : "";
+    sairDaLista(ativado_por);
+    ativado_por != "lista_filtrada"
+      ? ""
+      : abrir_lista_filtrada(posicao_da_lista_filtrada_que_vai_ser_aberta);
   } else {
     if (confirmacao_de_lista_salva) {
-      sairDaLista();
+      sairDaLista(ativado_por);
+      ativado_por != "lista_filtrada"
+        ? ""
+        : abrir_lista_filtrada(posicao_da_lista_filtrada_que_vai_ser_aberta);
     } else {
+      modal_salvar_lista_ativada_por = ativado_por;
       abrir_modal_salvar_lista();
     }
   }
 }
-function sairDaLista() {
+function sairDaLista(ativado_por = "lista_normal") {
   tarefas = [];
   detalhes_da_descricao = [];
   contador_tarefas = 0;
@@ -1257,26 +1298,56 @@ function sairDaLista() {
   numero_de_salvamento = 0;
   copia_das_tarefas = [];
   modo_da_lista = "";
-  remover_lista_normal(pagina_que_a_lista_vai_remover);
+  confirmacao_de_lista_salva = true;
+  remover_lista_normal(
+    pagina_que_a_lista_vai_remover,
+    ativado_por != "lista_filtrada" ? "lista_normal" : "lista_filtrada"
+  );
   console.log("saio da lista");
   console.log("nenhuma lista aberta " + lista_aberta);
 }
-function remover_lista_normal(texto,ativado_por="lista_normal") {
+function remover_lista_normal(texto, ativado_por = "lista_normal") {
   switch (texto) {
     case "paginaincial":
-      remover_elemento_da_tela(WindowMain, (ativado_por!="lista_filtrada")?secao_direita_list_normal:secao_direita_pagina_inicial);
-      (ativado_por!="lista_filtrada")?menu_ativo_pagina_inicial():menu_activo = "lista_normal";
+      remover_elemento_da_tela(
+        WindowMain,
+        ativado_por != "lista_filtrada"
+          ? secao_direita_list_normal
+          : secao_direita_pagina_inicial
+      );
+      ativado_por != "lista_filtrada"
+        ? menu_ativo_pagina_inicial()
+        : (menu_activo = "lista_normal");
       break;
     case "configuracao":
-      remover_elemento_da_tela(WindowMain, (ativado_por!="lista_filtrada")?secao_direita_list_normal:secao_direita_config);
-      (ativado_por!="lista_filtrada")?menu_ativo_configuracoes():menu_activo = "lista_normal";
+      remover_elemento_da_tela(
+        WindowMain,
+        ativado_por != "lista_filtrada"
+          ? secao_direita_list_normal
+          : secao_direita_config
+      );
+      ativado_por != "lista_filtrada"
+        ? menu_ativo_configuracoes()
+        : (menu_activo = "lista_normal");
       break;
     case "ajuda":
-      remover_elemento_da_tela(WindowMain, (ativado_por!="lista_filtrada")?secao_direita_list_normal:secao_direita_help);
-      (ativado_por!="lista_filtrada")?menu_ativo_sobre_app():menu_activo = "lista_normal";
+      remover_elemento_da_tela(
+        WindowMain,
+        ativado_por != "lista_filtrada"
+          ? secao_direita_list_normal
+          : secao_direita_help
+      );
+      ativado_por != "lista_filtrada"
+        ? menu_ativo_sobre_app()
+        : (menu_activo = "lista_normal");
       break;
     case "lista_normal":
-      remover_elemento_da_tela(WindowMain, (ativado_por!="lista_filtrada")?secao_direita_list_normal:secao_direita_list_normal);
+      remover_elemento_da_tela(
+        WindowMain,
+        ativado_por != "lista_filtrada"
+          ? secao_direita_list_normal
+          : secao_direita_list_normal
+      );
       break;
     default:
       console.log("ação solicitada invalida");
@@ -1473,7 +1544,13 @@ function sair_das_configuracoes(texto) {
       remover_elemento_da_tela(WindowMain, secao_direita_config);
       menu_ativo_sobre_app();
       break;
+    case "lista_normal":
+      remover_elemento_da_tela(WindowMain, secao_direita_config);
+      menu_activo="lista_normal";
+      abrir_lista_filtrada(posicao_da_lista_filtrada_que_vai_ser_aberta);
+      break;
     default:
+      console.log("opção invalida");
       break;
   }
 }
@@ -1555,7 +1632,7 @@ function verificar_filtro_selecionado() {
     case "Projetos":
       obter_opcao_selecionada("Projetos");
       break;
-  
+
     default:
       console.log("opção invalida");
       break;
@@ -1575,6 +1652,43 @@ function sair_do_filtro_de_opcoes(elemento = "filter_list_opcoes") {
       }
     }
   });
+}
+function verificar_lista_filtrada_a_ser_aberto() {
+  const listas_filtradas = [
+    ...document.querySelectorAll(".display_filter_itens"),
+  ];
+  listas_filtradas.forEach((item) => {
+    item.addEventListener("click", (e) => {
+      let index = e.target.getAttribute("data-index");
+      posicao_da_lista_filtrada_que_vai_ser_aberta = index;
+      modal_salvar_lista_ativada_por = "lista_filtrada";
+      if (menu_activo == "configuracao" && configuracoes_salvas) {
+        verificar_da_Saida_da_lista(menu_activo, "lista_filtrada");
+      } else if (menu_activo=="paginaincial" || menu_activo=="ajuda" || menu_activo=="lista_normal"){
+        verificar_da_Saida_da_lista(menu_activo, "lista_filtrada");
+      }else{
+        console.log("não abrir");
+        verificacao_do_salvamento_das_configuracoes("lista_normal");
+      }
+    });
+  });
+}
+function abrir_lista_filtrada(index) {
+  lista_normal();
+  limpar_tarefas();
+  lista_aberta = index;
+  dados_salvo_no_arrey = true;
+  tarefas = listas[lista_aberta].tarefas;
+  copia_das_tarefas = JSON.parse(JSON.stringify(tarefas));
+  detalhes_da_descricao = listas[lista_aberta].descricao;
+  contador_tarefas = listas[lista_aberta].num_tarefas;
+  seletor_categorias_normal.innerHTML = `${listas[lista_aberta].categoria}`;
+  title_task_normal.innerHTML = `${listas[lista_aberta].titulo_lista}`;
+  numero_de_salvamento = listas[lista_aberta].lisa_salva;
+  modo_da_lista = "lista_existente";
+  apresentar_tarefas();
+  infolista("inicio");
+  console.log("abriu o filtro " + index);
 }
 
 //saida de dados
@@ -1931,19 +2045,21 @@ function apresentar_listas_no_display_do_filtro(texto) {
     case "Todas":
       display_filter.innerHTML = ``;
       listas.forEach((lista, index) => {
-        display_filter.innerHTML = `
+        display_filter.innerHTML =
+          `
         <div id="${index}listaNoFiltro" class="display_filter_itens" data-index=${index}>${lista.titulo_lista}</div>
-      `+display_filter.innerHTML ;
+      ` + display_filter.innerHTML;
       });
       verificar_lista_filtrada_a_ser_aberto();
       break;
     case "Listas":
       display_filter.innerHTML = ``;
       listas.forEach((lista, index) => {
-        if (lista.categoria=="Lista de tarefa") {
-          display_filter.innerHTML = `
+        if (lista.categoria == "Lista de tarefa") {
+          display_filter.innerHTML =
+            `
           <div id="${index}listaNoFiltro" class="display_filter_itens" data-index=${index}>${lista.titulo_lista}</div>
-        `+display_filter.innerHTML ;
+        ` + display_filter.innerHTML;
         }
       });
       verificar_lista_filtrada_a_ser_aberto();
@@ -1951,10 +2067,11 @@ function apresentar_listas_no_display_do_filtro(texto) {
     case "Projetos":
       display_filter.innerHTML = ``;
       listas.forEach((lista, index) => {
-        if (lista.categoria=="Projeto") {
-          display_filter.innerHTML = `
+        if (lista.categoria == "Projeto") {
+          display_filter.innerHTML =
+            `
           <div id="${index}listaNoFiltro" class="display_filter_itens" data-index=${index}>${lista.titulo_lista}</div>
-        `+display_filter.innerHTML ;
+        ` + display_filter.innerHTML;
         }
       });
       verificar_lista_filtrada_a_ser_aberto();
@@ -1967,39 +2084,6 @@ function apresentar_listas_no_display_do_filtro(texto) {
 }
 
 
-function verificar_lista_filtrada_a_ser_aberto() {
-  const listas_filtradas = [...document.querySelectorAll('.display_filter_itens')];
-  listas_filtradas.forEach((item)=>{
-    item.addEventListener("click",(e)=>{
-      let index = e.target.getAttribute("data-index");
-      if (condition) {
-        
-      } else {
-        
-      }
-      abrir_lista_filtrada(index);
-    });
-  });
-}
-
-function abrir_lista_filtrada(index) {
-  remover_lista_normal(menu_activo,"lista_filtrada");
-  lista_normal();
-  limpar_tarefas();
-  lista_aberta = index;
-  dados_salvo_no_arrey = true;
-  tarefas = listas[lista_aberta].tarefas;
-  copia_das_tarefas = JSON.parse(JSON.stringify(tarefas));
-  detalhes_da_descricao = listas[lista_aberta].descricao;
-  contador_tarefas = listas[lista_aberta].num_tarefas;
-  seletor_categorias_normal.innerHTML = `${listas[lista_aberta].categoria}`;
-  title_task_normal.innerHTML = `${listas[lista_aberta].titulo_lista}`;
-  numero_de_salvamento = listas[lista_aberta].lisa_salva;
-  modo_da_lista = "lista_existente";
-  apresentar_tarefas();
-  infolista("inicio");
-  console.log("abriu o filtro " + index);
-}
 
 window.onload = () => {
   verificacao_modal_inicial();
