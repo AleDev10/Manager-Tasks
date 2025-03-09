@@ -43,8 +43,22 @@ var modal_salvar_lista_ativada_por = "";
 
 /*declaração dos elementos
  de maneira global*/
+ 
+ //declaração dos elementos da barra de titulo
+ const caixa_da_barra_de_titulo = document.createElement("div");
+ const elementos_do_lado_esquerdo_da_barra_de_titulo = document.createElement("div");
+ const icone_da_barra_de_titulo = document.createElement("img");
+ const seta_de_navegacao_esquerda = document.createElement("button");
+ const seta_de_navegacao_direita = document.createElement("button");
+ const elementos_do_centro_da_barra_de_titulo = document.createElement("div");
+ const titulo_da_lista_na_barra_de_titulo = document.createElement("span");
+ const elementos_do_lado_direito_da_barra_de_titulo = document.createElement("div");
+ const btn_minimizar_da_barra_de_titulo = document.createElement("button");
+ const btn_maximizar_da_barra_de_titulo = document.createElement("button");
+ const btn_fechar_da_barra_de_titulo = document.createElement("button");
 
-//declaração dos elementos da janela principal
+
+ //declaração dos elementos da janela principal
 const WindowMain = document.createElement("div");
 const secao_esquerda = document.createElement("div");
 const logo = document.createElement("img");
@@ -186,6 +200,59 @@ var info_modal_salvar_configuracoes = document.createElement("span");
 var caixa_btns_modal_salvar_configuracoes = document.createElement("div");
 var btn1_modal_salvar_configuracoes = document.createElement("button");
 var btn2_modal_salvar_configuracoes = document.createElement("button");
+
+//Barra de titulo
+function barra_de_titulo() {
+  //elemento principal
+  caixa_da_barra_de_titulo.setAttribute("id","caixa_da_barra_de_titulo");
+  main.appendChild(caixa_da_barra_de_titulo);
+
+  //caixa do lado esquerdo
+  elementos_do_lado_esquerdo_da_barra_de_titulo.setAttribute("id","elementos_do_lado_esquerdo_da_barra_de_titulo");
+  caixa_da_barra_de_titulo.appendChild(elementos_do_lado_esquerdo_da_barra_de_titulo);
+  //icone
+  icone_da_barra_de_titulo.setAttribute("id","icone_da_barra_de_titulo");
+  icone_da_barra_de_titulo.setAttribute("src","img/logo/icone2.png");
+  elementos_do_lado_esquerdo_da_barra_de_titulo.appendChild(icone_da_barra_de_titulo);
+  //setas de navegação//
+  //seta esquerda
+  seta_de_navegacao_esquerda.setAttribute("id","seta_de_navegacao_esquerda");
+  seta_de_navegacao_esquerda.setAttribute("class","seta_de_navegacao");
+  /* seta_de_navegacao_esquerda.innerHTML="voltar" */
+  elementos_do_lado_esquerdo_da_barra_de_titulo.appendChild(seta_de_navegacao_esquerda);
+  //seta direita
+  seta_de_navegacao_direita.setAttribute("id","seta_de_navegacao_direita");
+  seta_de_navegacao_direita.setAttribute("class","seta_de_navegacao");
+  /* seta_de_navegacao_direita.innerHTML=`<img src="img/icons/cancel.png" alt="seta esquerda">`, */
+  elementos_do_lado_esquerdo_da_barra_de_titulo.appendChild(seta_de_navegacao_direita);
+
+  //caixa do centro
+  elementos_do_centro_da_barra_de_titulo.setAttribute("id","elementos_do_centro_da_barra_de_titulo");
+  caixa_da_barra_de_titulo.appendChild(elementos_do_centro_da_barra_de_titulo);
+  //informação da lista
+  titulo_da_lista_na_barra_de_titulo.setAttribute("id","titulo_da_lista_na_barra_de_titulo");
+  titulo_da_lista_na_barra_de_titulo.innerHTML="Lista fechada";
+  elementos_do_centro_da_barra_de_titulo.appendChild(titulo_da_lista_na_barra_de_titulo);
+
+  //caixa direita
+  elementos_do_lado_direito_da_barra_de_titulo.setAttribute("id","elementos_do_lado_direito_da_barra_de_titulo");
+  caixa_da_barra_de_titulo.appendChild(elementos_do_lado_direito_da_barra_de_titulo);
+  //botão minimizar
+  btn_minimizar_da_barra_de_titulo.setAttribute("id","btn_minimizar_da_barra_de_titulo");
+  btn_minimizar_da_barra_de_titulo.setAttribute("class","seta_de_navegacao");
+  /* btn_minimizar_da_barra_de_titulo.innerHTML="Minimizar"; */
+  elementos_do_lado_direito_da_barra_de_titulo.appendChild(btn_minimizar_da_barra_de_titulo);
+  //botão maximizar
+  btn_maximizar_da_barra_de_titulo.setAttribute("id","btn_maximizar_da_barra_de_titulo");
+  btn_maximizar_da_barra_de_titulo.setAttribute("class","seta_de_navegacao");
+  /* btn_maximizar_da_barra_de_titulo.innerHTML="Maximizar"; */
+  elementos_do_lado_direito_da_barra_de_titulo.appendChild(btn_maximizar_da_barra_de_titulo);
+  //botão fechar
+  btn_fechar_da_barra_de_titulo.setAttribute("id","btn_fechar_da_barra_de_titulo");
+  btn_fechar_da_barra_de_titulo.setAttribute("class","seta_de_navegacao");
+  /* btn_fechar_da_barra_de_titulo.innerHTML="Fechar"; */
+  elementos_do_lado_direito_da_barra_de_titulo.appendChild(btn_fechar_da_barra_de_titulo);
+}
 
 //janela principal
 function janela_principal() {
@@ -955,6 +1022,7 @@ function salvar_configuracoes() {
 
 //processamento de dados
 function verificacao_modal_inicial() {
+  barra_de_titulo();
   if (!ativar) {
     modal_inicio();
     modal_tipo_lista();
@@ -1253,9 +1321,7 @@ function verificar_modal_salvar_lista() {
       modal_salvar_lista_ativada_por = "";
       console.log("sim sim");
     } else {
-      modal_salvar_lista_ativada_por != "lista_filtrada"
-        ? contador_listas--
-        : "";
+      contador_listas--;
       sair_da_modal_salvar_lista();
       sairDaLista(
         modal_salvar_lista_ativada_por != "lista_filtrada"
@@ -1674,6 +1740,7 @@ function verificar_lista_filtrada_a_ser_aberto() {
   });
 }
 function abrir_lista_filtrada(index) {
+  desativar_modo_selecao();
   lista_normal();
   limpar_tarefas();
   lista_aberta = index;
@@ -1690,7 +1757,7 @@ function abrir_lista_filtrada(index) {
   infolista("inicio");
   console.log("abriu o filtro " + index);
 }
-
+ 
 //saida de dados
 function cor_menu_pagina_inicial() {
   item_menu_settings.style.backgroundColor = "";
