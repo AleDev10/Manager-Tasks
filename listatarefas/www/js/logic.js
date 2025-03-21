@@ -1,5 +1,6 @@
 //seleções gerais
 const main = document.getElementById("main");
+const barra = document.getElementById("barra");
 
 document.addEventListener("keydown", (e) => {
   if (e.key === "Tab") {
@@ -205,7 +206,7 @@ var btn2_modal_salvar_configuracoes = document.createElement("button");
 function barra_de_titulo() {
   //elemento principal
   caixa_da_barra_de_titulo.setAttribute("id","caixa_da_barra_de_titulo");
-  main.appendChild(caixa_da_barra_de_titulo);
+  barra.appendChild(caixa_da_barra_de_titulo);
 
   //caixa do lado esquerdo
   elementos_do_lado_esquerdo_da_barra_de_titulo.setAttribute("id","elementos_do_lado_esquerdo_da_barra_de_titulo");
