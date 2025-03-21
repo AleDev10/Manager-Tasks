@@ -31,7 +31,7 @@ body {
 #main{
     display: grid;
     width: 100vw;
-    height: 100vh;
+    height: 100%;
     font-family: "Montserrat";
     background-color: var(--modo-segunda-cor);
     overflow: hidden;
@@ -109,13 +109,13 @@ body {
 #windowsmain{
     display: grid;
     grid-template-columns: 1fr 6fr;
-    max-height: 100vh;
+    height: 100%;
 }
 
 /* estilização da aria esquerda geral de todas as janelas */
 #secao_esquerda{
     background-color: var(--modo-primeira-cor);
-    height: 100vh;
+    height: 100%;
     padding: 1rem;
     display: flex;
     flex-direction: column;
@@ -253,7 +253,7 @@ janela pagina inicial */
 /* estilização da aria direita da pagina inicial */
 #secao_direita_pagina_inicial{
     padding: 1rem;
-    height: 100vh;
+    height: 100%;
 }
 #boxtitle{
     display: flex;
@@ -396,7 +396,7 @@ janela pagina inicial */
 /* estilização gerais das arias direitas das panelas configuração e sobre app*/
 .secao_direita{
     padding: 1rem;
-    height: 100vh;
+    height: 100%;
     display: flex;
     flex-direction: column;
 }
@@ -607,7 +607,7 @@ modal type list */
 
 #modaltypelist{
     width: 100vw;
-    height: 100vh; 
+    height: 100%; 
     background-color: rgb(0, 0, 0, 0.7);
     margin: auto;
     display: flex;
@@ -903,7 +903,7 @@ textarea::-webkit-scrollbar{
 de confirmação de lista salva */
 #modalsalvalista{
     width: 100vw;
-    height: 100vh; 
+    height: 100%; 
     background-color: rgb(0, 0, 0, 0.7);
     margin: auto;
     display: flex;
@@ -956,7 +956,7 @@ de confirmação de lista salva */
 mensagens */
 #caixa_modal_mensagens{
     width: 100vw;
-    height: 100vh;
+    height: 95%;
     display: flex;
     flex-direction: column;
     justify-content: end;
@@ -988,7 +988,7 @@ mensagens */
 salvar configurações */
 #caixa_modal_salvar_configuracoes{
     width: 100vw;
-    height: 100vh; 
+    height: 100%; 
     background-color: rgb(0, 0, 0, 0.7);
     margin: auto;
     display: flex;
@@ -1038,12 +1038,14 @@ salvar configurações */
 barra de titulo */
 #barra {
     width: 100vw;
+    height: 5.4%;
 }
 #caixa_da_barra_de_titulo {
     display: flex;
     justify-content: space-between;
+    align-items: center;
     width: 100%;
-    padding: 0.7rem 1rem;
+    padding: 0.5rem 1rem;
 }
 #elementos_do_lado_esquerdo_da_barra_de_titulo {
     display: flex;
