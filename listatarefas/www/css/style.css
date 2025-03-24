@@ -955,23 +955,22 @@ de confirmação de lista salva */
 /* estilização da modal 
 mensagens */
 #caixa_modal_mensagens{
-    width: 100vw;
-    height: 95%;
+    width: 100%;
+    height: 90%;
     display: flex;
     flex-direction: column;
     justify-content: end;
     align-items: center;
-    padding: 3%;
+    padding: 1% 0%;
     position: absolute;
-    z-index: 1000;
+    z-index: 20000;
     transition: ease-in-out;
 }
 .modal_mensagens{
     background-color: var(--cor-main);
     color:#ffff;
     padding: 1.4rem;
-    border-radius: 3rem;
-    width: 70%;
+    width: 100%;
     height: 1rem;
     text-align: center;
     display: flex;
@@ -1039,6 +1038,7 @@ barra de titulo */
 #barra {
     width: 100vw;
     height: 5.4%;
+    background-color: var(--modo-segunda-cor);
 }
 #caixa_da_barra_de_titulo {
     display: flex;
@@ -1055,10 +1055,26 @@ barra de titulo */
 }
 #icone_da_barra_de_titulo {
     width: 20px;
+    cursor: pointer;
+}
+.icones_de_navegacao {
+    width: 50%;
 }
 .seta_de_navegacao {
     height: 22px;
     width: 8%;
+    background-color: var(--modo-primeira-cor);
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.seta_de_navegacao:hover{
+    background-color: var(--modo-terceira-cor);
+}
+.seta_de_navegacao:hover:active{
+    background-color: var(--modo-primeira-cor);
 }
 #elementos_do_centro_da_barra_de_titulo {
     display: flex;
@@ -1071,6 +1087,7 @@ barra de titulo */
     border-radius: 10px;
     padding: 0.3rem;
     width: 100%;
+    background-color: var(--modo-primeira-cor);
 }
 #elementos_do_lado_direito_da_barra_de_titulo {
     display: flex;
@@ -1078,6 +1095,15 @@ barra de titulo */
     justify-content: end;
     width: 100%;
     gap: 0.5rem;
+}
+#btn_fechar_da_barra_de_titulo {
+    background-color: var(--cor-main);
+}
+#btn_fechar_da_barra_de_titulo:hover {
+    background-color: var(--modo-primeira-cor);
+}
+#btn_fechar_da_barra_de_titulo:hover:active {
+    background-color: var(--cor-main);
 }
 /* aria da responsividade com media query */
 @media screen and (max-width:2000px){

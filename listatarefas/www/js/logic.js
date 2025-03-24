@@ -217,15 +217,15 @@ function barra_de_titulo() {
   elementos_do_lado_esquerdo_da_barra_de_titulo.appendChild(icone_da_barra_de_titulo);
   //setas de navegação//
   //seta esquerda
-  seta_de_navegacao_esquerda.setAttribute("id","seta_de_navegacao_esquerda");
-  seta_de_navegacao_esquerda.setAttribute("class","seta_de_navegacao");
-  /* seta_de_navegacao_esquerda.innerHTML="voltar" */
-  elementos_do_lado_esquerdo_da_barra_de_titulo.appendChild(seta_de_navegacao_esquerda);
-  //seta direita
   seta_de_navegacao_direita.setAttribute("id","seta_de_navegacao_direita");
   seta_de_navegacao_direita.setAttribute("class","seta_de_navegacao");
-  /* seta_de_navegacao_direita.innerHTML=`<img src="img/icons/cancel.png" alt="seta esquerda">`, */
+  seta_de_navegacao_direita.innerHTML=`<img class="icones_de_navegacao" src="img/icons/seta-direita-white.png" alt="seta direita">`,
   elementos_do_lado_esquerdo_da_barra_de_titulo.appendChild(seta_de_navegacao_direita);
+  //seta direita
+  seta_de_navegacao_esquerda.setAttribute("id","seta_de_navegacao_esquerda");
+  seta_de_navegacao_esquerda.setAttribute("class","seta_de_navegacao");
+  seta_de_navegacao_esquerda.innerHTML=`<img class="icones_de_navegacao" src="img/icons/seta-esquerda-white.png" alt="seta esquerda">`,
+  elementos_do_lado_esquerdo_da_barra_de_titulo.appendChild(seta_de_navegacao_esquerda);
 
   //caixa do centro
   elementos_do_centro_da_barra_de_titulo.setAttribute("id","elementos_do_centro_da_barra_de_titulo");
@@ -241,7 +241,7 @@ function barra_de_titulo() {
   //botão minimizar
   btn_minimizar_da_barra_de_titulo.setAttribute("id","btn_minimizar_da_barra_de_titulo");
   btn_minimizar_da_barra_de_titulo.setAttribute("class","seta_de_navegacao");
-  /* btn_minimizar_da_barra_de_titulo.innerHTML="Minimizar"; */
+  btn_minimizar_da_barra_de_titulo.innerHTML=`<img class="icones_de_navegacao" src="img/icons/minimize-white.png" alt="minimizar">`,
   elementos_do_lado_direito_da_barra_de_titulo.appendChild(btn_minimizar_da_barra_de_titulo);
   //botão maximizar
   btn_maximizar_da_barra_de_titulo.setAttribute("id","btn_maximizar_da_barra_de_titulo");
@@ -251,7 +251,7 @@ function barra_de_titulo() {
   //botão fechar
   btn_fechar_da_barra_de_titulo.setAttribute("id","btn_fechar_da_barra_de_titulo");
   btn_fechar_da_barra_de_titulo.setAttribute("class","seta_de_navegacao");
-  /* btn_fechar_da_barra_de_titulo.innerHTML="Fechar"; */
+  btn_fechar_da_barra_de_titulo.innerHTML=`<img class="icones_de_navegacao" src="img/icons/cancel-white.png" alt="fechar">`,
   elementos_do_lado_direito_da_barra_de_titulo.appendChild(btn_fechar_da_barra_de_titulo);
 }
 
