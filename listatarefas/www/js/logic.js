@@ -251,7 +251,8 @@ function barra_de_titulo() {
   //botão fechar
   btn_fechar_da_barra_de_titulo.setAttribute("id","btn_fechar_da_barra_de_titulo");
   btn_fechar_da_barra_de_titulo.setAttribute("class","seta_de_navegacao");
-  btn_fechar_da_barra_de_titulo.innerHTML=`<img class="icones_de_navegacao" src="img/icons/cancel-white.png" alt="fechar">`,
+  btn_fechar_da_barra_de_titulo.innerHTML=`<img class="icones_de_navegacao" src="img/icons/cancel-white.png" alt="fechar">`;
+  btn_fechar_da_barra_de_titulo.addEventListener("click",fechar_janela);
   elementos_do_lado_direito_da_barra_de_titulo.appendChild(btn_fechar_da_barra_de_titulo);
 }
 
@@ -2151,7 +2152,9 @@ function apresentar_listas_no_display_do_filtro(texto) {
   }
 }
 
-
+function fechar_janela() {
+  api.fechar();
+}
 
 window.onload = () => {
   verificacao_modal_inicial();
