@@ -41,6 +41,7 @@ var dados_das_configuracoes = {
 var copia_dos_dados_das_configuracoes = {};
 var posicao_da_lista_filtrada_que_vai_ser_aberta = 0;
 var modal_salvar_lista_ativada_por = "";
+var menu_anterior = "";
 
 /*declaração dos elementos
  de maneira global*/
