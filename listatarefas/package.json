@@ -1,0 +1,42 @@
+{
+  "name": "manager-tasks",
+  "version": "1.0.0",
+  "main": "www/main.js",
+  "scripts": {
+    "start": "electron .",
+    "build": "electron-builder"
+  },
+  "build": {
+    "appId": "com.managertasks.ippcv",
+    "productName": "ManagerTasks",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "www/**/*",
+      "package.json"
+    ],
+    "win": {
+      "target": "nsis",
+      "icon": "build/app.png"
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": true,
+      "allowElevation": true,
+      "allowToChangeInstallationDirectory": true
+    }
+  },
+  "keywords": [],
+  "author": "IPPCV QUIBALA",
+  "license": "ISC",
+  "type": "commonjs",
+  "description": "Um exemplo de aplicação Electron com o Node.js",
+  "devDependencies": {
+    "electron": "^35.2.1",
+    "electron-builder": "^26.0.12"
+  },
+  "dependencies": {
+    "node-notifier": "^10.0.1"
+  }
+}
