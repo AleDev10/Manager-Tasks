@@ -4,7 +4,8 @@
   "main": "www/main.js",
   "scripts": {
     "start": "electron .",
-    "build": "electron-builder"
+    "build": "electron-builder",
+    "postinstall": "electron-rebuild"
   },
   "build": {
     "appId": "com.managertasks.ippcv",
@@ -25,7 +26,14 @@
       "perMachine": true,
       "allowElevation": true,
       "allowToChangeInstallationDirectory": true
-    }
+    },
+    "extraResources": [
+      "node_modules/better-sqlite3/lib/binding/**/*",
+      {
+        "from": "www/db/",
+        "to": "db/"
+      }
+    ]
   },
   "keywords": [],
   "author": "IPPCV QUIBALA",
@@ -34,9 +42,11 @@
   "description": "Um exemplo de aplicação Electron com o Node.js",
   "devDependencies": {
     "electron": "^35.2.1",
-    "electron-builder": "^26.0.12"
+    "electron-builder": "^26.0.12",
+    "electron-rebuild": "^3.2.9"
   },
   "dependencies": {
+    "better-sqlite3": "^11.9.1",
     "node-notifier": "^10.0.1"
   }
 }

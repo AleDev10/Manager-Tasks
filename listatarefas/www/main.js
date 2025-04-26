@@ -1,8 +1,17 @@
 console.log("Abrindo o programa ...");
 
 const path = require("path");
+const fs = require('fs');
 const notifier = require("node-notifier");
+const Database = require('better-sqlite3');
 const { app, BrowserWindow,ipcMain,nativeTheme,shell } = require("electron");
+
+const dbPath = path.join(__dirname, "db", "Listas_de_tarefas.db");
+
+if (!fs.existsSync(dbPath)) {
+  console.log('O banco de dados não existe. Criando um novo...');
+  const db = new Database(`${dbPath}`, { verbose: console.log });
+}
 
 let janela_de_abertura;
 let janela_de_execucao;
