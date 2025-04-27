@@ -2265,7 +2265,29 @@ function apresentar_listas_no_display_do_filtro(texto) {
 
 
 
+function carregar_listas() {
+  console.clear();
 
+  console.group("tabela das listas");
+  console.table(listas);
+  console.groupEnd("tabela das listas");
+
+  console.group("tabela das tarefas");
+  console.table(tarefas);
+  console.groupEnd("tabela das tarefas");
+
+  console.group("tabela das descrições");
+  console.table(detalhes_da_descricao);
+  console.groupEnd("tabela das descrições");
+
+  console.group("tabela das definições");
+  console.table(dados_das_configuracoes);
+  console.groupEnd("tabela das definições");
+
+  console.group("tabela do historico de navegação");
+  console.table(lista_anterior);
+  console.groupEnd("tabela do historico de navegação");
+}
 
 
 

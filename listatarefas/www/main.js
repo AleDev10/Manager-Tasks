@@ -33,7 +33,7 @@ const criar_janela_segundaria = () => {
 
   let pagina = path.join(__dirname, "view", "telasecundaria.html");
   janela_de_execucao.loadFile(`${pagina}`);
-  /* janela_de_execucao.webContents.openDevTools(); */
+  janela_de_execucao.webContents.openDevTools();
 };
 
 const criar_janela_principal = () => {
