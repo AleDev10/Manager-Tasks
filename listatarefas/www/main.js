@@ -7,10 +7,31 @@ const Database = require('better-sqlite3');
 const { app, BrowserWindow,ipcMain,nativeTheme,shell } = require("electron");
 
 const dbPath = path.join(__dirname, "db", "Listas_de_tarefas.db");
+const db = new Database(`${dbPath}`, { verbose: console.log });
+
+db.exec(`create table if not exists lista(
+  id integer primary key autoincrement,
+  titulo text not null default 'Titulo',
+  categoria text not null default 'Nenhuma',
+  numero_de_tarefas integer not null default 0,
+  qtd_de_salvamento_da_lista integer not null default 1
+);`);
+
+//criaÇão da tabela definições
+db.exec(`create table if not exists definicoes(
+  id integer primary key autoincrement,
+  nome_usuario text not null,
+  cor_do_Sistema text not null default '#c935f2',
+  cor_modo_sistema text not null default 'escuro',
+  tamanho_da_font integer not null default 13,
+  logo1 text not null default '../img/logo/logoapp5.png',
+  logo2 text not null default '../img/logo/logoapp4.png',
+  execucao_do_app integer not null default 0
+);
+`);
 
 if (!fs.existsSync(dbPath)) {
   console.log('O banco de dados não existe. Criando um novo...');
-  const db = new Database(`${dbPath}`, { verbose: console.log });
 }
 
 let janela_de_abertura;
