@@ -4,11 +4,38 @@ const path = require("path");
 const fs = require('fs');
 const notifier = require("node-notifier");
 const Database = require('better-sqlite3');
-const { app, BrowserWindow,ipcMain,nativeTheme,shell } = require("electron");
+const { app, BrowserWindow,ipcMain,nativeTheme,shell, ipcRenderer } = require("electron");
 
-const dbPath = path.join(__dirname, "db", "Listas_de_tarefas.db");
+let listas_do_db;
+let definicoes_do_db;
+let tarefas_do_db;
+let descricao_do_db;
+
+//caminho do db para desenvolvimento
+const dbPath = path.join(__dirname,"db","Listas_de_tarefas.db");
+
+//caminho do db para compilação
+//const dbPath = path.join(app.getPath('userData'),"Listas_de_tarefas.db");
+
+//comando para abrir ou criar o db
 const db = new Database(`${dbPath}`, { verbose: console.log });
 
+/* if (fs.existsSync(path.join(__dirname,"db","Listas_de_tarefas.db"))) {
+  notifier.notify({
+    title: "db do vscode",
+    message: "O app está abrindo.",
+    icon: path.join(__dirname, "img", "logo", "icone.png"),
+  });
+}else{
+  notifier.notify({
+    title: "db do build",
+    message: "O app está abrindo.",
+    icon: path.join(__dirname, "img", "logo", "icone.png"),
+  });
+   dbPath = path.join(app.getPath('userData'),"Listas_de_tarefas.db"); 
+} */
+
+//criaÇão da tabela listas
 db.exec(`create table if not exists lista(
   id integer primary key autoincrement,
   titulo text not null default 'Titulo',
@@ -30,9 +57,44 @@ db.exec(`create table if not exists definicoes(
 );
 `);
 
-if (!fs.existsSync(dbPath)) {
-  console.log('O banco de dados não existe. Criando um novo...');
+//criaÇão da tabela descrições
+db.exec(`create table if not exists descricao (
+  id integer primary key autoincrement,
+  texto text not null default '......',
+  altura integer not null default 54,
+  id_lista integer not null,
+  foreign key (id_lista) references  lista(id) on delete cascade
+);`);
+
+//criação da tabela tarefas
+db.exec(`create table if not exists tarefas (
+  id integer primary key autoincrement,
+  tarefa text not null,
+  estado integer not null,
+  id_lista integer not null,
+  foreign key (id_lista) references  lista(id) on delete cascade
+);`);
+
+function inserir_dados_nas_definicoes(dados) {
+  let inserir = db.prepare(`insert into definicoes (id,nome_usuario,cor_do_Sistema,cor_modo_sistema,tamanho_da_font,logo1,logo2,execucao_do_app) values (?,?,?,?,?,?,?);`);
+  inserir.run(0,dados.nome,dados.cor_sistema,dados.cor_modo_do_sistema,dados.tamanho_da_fonte,dados.logo1,dados.logo2,dados.execucao);
 }
+
+function inserir_dados_na_lista(dados) {
+  console.log(dados);
+  let inserir = db.prepare(`insert into lista( titulo,categoria,numero_de_tarefas,qtd_de_salvamento_da_lista) values(?,?,?,?);`);
+  inserir.run(dados.titulo,dados.categoria,dados.num_tarefas,dados.lista_salva);
+}
+
+const inserir_dados_das_tarefas_e_descricoes = db.transaction((dados)=>{
+    let inserirTarefa = db.prepare(`insert into tarefas(tarefa,estado,id_lista) values(?,?,?);`);
+    let inserirDescricoes = db.prepare(`insert into descricao (id,texto,altura,id_lista) values(?,?,?,?);`);
+
+    let id = inserirTarefa.run(dados.tarefas.tarefa,dados.tarefas.estado,1);
+    let idTarefa = id.lastInsertRowid;
+
+    inserirDescricoes.run(idTarefa,dados.descricoes.texto,dados.descricoes.altura,1);
+  });
 
 let janela_de_abertura;
 let janela_de_execucao;
@@ -126,6 +188,16 @@ app.whenReady().then(() => {
       janela_de_execucao.maximize();
       console.log("Programa maximizado");
     }
+  });
+  ipcMain.on("inserirDadosDasDefinicoes",(event,dados)=>{
+    inserir_dados_nas_definicoes(dados);
+  });
+  ipcMain.on("inserirDadosNaLista",(event,dados)=>{
+    inserir_dados_na_lista(dados);
+  });
+  ipcMain.on("inserirDadosNasTarefaseNasDescricoes",(event,dados)=>{
+    console.log(dados);
+    inserir_dados_das_tarefas_e_descricoes(dados);
   });
 });
 

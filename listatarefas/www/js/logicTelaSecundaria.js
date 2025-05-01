@@ -977,12 +977,14 @@ function adicionar_tarefa() {
   detalhes_da_descricao.push({
     texto: "......",
     alturaDaCaixa: 54,
+    id_lista:lista_aberta
   }),
     tarefas.push({
       id: contador_tarefas,
       tarefa: inputlistnormal.value.trim(),
       descricao: detalhes_da_descricao[contador_tarefas - 1],
       estatos: false,
+      id_lista:lista_aberta
     });
   console.log(tarefas);
   apresentar_tarefas();
@@ -1010,6 +1012,23 @@ function salvar_lista() {
     descricao: detalhes_da_descricao,
     lisa_salva: numero_de_salvamento,
   };
+  api.inserirlistas({titulo:listas[lista_aberta].titulo_lista,categoria:listas[lista_aberta].categoria,num_tarefas:listas[lista_aberta].num_tarefas,lista_salva:listas[lista_aberta].lisa_salva});
+
+  for (let index = 0; index < tarefas.length; index++) {
+    api.inserirTarefaEDescricao({
+      tarefas:{
+        tarefa:tarefas[index].tarefa,
+        estado:(tarefas[index].estatos)?1:0,
+        id_lista:lista_aberta
+      },
+      descricoes:{
+        texto:detalhes_da_descricao[index].texto,
+        altura:detalhes_da_descricao[index].alturaDaCaixa,
+        id_lista:lista_aberta
+      }
+    });
+    
+  }
   dados_salvo_no_arrey = true;
   modo_da_lista = "lista_existente";
   console.log("a lista está no arrey");
@@ -1037,7 +1056,9 @@ function salvar_configuracoes() {
     cor_modo_do_sistema: dados_das_configuracoes.cor_modo_do_sistema,
     percentagem_da_fonte: inputfont.value,
     logo: dados_das_configuracoes.logo,
+    logo2:dados_das_configuracoes.logo2
   };
+  api.inserirDefinicoes({nome:dados_das_configuracoes.nome_user,cor_sistema:dados_das_configuracoes.cor_sistema,cor_modo_do_sistema:dados_das_configuracoes.cor_modo_do_sistema,tamanho_da_fonte:dados_das_configuracoes.percentagem_da_fonte,logo1:dados_das_configuracoes.logo,logo2:dados_das_configuracoes.logo2,execucao:(ativar)?1:0});
   alteracoes_salvas();
 }
 
