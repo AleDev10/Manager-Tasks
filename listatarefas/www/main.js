@@ -76,8 +76,8 @@ db.exec(`create table if not exists tarefas (
 );`);
 
 function inserir_dados_nas_definicoes(dados) {
-  let inserir = db.prepare(`insert into definicoes (id,nome_usuario,cor_do_Sistema,cor_modo_sistema,tamanho_da_font,logo1,logo2,execucao_do_app) values (?,?,?,?,?,?,?);`);
-  inserir.run(0,dados.nome,dados.cor_sistema,dados.cor_modo_do_sistema,dados.tamanho_da_fonte,dados.logo1,dados.logo2,dados.execucao);
+  let inserir = db.prepare(`insert into definicoes (nome_usuario,cor_do_Sistema,cor_modo_sistema,tamanho_da_font,logo1,logo2,execucao_do_app) values (?,?,?,?,?,?,?);`);
+  inserir.run(dados.nome,dados.cor_sistema,dados.cor_modo_do_sistema,dados.tamanho_da_fonte,dados.logo1,dados.logo2,dados.execucao);
 }
 
 function inserir_dados_na_lista(dados) {
