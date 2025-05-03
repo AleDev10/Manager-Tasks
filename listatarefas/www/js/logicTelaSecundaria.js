@@ -1,3 +1,4 @@
+
 //seleções gerais
 const main = document.getElementById("main");
 const barra = document.getElementById("barra");
@@ -37,6 +38,7 @@ var dados_das_configuracoes = {
   percentagem_da_fonte: 13,
   logo: "../img/logo/logoapp.png",
   logo2: "../img/logo/logoapp2.png",
+  execucao_do_app:false
 };
 var copia_dos_dados_das_configuracoes = {};
 var posicao_da_lista_filtrada_que_vai_ser_aberta = 0;
@@ -1019,12 +1021,12 @@ function salvar_lista() {
       tarefas:{
         tarefa:tarefas[index].tarefa,
         estado:(tarefas[index].estatos)?1:0,
-        id_lista:lista_aberta
+        id_lista:lista_aberta+1
       },
       descricoes:{
         texto:detalhes_da_descricao[index].texto,
         altura:detalhes_da_descricao[index].alturaDaCaixa,
-        id_lista:lista_aberta
+        id_lista:lista_aberta+1
       }
     });
     
@@ -1056,7 +1058,8 @@ function salvar_configuracoes() {
     cor_modo_do_sistema: dados_das_configuracoes.cor_modo_do_sistema,
     percentagem_da_fonte: inputfont.value,
     logo: dados_das_configuracoes.logo,
-    logo2:dados_das_configuracoes.logo2
+    logo2:dados_das_configuracoes.logo2,
+    execucao_do_app:true
   };
   api.inserirDefinicoes({nome:dados_das_configuracoes.nome_user,cor_sistema:dados_das_configuracoes.cor_sistema,cor_modo_do_sistema:dados_das_configuracoes.cor_modo_do_sistema,tamanho_da_fonte:dados_das_configuracoes.percentagem_da_fonte,logo1:dados_das_configuracoes.logo,logo2:dados_das_configuracoes.logo2,execucao:(ativar)?1:0});
   alteracoes_salvas();
@@ -1079,6 +1082,7 @@ function verificacao_modal_inicial() {
     janela_principal();
     cor_menu_pagina_inicial();
     pagina_inicial();
+    alterar_tamanho_da_fonte();
   }
   escolher_tema(dados_das_configuracoes.cor_modo_do_sistema);
   cor_do_sistema_escolhida(dados_das_configuracoes.cor_sistema);
@@ -1173,6 +1177,7 @@ function verificacao_modal_inicial_com_botao() {
     dados_das_configuracoes.nome_user =
       nome.charAt(0).toUpperCase() + nome.slice(1).toLowerCase();
     ativar = true;
+    salvar_configuracoes();
     modalBox.style.display = "none";
     janela_principal();
     pagina_inicial();
@@ -2309,11 +2314,30 @@ function carregar_listas() {
   console.table(lista_anterior);
   console.groupEnd("tabela do historico de navegação");
 }
+async function obter_dados_do_db() {
+  return await api.buscarDadosAoDB();
+}
 
 
 
 
-
-window.onload = () => {
+window.onload = async () => {
+  let dados = await obter_dados_do_db()
+  console.log(dados);
+  if (dados.definicoes=={}) {
+    console.log("definições vazia");
+  }else{
+    dados_das_configuracoes={
+      nome_user: dados.definicoes.nome_usuario,
+      cor_sistema: dados.definicoes.cor_do_Sistema,
+      cor_modo_do_sistema: dados.definicoes.cor_modo_sistema,
+      percentagem_da_fonte: dados.definicoes.tamanho_da_font,
+      logo: dados.definicoes.logo1,
+      logo2: dados.definicoes.logo2,
+      execucao_do_app:(dados.definicoes.execucao_do_app==1)?true:false
+    };
+    listas=dados.listas;
+    ativar=dados_das_configuracoes.execucao_do_app;
+  }
   verificacao_modal_inicial();
 };

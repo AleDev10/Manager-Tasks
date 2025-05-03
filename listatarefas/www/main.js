@@ -1,15 +1,20 @@
 console.log("Abrindo o programa ...");
 
+
+//aria das importações
 const path = require("path");
 const fs = require('fs');
 const notifier = require("node-notifier");
 const Database = require('better-sqlite3');
 const { app, BrowserWindow,ipcMain,nativeTheme,shell, ipcRenderer } = require("electron");
+const { log } = require("console");
 
-let listas_do_db;
-let definicoes_do_db;
-let tarefas_do_db;
-let descricao_do_db;
+//aria das variaveis de dados
+let listas_do_db=[];
+let definicoes_do_db={};
+let tarefas_do_db=[];
+let descricao_do_db=[];
+let conteudo_do_db;
 
 //caminho do db para desenvolvimento
 const dbPath = path.join(__dirname,"db","Listas_de_tarefas.db");
@@ -19,21 +24,6 @@ const dbPath = path.join(__dirname,"db","Listas_de_tarefas.db");
 
 //comando para abrir ou criar o db
 const db = new Database(`${dbPath}`, { verbose: console.log });
-
-/* if (fs.existsSync(path.join(__dirname,"db","Listas_de_tarefas.db"))) {
-  notifier.notify({
-    title: "db do vscode",
-    message: "O app está abrindo.",
-    icon: path.join(__dirname, "img", "logo", "icone.png"),
-  });
-}else{
-  notifier.notify({
-    title: "db do build",
-    message: "O app está abrindo.",
-    icon: path.join(__dirname, "img", "logo", "icone.png"),
-  });
-   dbPath = path.join(app.getPath('userData'),"Listas_de_tarefas.db"); 
-} */
 
 //criaÇão da tabela listas
 db.exec(`create table if not exists lista(
@@ -90,11 +80,48 @@ const inserir_dados_das_tarefas_e_descricoes = db.transaction((dados)=>{
     let inserirTarefa = db.prepare(`insert into tarefas(tarefa,estado,id_lista) values(?,?,?);`);
     let inserirDescricoes = db.prepare(`insert into descricao (id,texto,altura,id_lista) values(?,?,?,?);`);
 
-    let id = inserirTarefa.run(dados.tarefas.tarefa,dados.tarefas.estado,1);
+    let id = inserirTarefa.run(dados.tarefas.tarefa,dados.tarefas.estado,dados.tarefas.id_lista);
     let idTarefa = id.lastInsertRowid;
 
-    inserirDescricoes.run(idTarefa,dados.descricoes.texto,dados.descricoes.altura,1);
+    inserirDescricoes.run(idTarefa,dados.descricoes.texto,dados.descricoes.altura,dados.descricoes.id_lista);
+});
+
+function buscar_difinicoes_ao_db() {
+  let dados = db.prepare(`select  * from definicoes order by id desc limit 1;`).get();
+  definicoes_do_db=dados;  
+  console.log(definicoes_do_db);
+}
+
+function buscar_listas_ao_db() {
+  let dados = db.prepare(`select * from lista;`).all();
+  dados.forEach((item)=>{
+    listas_do_db.push(item);
   });
+  console.log(listas_do_db);
+}
+
+function verificar_contiudo_no_db() {
+  let conteudo_definicoes = db.prepare(`select count (*) as total from definicoes;`).get();
+  let conteudo_lista = db.prepare(`select count (*) as total from lista;`).get();
+
+  console.log(conteudo_definicoes);
+
+  if (conteudo_definicoes.total==0 && conteudo_lista.total==0) {
+    console.log("banco vazio");
+    conteudo_do_db="nenhum";
+  }else if(conteudo_lista.total==0){
+    console.log("listas vazias");
+    conteudo_do_db="definições";
+    buscar_difinicoes_ao_db();
+  }else{
+    console.log("dados obtidos");
+    conteudo_do_db="todos";
+    buscar_difinicoes_ao_db();
+    buscar_listas_ao_db();
+  }
+}
+
+verificar_contiudo_no_db();
 
 let janela_de_abertura;
 let janela_de_execucao;
@@ -198,6 +225,23 @@ app.whenReady().then(() => {
   ipcMain.on("inserirDadosNasTarefaseNasDescricoes",(event,dados)=>{
     console.log(dados);
     inserir_dados_das_tarefas_e_descricoes(dados);
+  });
+  ipcMain.handle("dadosDoDB", async ()=>{
+    let listas_enviadas=[]
+    listas_do_db.forEach((item)=>{
+      listas_enviadas.push({
+        titulo_lista: item.titulo,
+        categoria: item.categoria,
+        num_tarefas: item.numero_de_tarefas,
+        tarefas: [],
+        descricao:[],
+        lisa_salva:item.qtd_de_salvamento_da_lista,
+      });
+    });
+    return {
+      listas: listas_enviadas,
+      definicoes:definicoes_do_db
+    };
   });
 });
 

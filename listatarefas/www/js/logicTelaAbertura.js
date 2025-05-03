@@ -76,8 +76,26 @@ function tema_da_tela_de_abertura(tema) {
   }
 }
 
+async function obter_dados_do_db() {
+  return await api.buscarDadosAoDB();
+}
 
-window.onload=()=>{
+window.onload = async ()=>{
+  let dados = await obter_dados_do_db()
+  console.log(dados);
+  if (dados.definicoes=={}) {
+    console.log("definições vazia");
+  }else{
+    dados_das_configuracoes={
+      nome_user: dados.definicoes.nome_usuario,
+      cor_sistema: dados.definicoes.cor_do_Sistema,
+      cor_modo_do_sistema: dados.definicoes.cor_modo_sistema,
+      percentagem_da_fonte: dados.definicoes.tamanho_da_font,
+      logo: dados.definicoes.logo1,
+      logo2: dados.definicoes.logo2,
+      execucao_do_app:(dados.definicoes.execucao_do_app==1)?true:false
+    };
+  }
   tela_de_abertura();
   tema_da_tela_de_abertura(dados_das_configuracoes.cor_modo_do_sistema);
   cor_da_tela_de_abertura(dados_das_configuracoes.cor_sistema);

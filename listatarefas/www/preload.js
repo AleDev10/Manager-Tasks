@@ -12,5 +12,6 @@ contextBridge.exposeInMainWorld('api',{
   maximizarOuRestaurar: ()=> ipcRenderer.send("maximizarOuRestaurarJanela"),
   inserirDefinicoes: (dados)=> ipcRenderer.send("inserirDadosDasDefinicoes",dados),
   inserirlistas:(dados)=>{ipcRenderer.send("inserirDadosNaLista",dados)},
-  inserirTarefaEDescricao:(dados)=>{ipcRenderer.send("inserirDadosNasTarefaseNasDescricoes",dados)}
+  inserirTarefaEDescricao:(dados)=>{ipcRenderer.send("inserirDadosNasTarefaseNasDescricoes",dados)},
+  buscarDadosAoDB: ()=> ipcRenderer.invoke('dadosDoDB')
 });
