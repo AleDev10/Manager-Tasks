@@ -87,11 +87,11 @@ window.onload = async ()=>{
     console.log("definições vazia");
   }else{
     dados_das_configuracoes={
-      nome_user: dados.definicoes.nome_usuario,
-      cor_sistema: dados.definicoes.cor_do_Sistema,
-      cor_modo_do_sistema: dados.definicoes.cor_modo_sistema,
-      percentagem_da_fonte: dados.definicoes.tamanho_da_font,
-      logo: dados.definicoes.logo1,
+      nome_user: dados.definicoes.nome_user,
+      cor_sistema: dados.definicoes.cor_sistema,
+      cor_modo_do_sistema: dados.definicoes.cor_modo_do_sistema,
+      percentagem_da_fonte: dados.definicoes.percentagem_da_fonte,
+      logo: dados.definicoes.logo,
       logo2: dados.definicoes.logo2,
       execucao_do_app:(dados.definicoes.execucao_do_app==1)?true:false
     };

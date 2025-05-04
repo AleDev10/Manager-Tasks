@@ -1014,18 +1014,18 @@ function salvar_lista() {
     descricao: detalhes_da_descricao,
     lisa_salva: numero_de_salvamento,
   };
-  api.inserirlistas({titulo:listas[lista_aberta].titulo_lista,categoria:listas[lista_aberta].categoria,num_tarefas:listas[lista_aberta].num_tarefas,lista_salva:listas[lista_aberta].lisa_salva});
+  api.inserirlistas({titulo_lista:listas[lista_aberta].titulo_lista,categoria:listas[lista_aberta].categoria,num_tarefas:listas[lista_aberta].num_tarefas,lisa_salva:listas[lista_aberta].lisa_salva});
 
   for (let index = 0; index < tarefas.length; index++) {
     api.inserirTarefaEDescricao({
       tarefas:{
         tarefa:tarefas[index].tarefa,
-        estado:(tarefas[index].estatos)?1:0,
+        estatos:(tarefas[index].estatos)?1:0,
         id_lista:lista_aberta+1
       },
       descricoes:{
         texto:detalhes_da_descricao[index].texto,
-        altura:detalhes_da_descricao[index].alturaDaCaixa,
+        alturaDaCaixa:detalhes_da_descricao[index].alturaDaCaixa,
         id_lista:lista_aberta+1
       }
     });
@@ -1061,7 +1061,7 @@ function salvar_configuracoes() {
     logo2:dados_das_configuracoes.logo2,
     execucao_do_app:true
   };
-  api.inserirDefinicoes({nome:dados_das_configuracoes.nome_user,cor_sistema:dados_das_configuracoes.cor_sistema,cor_modo_do_sistema:dados_das_configuracoes.cor_modo_do_sistema,tamanho_da_fonte:dados_das_configuracoes.percentagem_da_fonte,logo1:dados_das_configuracoes.logo,logo2:dados_das_configuracoes.logo2,execucao:(ativar)?1:0});
+  api.inserirDefinicoes({nome_user:dados_das_configuracoes.nome_user,cor_sistema:dados_das_configuracoes.cor_sistema,cor_modo_do_sistema:dados_das_configuracoes.cor_modo_do_sistema,percentagem_da_fonte:dados_das_configuracoes.percentagem_da_fonte,logo:dados_das_configuracoes.logo,logo2:dados_das_configuracoes.logo2,execucao_do_app:(ativar)?1:0});
   alteracoes_salvas();
 }
 
@@ -2331,11 +2331,11 @@ window.onload = async () => {
     console.log("definições vazia");
   }else{
     dados_das_configuracoes={
-      nome_user: dados.definicoes.nome_usuario,
-      cor_sistema: dados.definicoes.cor_do_Sistema,
-      cor_modo_do_sistema: dados.definicoes.cor_modo_sistema,
-      percentagem_da_fonte: dados.definicoes.tamanho_da_font,
-      logo: dados.definicoes.logo1,
+      nome_user: dados.definicoes.nome_user,
+      cor_sistema: dados.definicoes.cor_sistema,
+      cor_modo_do_sistema: dados.definicoes.cor_modo_do_sistema,
+      percentagem_da_fonte: dados.definicoes.percentagem_da_fonte,
+      logo: dados.definicoes.logo,
       logo2: dados.definicoes.logo2,
       execucao_do_app:(dados.definicoes.execucao_do_app==1)?true:false
     };

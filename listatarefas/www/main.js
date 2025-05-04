@@ -12,7 +12,8 @@ const { log } = require("console");
 //aria das variaveis de dados
 let listas_do_db=[];
 let definicoes_do_db={};
-let tarefas_e_descricoes=[];
+let tarefas_do_db=[];
+let descricoes_do_db=[];
 let conteudo_do_db;
 
 //caminho do db para desenvolvimento
@@ -28,20 +29,20 @@ const db = new Database(`${dbPath}`, { verbose: console.log });
 //criaÇão da tabela listas
 db.exec(`create table if not exists lista(
   id integer primary key autoincrement,
-  titulo text not null default 'Titulo',
+  titulo_lista text not null default 'Titulo',
   categoria text not null default 'Nenhuma',
-  numero_de_tarefas integer not null default 0,
-  qtd_de_salvamento_da_lista integer not null default 1
+  num_tarefas integer not null default 0,
+  lisa_salva integer not null default 1
 );`);
 
 //criaÇão da tabela definições
 db.exec(`create table if not exists definicoes(
   id integer primary key autoincrement,
-  nome_usuario text not null,
-  cor_do_Sistema text not null default '#c935f2',
-  cor_modo_sistema text not null default 'escuro',
-  tamanho_da_font integer not null default 13,
-  logo1 text not null default '../img/logo/logoapp5.png',
+  nome_user text not null,
+  cor_sistema text not null default '#c935f2',
+  cor_modo_do_sistema text not null default 'escuro',
+  percentagem_da_fonte integer not null default 13,
+  logo text not null default '../img/logo/logoapp5.png',
   logo2 text not null default '../img/logo/logoapp4.png',
   execucao_do_app integer not null default 0
 );
@@ -51,7 +52,7 @@ db.exec(`create table if not exists definicoes(
 db.exec(`create table if not exists descricao (
   id integer primary key autoincrement,
   texto text not null default '......',
-  altura integer not null default 54,
+  alturaDaCaixa integer not null default 54,
   id_lista integer not null,
   foreign key (id_lista) references  lista(id) on delete cascade
 );`);
@@ -60,30 +61,30 @@ db.exec(`create table if not exists descricao (
 db.exec(`create table if not exists tarefas (
   id integer primary key autoincrement,
   tarefa text not null,
-  estado integer not null,
+  estatos integer not null,
   id_lista integer not null,
   foreign key (id_lista) references  lista(id) on delete cascade
 );`);
 
 function inserir_dados_nas_definicoes(dados) {
-  let inserir = db.prepare(`insert into definicoes (nome_usuario,cor_do_Sistema,cor_modo_sistema,tamanho_da_font,logo1,logo2,execucao_do_app) values (?,?,?,?,?,?,?);`);
-  inserir.run(dados.nome,dados.cor_sistema,dados.cor_modo_do_sistema,dados.tamanho_da_fonte,dados.logo1,dados.logo2,dados.execucao);
+  let inserir = db.prepare(`insert into definicoes (nome_user,cor_sistema,cor_modo_do_sistema,percentagem_da_fonte,logo,logo2,execucao_do_app) values (?,?,?,?,?,?,?);`);
+  inserir.run(dados.nome_user,dados.cor_sistema,dados.cor_modo_do_sistema,dados.percentagem_da_fonte,dados.logo,dados.logo2,dados.execucao_do_app);
 }
 
 function inserir_dados_na_lista(dados) {
   console.log(dados);
-  let inserir = db.prepare(`insert into lista( titulo,categoria,numero_de_tarefas,qtd_de_salvamento_da_lista) values(?,?,?,?);`);
-  inserir.run(dados.titulo,dados.categoria,dados.num_tarefas,dados.lista_salva);
+  let inserir = db.prepare(`insert into lista( titulo_lista,categoria,num_tarefas,lisa_salva) values(?,?,?,?);`);
+  inserir.run(dados.titulo_lista,dados.categoria,dados.num_tarefas,dados.lisa_salva);
 }
 
 const inserir_dados_das_tarefas_e_descricoes = db.transaction((dados)=>{
-    let inserirTarefa = db.prepare(`insert into tarefas(tarefa,estado,id_lista) values(?,?,?);`);
-    let inserirDescricoes = db.prepare(`insert into descricao (id,texto,altura,id_lista) values(?,?,?,?);`);
+    let inserirTarefa = db.prepare(`insert into tarefas(tarefa,estatos,id_lista) values(?,?,?);`);
+    let inserirDescricoes = db.prepare(`insert into descricao (id,texto,alturaDaCaixa,id_lista) values(?,?,?,?);`);
 
-    let id = inserirTarefa.run(dados.tarefas.tarefa,dados.tarefas.estado,dados.tarefas.id_lista);
+    let id = inserirTarefa.run(dados.tarefas.tarefa,dados.tarefas.estatos,dados.tarefas.id_lista);
     let idTarefa = id.lastInsertRowid;
 
-    inserirDescricoes.run(idTarefa,dados.descricoes.texto,dados.descricoes.altura,dados.descricoes.id_lista);
+    inserirDescricoes.run(idTarefa,dados.descricoes.texto,dados.descricoes.alturaDaCaixa,dados.descricoes.id_lista);
 });
 
 function buscar_difinicoes_ao_db() {
@@ -102,17 +103,16 @@ function buscar_listas_ao_db() {
 
 function buscar_tarefas_e_descrições_ao_db() {
   let numero_de_listas = db.prepare(`select count (*) as total from lista;`).get();
-  let tarefas_e_descricoes_do_db=[];
 
   console.log(numero_de_listas);
+
   for (let index = 1; index <= numero_de_listas.total; index++) {
-    tarefas_e_descricoes_do_db.push(db.prepare(`select tarefas.id,tarefas.tarefa,tarefas.estado,tarefas.id_lista,descricao.id_lista,descricao.id,descricao.texto,descricao.altura from tarefas inner join descricao on tarefas.id=descricao.id and tarefas.id_lista=${index};`).all());
+    tarefas_do_db.push(db.prepare(`select * from tarefas where id_lista=${index};`).all());
+    descricoes_do_db.push(db.prepare(`select * from descricao where id_lista=${index};`).all());
   }
 
-  tarefas_e_descricoes_do_db.forEach((item)=>{
-    tarefas_e_descricoes.push(item);
-  });
-  console.log(tarefas_e_descricoes);
+  console.log(tarefas_do_db);
+  console.log(descricoes_do_db);
 }
 
 function verificar_contiudo_no_db() {
@@ -127,11 +127,11 @@ function verificar_contiudo_no_db() {
     console.log("banco vazio");
     conteudo_do_db="nenhum";
     definicoes_do_db={
-      nome_usuario: "",
-      cor_do_Sistema: "#c935f2",
-      cor_modo_sistema: "escuro",
-      tamanho_da_font: 13,
-      logo1: "../img/logo/logoapp.png",
+      nome_user: "",
+      cor_sistema: "#c935f2",
+      cor_modo_do_sistema: "escuro",
+      percentagem_da_fonte: 13,
+      logo: "../img/logo/logoapp.png",
       logo2: "../img/logo/logoapp2.png",
       execucao_do_app:false
     }
@@ -255,24 +255,23 @@ app.whenReady().then(() => {
   });
   ipcMain.handle("dadosDoDB", async ()=>{
     let listas_enviadas=[]
-    let tarefas_enviadas=[]
-    let descricoes_enviadas=[]
-
 
     listas_do_db.forEach((item,index)=>{
       listas_enviadas.push({
-        titulo_lista: item.titulo,
+        titulo_lista: item.titulo_lista,
         categoria: item.categoria,
-        num_tarefas: item.numero_de_tarefas,
-        tarefas: tarefas_e_descricoes[index],
-        descricao:tarefas_e_descricoes[index],
-        lisa_salva:item.qtd_de_salvamento_da_lista,
+        num_tarefas: item.num_tarefas,
+        tarefas: tarefas_do_db[index],
+        descricao:descricoes_do_db[index],
+        lisa_salva:item.lisa_salva,
       });
     });
+
     return {
       listas: listas_enviadas,
       definicoes:definicoes_do_db
     };
+
   });
 });
 
