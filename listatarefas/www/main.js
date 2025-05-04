@@ -12,8 +12,7 @@ const { log } = require("console");
 //aria das variaveis de dados
 let listas_do_db=[];
 let definicoes_do_db={};
-let tarefas_do_db=[];
-let descricao_do_db=[];
+let tarefas_e_descricoes=[];
 let conteudo_do_db;
 
 //caminho do db para desenvolvimento
@@ -22,6 +21,7 @@ const dbPath = path.join(__dirname,"db","Listas_de_tarefas.db");
 //caminho do db para compilação
 //const dbPath = path.join(app.getPath('userData'),"Listas_de_tarefas.db");
 
+console.log(dbPath);
 //comando para abrir ou criar o db
 const db = new Database(`${dbPath}`, { verbose: console.log });
 
@@ -100,15 +100,41 @@ function buscar_listas_ao_db() {
   console.log(listas_do_db);
 }
 
+function buscar_tarefas_e_descrições_ao_db() {
+  let numero_de_listas = db.prepare(`select count (*) as total from lista;`).get();
+  let tarefas_e_descricoes_do_db=[];
+
+  console.log(numero_de_listas);
+  for (let index = 1; index <= numero_de_listas.total; index++) {
+    tarefas_e_descricoes_do_db.push(db.prepare(`select tarefas.id,tarefas.tarefa,tarefas.estado,tarefas.id_lista,descricao.id_lista,descricao.id,descricao.texto,descricao.altura from tarefas inner join descricao on tarefas.id=descricao.id and tarefas.id_lista=${index};`).all());
+  }
+
+  tarefas_e_descricoes_do_db.forEach((item)=>{
+    tarefas_e_descricoes.push(item);
+  });
+  console.log(tarefas_e_descricoes);
+}
+
 function verificar_contiudo_no_db() {
   let conteudo_definicoes = db.prepare(`select count (*) as total from definicoes;`).get();
   let conteudo_lista = db.prepare(`select count (*) as total from lista;`).get();
 
   console.log(conteudo_definicoes);
+  console.log(conteudo_lista);
+
 
   if (conteudo_definicoes.total==0 && conteudo_lista.total==0) {
     console.log("banco vazio");
     conteudo_do_db="nenhum";
+    definicoes_do_db={
+      nome_usuario: "",
+      cor_do_Sistema: "#c935f2",
+      cor_modo_sistema: "escuro",
+      tamanho_da_font: 13,
+      logo1: "../img/logo/logoapp.png",
+      logo2: "../img/logo/logoapp2.png",
+      execucao_do_app:false
+    }
   }else if(conteudo_lista.total==0){
     console.log("listas vazias");
     conteudo_do_db="definições";
@@ -118,6 +144,7 @@ function verificar_contiudo_no_db() {
     conteudo_do_db="todos";
     buscar_difinicoes_ao_db();
     buscar_listas_ao_db();
+    buscar_tarefas_e_descrições_ao_db();
   }
 }
 
@@ -228,13 +255,17 @@ app.whenReady().then(() => {
   });
   ipcMain.handle("dadosDoDB", async ()=>{
     let listas_enviadas=[]
-    listas_do_db.forEach((item)=>{
+    let tarefas_enviadas=[]
+    let descricoes_enviadas=[]
+
+
+    listas_do_db.forEach((item,index)=>{
       listas_enviadas.push({
         titulo_lista: item.titulo,
         categoria: item.categoria,
         num_tarefas: item.numero_de_tarefas,
-        tarefas: [],
-        descricao:[],
+        tarefas: tarefas_e_descricoes[index],
+        descricao:tarefas_e_descricoes[index],
         lisa_salva:item.qtd_de_salvamento_da_lista,
       });
     });

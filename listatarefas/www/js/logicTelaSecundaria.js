@@ -1083,6 +1083,7 @@ function verificacao_modal_inicial() {
     cor_menu_pagina_inicial();
     pagina_inicial();
     alterar_tamanho_da_fonte();
+    configuracoes_salvas=true;
   }
   escolher_tema(dados_das_configuracoes.cor_modo_do_sistema);
   cor_do_sistema_escolhida(dados_das_configuracoes.cor_sistema);
@@ -1177,6 +1178,8 @@ function verificacao_modal_inicial_com_botao() {
     dados_das_configuracoes.nome_user =
       nome.charAt(0).toUpperCase() + nome.slice(1).toLowerCase();
     ativar = true;
+    nome_do_gerencidor.value=dados_das_configuracoes.nome_user;
+    inputfont.value=13;
     salvar_configuracoes();
     modalBox.style.display = "none";
     janela_principal();
@@ -2338,6 +2341,7 @@ window.onload = async () => {
     };
     listas=dados.listas;
     ativar=dados_das_configuracoes.execucao_do_app;
+    contador_listas=listas.length;
   }
   verificacao_modal_inicial();
 };

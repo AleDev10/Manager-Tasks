@@ -1111,8 +1111,59 @@ barra de titulo */
     background-color: var(--cor-main);
 }
 /* aria da responsividade com media query */
-@media screen and (max-width:2000px){
-    /* #secao_direita_list_normal{
+@media screen and (max-width:700px){
+    *{
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        user-select: none;
+        font-size: 10px;
+        font-family: "Montserrat_medium";
+        color: var(--cor-do-texto);
+    }
+}
+@media screen and (max-width:560px){
+    *{
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        user-select: none;
+        font-size: 8px;
+        font-family: "Montserrat_medium";
+        color: var(--cor-do-texto);
+    }
+    
+}
+@media screen and (max-width:500px) {
+    #barra {
         display: none;
-    } */
+    }
+    #secao_esquerda{
+        display: none;
+    }
+    #windowsmain {
+        display: block;
+        height: 100%;
+    }
+    .btn_clean {
+        display: none;
+    }#inputlistnormal {
+        display: none;
+    }#box_btns_list_normal {
+        display: none;
+    }
+    #caixa_das_opcoes_e_das_categorias {
+        width: 30%;
+    }
+    #boxlistinputnormal {
+        margin-bottom: 1rem;
+    }
+}
+@media screen and (max-width:315px){
+    #btn_new_list {
+        font-size: 1.5rem;
+    }
+    .list {
+        height: 90px;
+    }
 }
