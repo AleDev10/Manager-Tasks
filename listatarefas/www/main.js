@@ -7,7 +7,7 @@ const fs = require('fs');
 const notifier = require("node-notifier");
 const Database = require('better-sqlite3');
 const { app, BrowserWindow,ipcMain,nativeTheme,shell, ipcRenderer } = require("electron");
-const { log } = require("console");
+const { log, Console } = require("console");
 
 //aria das variaveis de dados
 let listas_do_db=[];
@@ -32,7 +32,8 @@ db.exec(`create table if not exists lista(
   titulo_lista text not null default 'Titulo',
   categoria text not null default 'Nenhuma',
   num_tarefas integer not null default 0,
-  lisa_salva integer not null default 1
+  lisa_salva integer not null default 1,
+  codigo_de_lista integer not null unique
 );`);
 
 //criaÇão da tabela definições
@@ -53,8 +54,8 @@ db.exec(`create table if not exists descricao (
   id integer primary key autoincrement,
   texto text not null default '......',
   alturaDaCaixa integer not null default 54,
-  id_lista integer not null,
-  foreign key (id_lista) references  lista(id) on delete cascade
+  codigo_de_lista integer not null,
+  foreign key (codigo_de_lista) references  lista(codigo_de_lista) on delete cascade
 );`);
 
 //criação da tabela tarefas
@@ -62,8 +63,8 @@ db.exec(`create table if not exists tarefas (
   id integer primary key autoincrement,
   tarefa text not null,
   estatos integer not null,
-  id_lista integer not null,
-  foreign key (id_lista) references  lista(id) on delete cascade
+  codigo_de_lista integer not null,
+  foreign key (codigo_de_lista) references  lista(codigo_de_lista) on delete cascade
 );`);
 
 function inserir_dados_nas_definicoes(dados) {
@@ -73,18 +74,18 @@ function inserir_dados_nas_definicoes(dados) {
 
 function inserir_dados_na_lista(dados) {
   console.log(dados);
-  let inserir = db.prepare(`insert into lista( titulo_lista,categoria,num_tarefas,lisa_salva) values(?,?,?,?);`);
-  inserir.run(dados.titulo_lista,dados.categoria,dados.num_tarefas,dados.lisa_salva);
+  let inserir = db.prepare(`insert into lista( titulo_lista,categoria,num_tarefas,lisa_salva,codigo_de_lista) values(?,?,?,?,?);`);
+  inserir.run(dados.titulo_lista,dados.categoria,dados.num_tarefas,dados.lisa_salva,dados.codigo_de_lista);
 }
 
 const inserir_dados_das_tarefas_e_descricoes = db.transaction((dados)=>{
-    let inserirTarefa = db.prepare(`insert into tarefas(tarefa,estatos,id_lista) values(?,?,?);`);
-    let inserirDescricoes = db.prepare(`insert into descricao (id,texto,alturaDaCaixa,id_lista) values(?,?,?,?);`);
+    let inserirTarefa = db.prepare(`insert into tarefas(tarefa,estatos,codigo_de_lista) values(?,?,?);`);
+    let inserirDescricoes = db.prepare(`insert into descricao (id,texto,alturaDaCaixa,codigo_de_lista) values(?,?,?,?);`);
 
-    let id = inserirTarefa.run(dados.tarefas.tarefa,dados.tarefas.estatos,dados.tarefas.id_lista);
+    let id = inserirTarefa.run(dados.tarefas.tarefa,dados.tarefas.estatos,dados.tarefas.codigo_de_lista);
     let idTarefa = id.lastInsertRowid;
 
-    inserirDescricoes.run(idTarefa,dados.descricoes.texto,dados.descricoes.alturaDaCaixa,dados.descricoes.id_lista);
+    inserirDescricoes.run(idTarefa,dados.descricoes.texto,dados.descricoes.alturaDaCaixa,dados.descricoes.codigo_de_lista);
 });
 
 function buscar_difinicoes_ao_db() {
@@ -103,16 +104,38 @@ function buscar_listas_ao_db() {
 
 function buscar_tarefas_e_descrições_ao_db() {
   let numero_de_listas = db.prepare(`select count (*) as total from lista;`).get();
+  let id_listas=[];
 
+  db.prepare(`select id from lista;`).all().forEach((obj)=>{
+    id_listas.push(obj.id);
+  });
+
+  console.log(id_listas)
   console.log(numero_de_listas);
 
-  for (let index = 1; index <= numero_de_listas.total; index++) {
-    tarefas_do_db.push(db.prepare(`select * from tarefas where id_lista=${index};`).all());
-    descricoes_do_db.push(db.prepare(`select * from descricao where id_lista=${index};`).all());
-  }
+  id_listas.forEach((posicao)=>{
+    let tarefa_temporaria=[];
+    let descricao_temporaria=db.prepare(`select * from descricao where codigo_de_lista=${posicao};`).all();
+
+    db.prepare(`select * from tarefas where codigo_de_lista=${posicao};`).all().forEach((obj,index2)=>{
+      
+      tarefa_temporaria.push({
+        id: obj.id,
+        tarefa: obj.tarefa,
+        descricao: descricao_temporaria[index2],
+        estatos: obj.estatos,
+        codigo_de_lista:obj.codigo_de_lista
+      });
+    });
+
+    tarefas_do_db.push(tarefa_temporaria);
+    tarefa_temporaria=[];
+    descricoes_do_db.push(db.prepare(`select * from descricao where codigo_de_lista=${posicao};`).all());
+  });
 
   console.log(tarefas_do_db);
   console.log(descricoes_do_db);
+
 }
 
 function verificar_contiudo_no_db() {
@@ -264,6 +287,7 @@ app.whenReady().then(() => {
         tarefas: tarefas_do_db[index],
         descricao:descricoes_do_db[index],
         lisa_salva:item.lisa_salva,
+        codigo_de_lista:item.codigo_de_lista
       });
     });
 
@@ -271,7 +295,6 @@ app.whenReady().then(() => {
       listas: listas_enviadas,
       definicoes:definicoes_do_db
     };
-
   });
 });
 

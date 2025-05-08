@@ -50,6 +50,7 @@ let lista_anterior={
   posicao:0
 }
 let controle_dos_btns_de_navegacao=true;
+let codigo_de_lista=0;
 
 /*declaração dos elementos
  de maneira global*/
@@ -979,14 +980,14 @@ function adicionar_tarefa() {
   detalhes_da_descricao.push({
     texto: "......",
     alturaDaCaixa: 54,
-    id_lista:lista_aberta
+    codigo_de_lista:(modo_da_lista == "lista_existente")?"":codigo_de_lista+1
   }),
     tarefas.push({
       id: contador_tarefas,
       tarefa: inputlistnormal.value.trim(),
       descricao: detalhes_da_descricao[contador_tarefas - 1],
       estatos: false,
-      id_lista:lista_aberta
+      codigo_de_lista:(modo_da_lista == "lista_existente")?"":codigo_de_lista+1
     });
   console.log(tarefas);
   apresentar_tarefas();
@@ -1006,6 +1007,7 @@ function verificacao_input_modal_inicial_com_tecla(tecla) {
 }
 function salvar_lista() {
   numero_de_salvamento++;
+  (modo_da_lista == "lista_existente")?"":codigo_de_lista++;
   listas[lista_aberta] = {
     titulo_lista: title_task_normal.textContent,
     categoria: seletor_categorias_normal.textContent,
@@ -1013,24 +1015,28 @@ function salvar_lista() {
     tarefas: tarefas,
     descricao: detalhes_da_descricao,
     lisa_salva: numero_de_salvamento,
+    codigo_de_lista:codigo_de_lista
   };
-  api.inserirlistas({titulo_lista:listas[lista_aberta].titulo_lista,categoria:listas[lista_aberta].categoria,num_tarefas:listas[lista_aberta].num_tarefas,lisa_salva:listas[lista_aberta].lisa_salva});
+  
+
+  api.inserirlistas({titulo_lista:listas[lista_aberta].titulo_lista,categoria:listas[lista_aberta].categoria,num_tarefas:listas[lista_aberta].num_tarefas,lisa_salva:listas[lista_aberta].lisa_salva,codigo_de_lista:codigo_de_lista});
 
   for (let index = 0; index < tarefas.length; index++) {
     api.inserirTarefaEDescricao({
       tarefas:{
         tarefa:tarefas[index].tarefa,
         estatos:(tarefas[index].estatos)?1:0,
-        id_lista:lista_aberta+1
+        codigo_de_lista:codigo_de_lista
       },
       descricoes:{
         texto:detalhes_da_descricao[index].texto,
         alturaDaCaixa:detalhes_da_descricao[index].alturaDaCaixa,
-        id_lista:lista_aberta+1
+        codigo_de_lista:codigo_de_lista
       }
     });
     
   }
+
   dados_salvo_no_arrey = true;
   modo_da_lista = "lista_existente";
   console.log("a lista está no arrey");
@@ -2323,7 +2329,6 @@ async function obter_dados_do_db() {
 
 
 
-
 window.onload = async () => {
   let dados = await obter_dados_do_db()
   console.log(dados);
@@ -2342,6 +2347,9 @@ window.onload = async () => {
     listas=dados.listas;
     ativar=dados_das_configuracoes.execucao_do_app;
     contador_listas=listas.length;
+    codigo_de_lista=listas[listas.length-1].codigo_de_lista;
   }
   verificacao_modal_inicial();
 };
+
+
