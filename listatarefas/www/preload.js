@@ -13,5 +13,13 @@ contextBridge.exposeInMainWorld('api',{
   inserirDefinicoes: (dados)=> ipcRenderer.send("inserirDadosDasDefinicoes",dados),
   inserirlistas:(dados)=>{ipcRenderer.send("inserirDadosNaLista",dados)},
   inserirTarefaEDescricao:(dados)=>{ipcRenderer.send("inserirDadosNasTarefaseNasDescricoes",dados)},
-  buscarDadosAoDB: ()=> ipcRenderer.invoke('dadosDoDB')
+  buscarDadosAoDB: ()=> ipcRenderer.invoke('dadosDoDB'),
+  buscarListaSalva: ()=> ipcRenderer.invoke('ultimaListaSalva'),
+  deletar_uma_tarefa_e_descricao:(dados)=> ipcRenderer.send("deletarTarefaEDescricao",dados),
+  deletarTodasTarefasEDescricoes: (dados)=> ipcRenderer.send("deletarTodasTarefasEDescricoes",dados),
+  atualizarNumeroDeListasSalvamento: (dados)=> ipcRenderer.send("atualizarNumeroDeListasSalvamento",dados),
+  atualizarEstatosDaTarefa:(dados)=> ipcRenderer.send("atualizarEstatosDaTarefa",dados),
+  atualizarTextoDeUmaTarefa: (dados)=> ipcRenderer.send("atualizarTextoDeUmaTarefa",dados),
+  deletarTodasAsListas: (dados)=> ipcRenderer.send("deletarTodasAsListas",dados),
+  atualizarTituloIguia: (dados)=> ipcRenderer.send("atualizarTituloIguia",dados)
 });

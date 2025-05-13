@@ -1,4 +1,3 @@
-
 //seleções gerais
 const main = document.getElementById("main");
 const barra = document.getElementById("barra");
@@ -38,38 +37,43 @@ var dados_das_configuracoes = {
   percentagem_da_fonte: 13,
   logo: "../img/logo/logoapp.png",
   logo2: "../img/logo/logoapp2.png",
-  execucao_do_app:false
+  execucao_do_app: false,
+  titulo_iguais:0
 };
 var copia_dos_dados_das_configuracoes = {};
 var posicao_da_lista_filtrada_que_vai_ser_aberta = 0;
 var modal_salvar_lista_ativada_por = "";
 var menu_anterior = "";
-let estado_da_janela="restaurar";
-let lista_anterior={
-  modo:"",
-  posicao:0
-}
-let controle_dos_btns_de_navegacao=true;
-let codigo_de_lista=0;
+let estado_da_janela = "restaurar";
+let lista_anterior = {
+  modo: "",
+  posicao: 0,
+};
+let controle_dos_btns_de_navegacao = true;
+let codigo_de_lista = 0;
+let controlador_de_IDs = 0;
+let copia_da_lista_aberta = {};
+let elemento_editar_aberto = false;
 
 /*declaração dos elementos
  de maneira global*/
- 
- //declaração dos elementos da barra de titulo
- const caixa_da_barra_de_titulo = document.createElement("div");
- const elementos_do_lado_esquerdo_da_barra_de_titulo = document.createElement("div");
- const icone_da_barra_de_titulo = document.createElement("img");
- const seta_de_navegacao_esquerda = document.createElement("button");
- const seta_de_navegacao_direita = document.createElement("button");
- const elementos_do_centro_da_barra_de_titulo = document.createElement("div");
- const titulo_da_lista_na_barra_de_titulo = document.createElement("span");
- const elementos_do_lado_direito_da_barra_de_titulo = document.createElement("div");
- const btn_minimizar_da_barra_de_titulo = document.createElement("button");
- const btn_maximizar_da_barra_de_titulo = document.createElement("button");
- const btn_fechar_da_barra_de_titulo = document.createElement("button");
 
+//declaração dos elementos da barra de titulo
+const caixa_da_barra_de_titulo = document.createElement("div");
+const elementos_do_lado_esquerdo_da_barra_de_titulo =
+  document.createElement("div");
+const icone_da_barra_de_titulo = document.createElement("img");
+const seta_de_navegacao_esquerda = document.createElement("button");
+const seta_de_navegacao_direita = document.createElement("button");
+const elementos_do_centro_da_barra_de_titulo = document.createElement("div");
+const titulo_da_lista_na_barra_de_titulo = document.createElement("span");
+const elementos_do_lado_direito_da_barra_de_titulo =
+  document.createElement("div");
+const btn_minimizar_da_barra_de_titulo = document.createElement("button");
+const btn_maximizar_da_barra_de_titulo = document.createElement("button");
+const btn_fechar_da_barra_de_titulo = document.createElement("button");
 
- //declaração dos elementos da janela principal
+//declaração dos elementos da janela principal
 const WindowMain = document.createElement("div");
 const secao_esquerda = document.createElement("div");
 const logo = document.createElement("img");
@@ -215,59 +219,116 @@ var btn2_modal_salvar_configuracoes = document.createElement("button");
 //Barra de titulo
 function barra_de_titulo() {
   //elemento principal
-  caixa_da_barra_de_titulo.setAttribute("id","caixa_da_barra_de_titulo");
+  caixa_da_barra_de_titulo.setAttribute("id", "caixa_da_barra_de_titulo");
   barra.appendChild(caixa_da_barra_de_titulo);
 
   //caixa do lado esquerdo
-  elementos_do_lado_esquerdo_da_barra_de_titulo.setAttribute("id","elementos_do_lado_esquerdo_da_barra_de_titulo");
-  caixa_da_barra_de_titulo.appendChild(elementos_do_lado_esquerdo_da_barra_de_titulo);
+  elementos_do_lado_esquerdo_da_barra_de_titulo.setAttribute(
+    "id",
+    "elementos_do_lado_esquerdo_da_barra_de_titulo"
+  );
+  caixa_da_barra_de_titulo.appendChild(
+    elementos_do_lado_esquerdo_da_barra_de_titulo
+  );
   //icone
-  icone_da_barra_de_titulo.setAttribute("id","icone_da_barra_de_titulo");
-  icone_da_barra_de_titulo.setAttribute("src","../img/logo/icone2.png");
-  elementos_do_lado_esquerdo_da_barra_de_titulo.appendChild(icone_da_barra_de_titulo);
+  icone_da_barra_de_titulo.setAttribute("id", "icone_da_barra_de_titulo");
+  icone_da_barra_de_titulo.setAttribute("src", "../img/logo/icone2.png");
+  elementos_do_lado_esquerdo_da_barra_de_titulo.appendChild(
+    icone_da_barra_de_titulo
+  );
   //setas de navegação//
   //seta esquerda
-  seta_de_navegacao_esquerda.setAttribute("id","seta_de_navegacao_esquerda");
-  seta_de_navegacao_esquerda.setAttribute("class","seta_de_navegacao seta_esquerda");
-  seta_de_navegacao_esquerda.addEventListener("click",verificar_historico_de_janelas);
-  seta_de_navegacao_esquerda.innerHTML=`<img class="icones_de_navegacao seta_esquerda" src="../img/icons/seta-esquerda-white.png" alt="seta esquerda">`,
-  elementos_do_lado_esquerdo_da_barra_de_titulo.appendChild(seta_de_navegacao_esquerda);
+  seta_de_navegacao_esquerda.setAttribute("id", "seta_de_navegacao_esquerda");
+  seta_de_navegacao_esquerda.setAttribute(
+    "class",
+    "seta_de_navegacao seta_esquerda"
+  );
+  seta_de_navegacao_esquerda.addEventListener(
+    "click",
+    verificar_historico_de_janelas
+  );
+  (seta_de_navegacao_esquerda.innerHTML = `<img class="icones_de_navegacao seta_esquerda" src="../img/icons/seta-esquerda-white.png" alt="seta esquerda">`),
+    elementos_do_lado_esquerdo_da_barra_de_titulo.appendChild(
+      seta_de_navegacao_esquerda
+    );
   //seta direita
-  seta_de_navegacao_direita.setAttribute("id","seta_de_navegacao_direita");
-  seta_de_navegacao_direita.setAttribute("class","seta_de_navegacao seta_direita");
-  seta_de_navegacao_direita.addEventListener("click",verificar_historico_de_janelas);
-  seta_de_navegacao_direita.innerHTML=`<img class="icones_de_navegacao seta_direita" src="../img/icons/seta-direita-white.png" alt="seta direita">`,
-  elementos_do_lado_esquerdo_da_barra_de_titulo.appendChild(seta_de_navegacao_direita);
+  seta_de_navegacao_direita.setAttribute("id", "seta_de_navegacao_direita");
+  seta_de_navegacao_direita.setAttribute(
+    "class",
+    "seta_de_navegacao seta_direita"
+  );
+  seta_de_navegacao_direita.addEventListener(
+    "click",
+    verificar_historico_de_janelas
+  );
+  (seta_de_navegacao_direita.innerHTML = `<img class="icones_de_navegacao seta_direita" src="../img/icons/seta-direita-white.png" alt="seta direita">`),
+    elementos_do_lado_esquerdo_da_barra_de_titulo.appendChild(
+      seta_de_navegacao_direita
+    );
 
   //caixa do centro
-  elementos_do_centro_da_barra_de_titulo.setAttribute("id","elementos_do_centro_da_barra_de_titulo");
+  elementos_do_centro_da_barra_de_titulo.setAttribute(
+    "id",
+    "elementos_do_centro_da_barra_de_titulo"
+  );
   caixa_da_barra_de_titulo.appendChild(elementos_do_centro_da_barra_de_titulo);
   //informação da lista
-  titulo_da_lista_na_barra_de_titulo.setAttribute("id","titulo_da_lista_na_barra_de_titulo");
-  titulo_da_lista_na_barra_de_titulo.innerHTML="Lista fechada";
-  elementos_do_centro_da_barra_de_titulo.appendChild(titulo_da_lista_na_barra_de_titulo);
+  titulo_da_lista_na_barra_de_titulo.setAttribute(
+    "id",
+    "titulo_da_lista_na_barra_de_titulo"
+  );
+  titulo_da_lista_na_barra_de_titulo.innerHTML = "Manager Tasks";
+  elementos_do_centro_da_barra_de_titulo.appendChild(
+    titulo_da_lista_na_barra_de_titulo
+  );
 
   //caixa direita
-  elementos_do_lado_direito_da_barra_de_titulo.setAttribute("id","elementos_do_lado_direito_da_barra_de_titulo");
-  caixa_da_barra_de_titulo.appendChild(elementos_do_lado_direito_da_barra_de_titulo);
+  elementos_do_lado_direito_da_barra_de_titulo.setAttribute(
+    "id",
+    "elementos_do_lado_direito_da_barra_de_titulo"
+  );
+  caixa_da_barra_de_titulo.appendChild(
+    elementos_do_lado_direito_da_barra_de_titulo
+  );
   //botão minimizar
-  btn_minimizar_da_barra_de_titulo.setAttribute("id","btn_minimizar_da_barra_de_titulo");
-  btn_minimizar_da_barra_de_titulo.setAttribute("class","seta_de_navegacao");
-  btn_minimizar_da_barra_de_titulo.innerHTML=`<img class="icones_de_navegacao" src="../img/icons/minimize-white.png" alt="minimizar">`,
-  btn_minimizar_da_barra_de_titulo.addEventListener("click",minimizar_janela);
-  elementos_do_lado_direito_da_barra_de_titulo.appendChild(btn_minimizar_da_barra_de_titulo);
+  btn_minimizar_da_barra_de_titulo.setAttribute(
+    "id",
+    "btn_minimizar_da_barra_de_titulo"
+  );
+  btn_minimizar_da_barra_de_titulo.setAttribute("class", "seta_de_navegacao");
+  (btn_minimizar_da_barra_de_titulo.innerHTML = `<img class="icones_de_navegacao" src="../img/icons/minimize-white.png" alt="minimizar">`),
+    btn_minimizar_da_barra_de_titulo.addEventListener(
+      "click",
+      minimizar_janela
+    );
+  elementos_do_lado_direito_da_barra_de_titulo.appendChild(
+    btn_minimizar_da_barra_de_titulo
+  );
   //botão maximizar
-  btn_maximizar_da_barra_de_titulo.setAttribute("id","btn_maximizar_da_barra_de_titulo");
-  btn_maximizar_da_barra_de_titulo.setAttribute("class","seta_de_navegacao");
-  btn_maximizar_da_barra_de_titulo.innerHTML=`<img class="icones_de_navegacao" src="../img/icons/maximizar-white.png" alt="maximizar">`;
-  btn_maximizar_da_barra_de_titulo.addEventListener("click",maximizar_ou_restaurar_janela);
-  elementos_do_lado_direito_da_barra_de_titulo.appendChild(btn_maximizar_da_barra_de_titulo);
+  btn_maximizar_da_barra_de_titulo.setAttribute(
+    "id",
+    "btn_maximizar_da_barra_de_titulo"
+  );
+  btn_maximizar_da_barra_de_titulo.setAttribute("class", "seta_de_navegacao");
+  btn_maximizar_da_barra_de_titulo.innerHTML = `<img class="icones_de_navegacao" src="../img/icons/maximizar-white.png" alt="maximizar">`;
+  btn_maximizar_da_barra_de_titulo.addEventListener(
+    "click",
+    maximizar_ou_restaurar_janela
+  );
+  elementos_do_lado_direito_da_barra_de_titulo.appendChild(
+    btn_maximizar_da_barra_de_titulo
+  );
   //botão fechar
-  btn_fechar_da_barra_de_titulo.setAttribute("id","btn_fechar_da_barra_de_titulo");
-  btn_fechar_da_barra_de_titulo.setAttribute("class","seta_de_navegacao");
-  btn_fechar_da_barra_de_titulo.innerHTML=`<img class="icones_de_navegacao" src="../img/icons/cancel-white.png" alt="fechar">`;
-  btn_fechar_da_barra_de_titulo.addEventListener("click",fechar_janela);
-  elementos_do_lado_direito_da_barra_de_titulo.appendChild(btn_fechar_da_barra_de_titulo);
+  btn_fechar_da_barra_de_titulo.setAttribute(
+    "id",
+    "btn_fechar_da_barra_de_titulo"
+  );
+  btn_fechar_da_barra_de_titulo.setAttribute("class", "seta_de_navegacao");
+  btn_fechar_da_barra_de_titulo.innerHTML = `<img class="icones_de_navegacao" src="../img/icons/cancel-white.png" alt="fechar">`;
+  btn_fechar_da_barra_de_titulo.addEventListener("click", fechar_janela);
+  elementos_do_lado_direito_da_barra_de_titulo.appendChild(
+    btn_fechar_da_barra_de_titulo
+  );
 }
 //janela principal
 function janela_principal() {
@@ -292,17 +353,17 @@ function janela_principal() {
   boxmenu.appendChild(item_menu_home);
   item_menu_home.setAttribute("class", "boxmenuitems");
   item_menu_home.setAttribute("id", "paginaincial");
-  item_menu_home.addEventListener("click", ()=>{
-    controle_dos_btns_de_navegacao=true;
+  item_menu_home.addEventListener("click", () => {
+    controle_dos_btns_de_navegacao = true;
     abrir_pagina_inicial();
-});
+  });
   logo_home.setAttribute("src", "../img/icons/home.png");
   item_menu_home.innerHTML = "Pagina inicial";
   item_menu_home.appendChild(logo_home);
   //botao settings
   boxmenu.appendChild(item_menu_settings);
-  item_menu_settings.addEventListener("click", ()=>{
-    controle_dos_btns_de_navegacao=true;
+  item_menu_settings.addEventListener("click", () => {
+    controle_dos_btns_de_navegacao = true;
     abrir_configuracoes();
   });
   item_menu_settings.setAttribute("class", "boxmenuitems");
@@ -316,8 +377,8 @@ function janela_principal() {
   boxmenu.appendChild(item_menu_help);
   item_menu_help.setAttribute("class", "boxmenuitems");
   item_menu_help.setAttribute("id", "ajuda");
-  item_menu_help.addEventListener("click", ()=>{
-    controle_dos_btns_de_navegacao=true;
+  item_menu_help.addEventListener("click", () => {
+    controle_dos_btns_de_navegacao = true;
     abrir_sobre_app();
   });
   //logo ajuda
@@ -617,7 +678,12 @@ function pagina_inicial() {
   });
   boxsearch.appendChild(input_search);
   //icon da barra de pesquisa
-  icon_search.setAttribute("src", "../img/icons/search.png");
+  icon_search.setAttribute(
+    "src",
+    dados_das_configuracoes.cor_modo_do_sistema == "escuro"
+      ? "../img/icons/search-white.png"
+      : "../img/icons/search.png"
+  );
   boxsearch.appendChild(icon_search);
 
   //display das listas na pagina inicial
@@ -732,6 +798,7 @@ function configuracoes() {
 
   //caixa de configurações armazenamento
   boxstorage.setAttribute("id", "boxstorage");
+  boxstorage.style.display="none";
   BoxConfig.appendChild(boxstorage);
   //titulo
   titleStorage.innerHTML = "Armazenamento";
@@ -772,8 +839,17 @@ function sobre_app() {
   Boxhelp.innerHTML = `
    <div id="boxversao">
      <div><h3 id="versaotitle">Versão:  </h3><p>1.0</p></div>
-     <div><h3><b>Criado por:</b></h3><p> Alexandre junqueiro</p></div>
-     <div><h3><b>Lançamento:</b></h3><p> Sem data</p></div>
+     <div id="boxcriadores">
+        <h3><b>Criado por:</b><br></h3>
+        <div id="criadores">
+          <p> <br>Alexandre Junqueiro <b>(Desenvolvedor principal)</b>
+            <br>Yurivaldo Domingos
+            <br>Ceusa Alguém
+            <br>Emanuel Alguém
+          </p>
+        </div>
+      </div>
+     <div><h3><b>Lançamento:</b></h3><p> 22/Maio/2025</p></div>
    </div>
    <div id="boxdescricao">
      <h3>Descrição:</h3>
@@ -787,17 +863,13 @@ function sobre_app() {
        para melhor desempenho do app.
      </p>
      <p>
-       Ele foi desenvolvido com tecnologia web <b>(HTML,CSS, JAVASCRIPT)</b>, electron <b>(um framework javascript)</b><br>
-       e <b>apache cordova electron</b>. Caso queira participar deste projeto fique avontade em contribuir no repositório do github.
+       Ele foi desenvolvido com tecnologia web <b>(HTML,CSS, JAVASCRIPT)</b>, electron <b>(um framework javascript)</b>. Caso queira participar deste projeto fique avontade em contribuir no repositório do github.
      </p>
    </div>
    <div id="boxredes">
-     <h3><b>Redes:</b> (click para copiar um link)</h3>
+     <h3><b>Repositório oficial:</b> (click para abrir o link)</h3>
      <p>
-     LinkedIn: <a href="https://www.linkedin.com/in/alexandre-junqueiro/" class="links" >Perfil do criador</a><br>
-     GitHub: <a href="https://github.com/AleDev10/Manager-Tasks" class="links" >Reportório do projeto</a><br>
-     Instagram: <a href="https://www.instagram.com/alexandre_junqueiro/" class="links" >Perfil do criador</a><br>
-     Facebook: <a href="https://web.facebook.com/profile.php?id=100008443771463" class="links" >Perfil do criador</a><br>
+     GitHub: <a href="https://github.com/AleDev10/Manager-Tasks" class="links" >Reportório do projeto</a>
      </p>
    </div>
    <div id="dica">
@@ -953,7 +1025,12 @@ function lista_normal() {
   seletor_categorias_normal.innerHTML = "Categoria";
   boxcategorias_list_normal.appendChild(seletor_categorias_normal);
   //icone da caixa categorias
-  iconCategoriaNormal.setAttribute("src", "../img/icons/filter.png");
+  iconCategoriaNormal.setAttribute(
+    "src",
+    dados_das_configuracoes.cor_modo_do_sistema == "escuro"
+      ? "../img/icons/filter-white.png"
+      : "../img/icons/filter.png"
+  );
   boxcategorias_list_normal.appendChild(iconCategoriaNormal);
 
   //linha divisória
@@ -977,17 +1054,26 @@ function terminar_edicao_do_titulo_lista_normal(e) {
 }
 function adicionar_tarefa() {
   contador_tarefas++;
+  controlador_de_IDs++;
+
   detalhes_da_descricao.push({
+    id: controlador_de_IDs,
     texto: "......",
     alturaDaCaixa: 54,
-    codigo_de_lista:(modo_da_lista == "lista_existente")?"":codigo_de_lista+1
+    codigo_de_lista:
+      modo_da_lista == "lista_existente"
+        ? listas[lista_aberta].codigo_de_lista
+        : codigo_de_lista + 1,
   }),
     tarefas.push({
-      id: contador_tarefas,
+      id: controlador_de_IDs,
       tarefa: inputlistnormal.value.trim(),
       descricao: detalhes_da_descricao[contador_tarefas - 1],
       estatos: false,
-      codigo_de_lista:(modo_da_lista == "lista_existente")?"":codigo_de_lista+1
+      codigo_de_lista:
+        modo_da_lista == "lista_existente"
+          ? listas[lista_aberta].codigo_de_lista
+          : codigo_de_lista + 1,
     });
   console.log(tarefas);
   apresentar_tarefas();
@@ -1007,34 +1093,92 @@ function verificacao_input_modal_inicial_com_tecla(tecla) {
 }
 function salvar_lista() {
   numero_de_salvamento++;
-  (modo_da_lista == "lista_existente")?"":codigo_de_lista++;
-  listas[lista_aberta] = {
-    titulo_lista: title_task_normal.textContent,
-    categoria: seletor_categorias_normal.textContent,
-    num_tarefas: contador_tarefas,
-    tarefas: tarefas,
-    descricao: detalhes_da_descricao,
-    lisa_salva: numero_de_salvamento,
-    codigo_de_lista:codigo_de_lista
-  };
-  
+  modo_da_lista == "lista_existente" ? "" : codigo_de_lista++;
 
-  api.inserirlistas({titulo_lista:listas[lista_aberta].titulo_lista,categoria:listas[lista_aberta].categoria,num_tarefas:listas[lista_aberta].num_tarefas,lisa_salva:listas[lista_aberta].lisa_salva,codigo_de_lista:codigo_de_lista});
-
-  for (let index = 0; index < tarefas.length; index++) {
-    api.inserirTarefaEDescricao({
-      tarefas:{
-        tarefa:tarefas[index].tarefa,
-        estatos:(tarefas[index].estatos)?1:0,
-        codigo_de_lista:codigo_de_lista
-      },
-      descricoes:{
-        texto:detalhes_da_descricao[index].texto,
-        alturaDaCaixa:detalhes_da_descricao[index].alturaDaCaixa,
-        codigo_de_lista:codigo_de_lista
-      }
+  if (modo_da_lista != "lista_existente") {
+    api.inserirlistas({
+      titulo_lista: title_task_normal.textContent,
+      categoria: seletor_categorias_normal.textContent,
+      num_tarefas: contador_tarefas,
+      lisa_salva: numero_de_salvamento,
+      codigo_de_lista: codigo_de_lista,
     });
-    
+
+    for (let index = 0; index < tarefas.length; index++) {
+      api.inserirTarefaEDescricao({
+        tarefas: {
+          tarefa: tarefas[index].tarefa,
+          estatos: tarefas[index].estatos ? 1 : 0,
+          codigo_de_lista: codigo_de_lista,
+        },
+        descricoes: {
+          texto: detalhes_da_descricao[index].texto,
+          alturaDaCaixa: detalhes_da_descricao[index].alturaDaCaixa,
+          codigo_de_lista: codigo_de_lista,
+        },
+      });
+    }
+
+    ultima_lista().then((obj) => {
+      console.log(obj);
+
+      listas[lista_aberta] = {
+        titulo_lista: obj.titulo_lista,
+        categoria: obj.categoria,
+        num_tarefas: obj.num_tarefas,
+        tarefas: obj.tarefas,
+        descricao: obj.descricao,
+        lisa_salva: obj.lisa_salva,
+        codigo_de_lista: obj.codigo_de_lista,
+      };
+    });
+  } else {
+    let diferenca_de_tamanho;
+
+    if (tarefas.length - copia_das_tarefas.length > 0) {
+      diferenca_de_tamanho = tarefas.length - copia_das_tarefas.length;
+    } else {
+      let pre_diferenca = copia_das_tarefas.length - tarefas.length;
+      pre_diferenca == 0
+        ? (diferenca_de_tamanho = pre_diferenca)
+        : (diferenca_de_tamanho = copia_das_tarefas.length - pre_diferenca);
+    }
+
+    let tarefas_antigas = tarefas.filter(
+      (obj) => !copia_das_tarefas.some((obj2) => obj.id == obj2.id)
+    );
+
+    let tarefasExtras = tarefas.slice(0 - diferenca_de_tamanho);
+
+    if (tarefas_antigas.length != 0) {
+      for (let index = 0; index < diferenca_de_tamanho; index++) {
+        api.inserirTarefaEDescricao({
+          tarefas: {
+            tarefa: tarefasExtras[index].tarefa,
+            estatos: tarefasExtras[index].estatos ? 1 : 0,
+            codigo_de_lista: listas[lista_aberta].codigo_de_lista,
+          },
+          descricoes: {
+            texto: tarefasExtras[index].descricao.texto,
+            alturaDaCaixa: tarefasExtras[index].descricao.alturaDaCaixa,
+            codigo_de_lista: listas[lista_aberta].codigo_de_lista,
+          },
+        });
+      }
+
+      listas[lista_aberta].titulo_lista = title_task_normal.textContent;
+      listas[lista_aberta].categoria = seletor_categorias_normal.textContent;
+      listas[lista_aberta].num_tarefas = contador_tarefas;
+      listas[lista_aberta].lisa_salva = numero_de_salvamento;
+
+      api.atualizarNumeroDeListasSalvamento({
+        titulo_lista: title_task_normal.textContent,
+        categoria: seletor_categorias_normal.textContent,
+        num_tarefas: contador_tarefas,
+        codigo_de_lista: listas[lista_aberta].codigo_de_lista,
+        lisa_salva: listas[lista_aberta].lisa_salva + 1,
+      });
+    }
   }
 
   dados_salvo_no_arrey = true;
@@ -1064,10 +1208,20 @@ function salvar_configuracoes() {
     cor_modo_do_sistema: dados_das_configuracoes.cor_modo_do_sistema,
     percentagem_da_fonte: inputfont.value,
     logo: dados_das_configuracoes.logo,
-    logo2:dados_das_configuracoes.logo2,
-    execucao_do_app:true
+    logo2: dados_das_configuracoes.logo2,
+    execucao_do_app: true,
+    titulo_iguais:titulo_iguais
   };
-  api.inserirDefinicoes({nome_user:dados_das_configuracoes.nome_user,cor_sistema:dados_das_configuracoes.cor_sistema,cor_modo_do_sistema:dados_das_configuracoes.cor_modo_do_sistema,percentagem_da_fonte:dados_das_configuracoes.percentagem_da_fonte,logo:dados_das_configuracoes.logo,logo2:dados_das_configuracoes.logo2,execucao_do_app:(ativar)?1:0});
+  api.inserirDefinicoes({
+    nome_user: dados_das_configuracoes.nome_user,
+    cor_sistema: dados_das_configuracoes.cor_sistema,
+    cor_modo_do_sistema: dados_das_configuracoes.cor_modo_do_sistema,
+    percentagem_da_fonte: dados_das_configuracoes.percentagem_da_fonte,
+    logo: dados_das_configuracoes.logo,
+    logo2: dados_das_configuracoes.logo2,
+    execucao_do_app: ativar ? 1 : 0,
+    titulo_iguais:titulo_iguais
+  });
   alteracoes_salvas();
 }
 
@@ -1081,6 +1235,7 @@ function verificacao_modal_inicial() {
     modalMensagem();
     modalSalvarConfiguracoes();
   } else {
+    modal_inicio();
     modal_tipo_lista();
     modal_salvar_lista();
     modalMensagem();
@@ -1089,7 +1244,8 @@ function verificacao_modal_inicial() {
     cor_menu_pagina_inicial();
     pagina_inicial();
     alterar_tamanho_da_fonte();
-    configuracoes_salvas=true;
+    modalBox.style.display = "none";
+    configuracoes_salvas = true;
   }
   escolher_tema(dados_das_configuracoes.cor_modo_do_sistema);
   cor_do_sistema_escolhida(dados_das_configuracoes.cor_sistema);
@@ -1098,49 +1254,49 @@ function verificacao_modal_inicial() {
 }
 function abrir_pagina_inicial() {
   if (menu_activo == "configuracao") {
-    menu_anterior=menu_activo;
+    menu_anterior = menu_activo;
     verificacao_do_salvamento_das_configuracoes("paginaincial");
   }
   if (menu_activo == "ajuda") {
-    menu_anterior=menu_activo;
+    menu_anterior = menu_activo;
     remover_elemento_da_tela(WindowMain, secao_direita_help);
     menu_ativo_pagina_inicial();
   }
   if (menu_activo == "lista_normal") {
-    menu_anterior=menu_activo;
+    menu_anterior = menu_activo;
     verificar_da_Saida_da_lista("paginaincial");
   }
 }
 function abrir_configuracoes() {
   if (menu_activo == "paginaincial") {
-    menu_anterior=menu_activo;
+    menu_anterior = menu_activo;
     desativar_modo_selecao();
     remover_elemento_da_tela(WindowMain, secao_direita_pagina_inicial);
     menu_ativo_configuracoes();
   }
   if (menu_activo == "ajuda") {
-    menu_anterior=menu_activo;
+    menu_anterior = menu_activo;
     remover_elemento_da_tela(WindowMain, secao_direita_help);
     menu_ativo_configuracoes();
   }
   if (menu_activo == "lista_normal") {
-    menu_anterior=menu_activo;
+    menu_anterior = menu_activo;
     verificar_da_Saida_da_lista("configuracao");
   }
 }
 function abrir_sobre_app() {
   if (menu_activo == "paginaincial") {
-    menu_anterior=menu_activo;
+    menu_anterior = menu_activo;
     desativar_modo_selecao();
     remover_elemento_da_tela(WindowMain, secao_direita_pagina_inicial);
     menu_ativo_sobre_app();
   }
   if (menu_activo == "configuracao") {
-    menu_anterior=menu_activo;
+    menu_anterior = menu_activo;
     verificacao_do_salvamento_das_configuracoes("ajuda");
   }
   if (menu_activo == "lista_normal") {
-    menu_anterior=menu_activo;
+    menu_anterior = menu_activo;
     verificar_da_Saida_da_lista("ajuda");
   }
 }
@@ -1149,7 +1305,7 @@ function abrir_lista_normal() {
   remover_elemento_da_tela(WindowMain, secao_direita_pagina_inicial);
   limpar_tarefas();
   lista_normal();
-  menu_anterior=menu_activo;
+  menu_anterior = menu_activo;
   menu_activo = "lista_normal";
   contador_listas++;
   lista_aberta = contador_listas - 1;
@@ -1184,8 +1340,8 @@ function verificacao_modal_inicial_com_botao() {
     dados_das_configuracoes.nome_user =
       nome.charAt(0).toUpperCase() + nome.slice(1).toLowerCase();
     ativar = true;
-    nome_do_gerencidor.value=dados_das_configuracoes.nome_user;
-    inputfont.value=13;
+    nome_do_gerencidor.value = dados_das_configuracoes.nome_user;
+    inputfont.value = 13;
     salvar_configuracoes();
     modalBox.style.display = "none";
     janela_principal();
@@ -1196,14 +1352,19 @@ function verificacao_modal_inicial_com_botao() {
   }
 }
 function deletar_lista() {
-  limpar_tarefas();
-  tarefas.splice(0, tarefas.length);
-  detalhes_da_descricao.splice(0, detalhes_da_descricao.length);
-  contador_tarefas = 0;
-  console.log(`tarefas da lista numero ${contador_listas} deletadas.`);
-  atualizar_num_listas();
-  deixar_entrada_normal();
-  infolista("alterada");
+  if (elemento_editar_aberto == false) {
+    if (modo_da_lista == "lista_existente") {
+      api.deletarTodasTarefasEDescricoes(listas[lista_aberta].codigo_de_lista);
+    }
+    limpar_tarefas();
+    tarefas.splice(0, tarefas.length);
+    detalhes_da_descricao.splice(0, detalhes_da_descricao.length);
+    contador_tarefas = 0;
+    console.log(`tarefas da lista numero ${contador_listas} deletadas.`);
+    atualizar_num_listas();
+    deixar_entrada_normal();
+    infolista("alterada");
+  }
 }
 function alterar_titulo(e) {
   if (e.target.id === "titletasknormal") {
@@ -1217,7 +1378,7 @@ function alterar_titulo(e) {
 function verificacao_para_adicionar_tarefa() {
   if (inputlistnormal.value.trim() == "") {
     deixar_entrada_normal();
-  } else {
+  } else if (elemento_editar_aberto == false) {
     adicionar_tarefa();
     deixar_entrada_normal();
   }
@@ -1242,8 +1403,10 @@ function verificar_caixa_de_verificacao_de_tarefa(e) {
     if (e.target.id == `caixa_concluir${index}`) {
       if (e.target.checked) {
         tarefas[index].estatos = true;
+        api.atualizarEstatosDaTarefa({ id: tarefas[index].id, estatos: 1 });
       } else {
         tarefas[index].estatos = false;
+        api.atualizarEstatosDaTarefa({ id: tarefas[index].id, estatos: 0 });
       }
     }
   }
@@ -1253,7 +1416,11 @@ function deletar_uma_tarefa() {
   let botoes_deletar = document.querySelectorAll(".deletartarefa");
   botoes_deletar.forEach((tag) => {
     tag.addEventListener("click", (e) => {
-      verificacao_botao_deletar_selecionado(e.target);
+      if (elemento_editar_aberto) {
+        e.stopPropagation();
+      } else {
+        verificacao_botao_deletar_selecionado(e.target);
+      }
     });
   });
 }
@@ -1265,15 +1432,39 @@ function verificacao_botao_deletar_selecionado(ele) {
   }
 }
 function deletar_tarefa_selecionada(i) {
-  tarefas.splice(i, 1);
-  detalhes_da_descricao.splice(i, 1);
-  contador_tarefas -= 1;
-  apresentar_tarefas();
+  if (modo_da_lista == "lista_existente") {
+    if (tarefas[i].id == detalhes_da_descricao[i].id) {
+      console.log(tarefas[i].id);
+      console.log(detalhes_da_descricao[i].id);
+      api.deletar_uma_tarefa_e_descricao({
+        id: tarefas[i].id,
+        num_tarefas: listas[lista_aberta].num_tarefas,
+        codigo_de_lista: tarefas[i].codigo_de_lista,
+      });
+
+      tarefas.splice(i, 1);
+      detalhes_da_descricao.splice(i, 1);
+      contador_tarefas -= 1;
+      apresentar_tarefas();
+    }
+  } else {
+    tarefas.splice(i, 1);
+    detalhes_da_descricao.splice(i, 1);
+    contador_tarefas -= 1;
+    apresentar_tarefas();
+  }
 }
 function editar_uma_tarefas() {
   let botoes_editar = [...document.querySelectorAll(".editartarefa")];
   botoes_editar.forEach((editar) => {
-    editar.addEventListener("click", verificacao_botao_editar_selecionado);
+    editar.addEventListener("click", (e) => {
+      if (elemento_editar_aberto) {
+        e.stopPropagation();
+      } else {
+        verificacao_botao_editar_selecionado(e);
+        elemento_editar_aberto = true;
+      }
+    });
   });
 }
 function verificacao_botao_editar_selecionado(e) {
@@ -1292,8 +1483,22 @@ function verificacao_botao_editar_selecionado(e) {
       let cancelar_edicao = document.createElement("img");
       let entrada_edicao = document.createElement("input");
 
-      confirmar_edicao.setAttribute("src", "../img/icons/dobleverificado.png");
-      cancelar_edicao.setAttribute("src", "../img/icons/cancel.png");
+      confirmar_edicao.setAttribute(
+        "src",
+        `${
+          dados_das_configuracoes.cor_modo_do_sistema == "escuro"
+            ? "../img/icons/dobleverificado-white.png"
+            : "../img/icons/dobleverificado.png"
+        }`
+      );
+      cancelar_edicao.setAttribute(
+        "src",
+        `${
+          dados_das_configuracoes.cor_modo_do_sistema == "escuro"
+            ? "../img/icons/cancel-white.png"
+            : "../img/icons/cancel.png"
+        }`
+      );
       entrada_edicao.setAttribute("class", "entrada_edicao");
 
       if (!verificacao_da_tarefa.checked) {
@@ -1327,16 +1532,13 @@ function verificacao_botao_editar_selecionado(e) {
         troca_de_elemento(confirmar_edicao, botao_editar);
         troca_de_elemento(cancelar_edicao, botao_deletar);
         troca_de_elemento(entrada_edicao, texto_tarefa);
-      });
-      entrada_edicao.addEventListener("blur", () => {
-        if (entrada_edicao.value == "") {
-          erro_entrada_edicao(entrada_edicao);
-        } else {
-          troca_de_elemento(confirmar_edicao, botao_editar);
-          troca_de_elemento(cancelar_edicao, botao_deletar);
-          troca_de_elemento(entrada_edicao, texto_tarefa);
-          guardar_tarefa_editada(entrada_edicao, texto_tarefa, index);
-        }
+        elemento_editar_aberto = false;
+        copia_das_tarefas[index] != tarefas[index]
+          ? ""
+          : api.atualizarTextoDeUmaTarefa({
+              id: tarefas[index].id,
+              tarefa: copia_das_tarefas[index].tarefa,
+            });
       });
       entrada_edicao.addEventListener("keydown", (e) => {
         if (e.key == "Enter") {
@@ -1356,6 +1558,11 @@ function verificacao_botao_editar_selecionado(e) {
 function guardar_tarefa_editada(pai, filho, i) {
   filho.textContent = pai.value;
   tarefas[i].tarefa = pai.value;
+  elemento_editar_aberto = false;
+  api.atualizarTextoDeUmaTarefa({
+    id: tarefas[i].id,
+    tarefa: tarefas[i].tarefa,
+  });
   apresentar_tarefas();
 }
 function verificar_modal_salvar_lista() {
@@ -1375,6 +1582,7 @@ function verificar_modal_salvar_lista() {
   } else {
     if (numero_de_salvamento > 0) {
       listas[lista_aberta].tarefas = copia_das_tarefas;
+      cancelar_alteracoes_no_db();
       sair_da_modal_salvar_lista();
       sairDaLista(
         modal_salvar_lista_ativada_por != "lista_filtrada"
@@ -1423,8 +1631,8 @@ function verificar_da_Saida_da_lista(texto, ativado_por = "lista_normal") {
   }
 }
 function sairDaLista(ativado_por = "lista_normal") {
-  lista_anterior.modo=modo_da_lista;
-  lista_anterior.posicao=lista_aberta;
+  lista_anterior.modo = modo_da_lista;
+  lista_anterior.posicao = lista_aberta;
   tarefas = [];
   detalhes_da_descricao = [];
   contador_tarefas = 0;
@@ -1433,8 +1641,9 @@ function sairDaLista(ativado_por = "lista_normal") {
   copia_das_tarefas = [];
   modo_da_lista = "";
   confirmacao_de_lista_salva = true;
-  menu_anterior=menu_activo;
-  menu_activo="lista_normal";
+  elemento_editar_aberto = false;
+  menu_anterior = menu_activo;
+  menu_activo = "lista_normal";
   remover_lista_normal(
     pagina_que_a_lista_vai_remover,
     ativado_por != "lista_filtrada" ? "lista_normal" : "lista_filtrada"
@@ -1525,7 +1734,7 @@ function verificar_lista_selecionada() {
       for (let index = 0; index < contador_listas; index++) {
         if (e.target.id == `${index}lista`) {
           if (evento_de_entrada_na_lista) {
-            controle_dos_btns_de_navegacao=true;
+            controle_dos_btns_de_navegacao = true;
             abrir_lista_normal_pela_pagina_inicial(index);
           } else {
             e.stopPropagation();
@@ -1539,10 +1748,11 @@ function abrir_lista_normal_pela_pagina_inicial(i) {
   remover_elemento_da_tela(WindowMain, secao_direita_pagina_inicial);
   lista_normal();
   limpar_tarefas();
-  menu_anterior=menu_activo;
+  menu_anterior = menu_activo;
   menu_activo = "lista_normal";
   lista_aberta = i;
   dados_salvo_no_arrey = true;
+  copia_da_lista_aberta = JSON.parse(JSON.stringify(listas[lista_aberta]));
   tarefas = listas[lista_aberta].tarefas;
   copia_das_tarefas = JSON.parse(JSON.stringify(tarefas));
   detalhes_da_descricao = listas[lista_aberta].descricao;
@@ -1557,8 +1767,11 @@ function abrir_lista_normal_pela_pagina_inicial(i) {
 }
 function deletar_todas_listas() {
   listas.splice(0, contador_listas);
+  api.deletarTodasAsListas();
   contador_listas = 0;
   titulo_iguais = 0;
+  controlador_de_IDs=0;
+  codigo_de_lista=0;
   actualizar_contador_de_listas();
   apresentar_listas_na_pagina_inicial();
   apresentar_listas_no_display_do_filtro(filter_list.innerHTML);
@@ -1629,20 +1842,24 @@ function trava_do_modo_selecao() {
   }
 }
 function verificar_se_a_lista_existe() {
-  let resultado = listas.findIndex(
-    (item) => item.titulo_lista === title_task_normal.textContent
-  );
-  if (resultado == -1) {
-    salvar_lista();
-    ativar_modalMensagem("Lista salva");
-  } else if (modo_da_lista === "lista_existente") {
-    salvar_lista();
-    ativar_modalMensagem("Lista salva");
-  } else {
-    titulo_iguais++;
-    title_task_normal.textContent = `Titulo${titulo_iguais}`;
-    salvar_lista();
-    ativar_modalMensagem("Lista salva");
+  if (elemento_editar_aberto == false) {
+    let resultado = listas.findIndex(
+      (item) => item.titulo_lista === title_task_normal.textContent
+    );
+    if (resultado == -1) {
+      salvar_lista();
+      ativar_modalMensagem("Lista salva");
+    } else if (modo_da_lista === "lista_existente") {
+      salvar_lista();
+      ativar_modalMensagem("Lista salva");
+    } else {
+      titulo_iguais++;
+      dados_das_configuracoes.titulo_iguais=titulo_iguais;
+      api.atualizarTituloIguia({id:dados_das_configuracoes.id,titulo_iguais:dados_das_configuracoes.titulo_iguais});
+      title_task_normal.textContent = `Titulo${titulo_iguais}`;
+      salvar_lista();
+      ativar_modalMensagem("Lista salva");
+    }
   }
 }
 function desativar_modo_selecao() {
@@ -1684,7 +1901,7 @@ function sair_das_configuracoes(texto) {
       break;
     case "lista_normal":
       remover_elemento_da_tela(WindowMain, secao_direita_config);
-      menu_activo="lista_normal";
+      menu_activo = "lista_normal";
       abrir_lista_filtrada(posicao_da_lista_filtrada_que_vai_ser_aberta);
       break;
     default:
@@ -1800,12 +2017,16 @@ function verificar_lista_filtrada_a_ser_aberto() {
       let index = e.target.getAttribute("data-index");
       posicao_da_lista_filtrada_que_vai_ser_aberta = index;
       modal_salvar_lista_ativada_por = "lista_filtrada";
-      controle_dos_btns_de_navegacao=true;
+      controle_dos_btns_de_navegacao = true;
       if (menu_activo == "configuracao" && configuracoes_salvas) {
         verificar_da_Saida_da_lista(menu_activo, "lista_filtrada");
-      } else if (menu_activo=="paginaincial" || menu_activo=="ajuda" || menu_activo=="lista_normal"){
+      } else if (
+        menu_activo == "paginaincial" ||
+        menu_activo == "ajuda" ||
+        menu_activo == "lista_normal"
+      ) {
         verificar_da_Saida_da_lista(menu_activo, "lista_filtrada");
-      }else{
+      } else {
         console.log("não abrir");
         verificacao_do_salvamento_das_configuracoes("lista_normal");
       }
@@ -1837,16 +2058,16 @@ function minimizar_janela() {
   api.minimizar();
 }
 function maximizar_ou_restaurar_janela() {
-  if (estado_da_janela== "restaurar") {
+  if (estado_da_janela == "restaurar") {
     api.maximizarOuRestaurar();
-    estado_da_janela="maximizar";
+    estado_da_janela = "maximizar";
   } else {
     api.maximizarOuRestaurar();
-    estado_da_janela="restaurar";
+    estado_da_janela = "restaurar";
   }
 }
 function verificar_historico_de_janelas(elemento) {
-  if (menu_anterior=="" && menu_seguinte=="") {
+  if (menu_anterior == "" && menu_seguinte == "") {
     console.log("Sem historico");
   } else {
     executar_acao(elemento.target);
@@ -1856,18 +2077,18 @@ function executar_acao(acionado_por) {
   console.log(acionado_por.classList[1]);
   switch (acionado_por.classList[1]) {
     case "seta_esquerda":
-      if(controle_dos_btns_de_navegacao){
+      if (controle_dos_btns_de_navegacao) {
         navegar_ate();
-        controle_dos_btns_de_navegacao=false;
-      }else{
+        controle_dos_btns_de_navegacao = false;
+      } else {
         console.warn("Não pode voltar mais.");
       }
       break;
     case "seta_direita":
-      if(controle_dos_btns_de_navegacao==false){
+      if (controle_dos_btns_de_navegacao == false) {
         navegar_ate();
-        controle_dos_btns_de_navegacao=true;
-      }else{
+        controle_dos_btns_de_navegacao = true;
+      } else {
         console.warn("Não pode avançar mais.");
       }
       break;
@@ -1877,7 +2098,7 @@ function executar_acao(acionado_por) {
   }
 }
 function navegar_ate() {
-  console.log("seta_esquerda vai voltar para "+ menu_anterior);
+  console.log("seta_esquerda vai voltar para " + menu_anterior);
   switch (menu_anterior) {
     case "paginaincial":
       abrir_pagina_inicial();
@@ -1897,14 +2118,52 @@ function navegar_ate() {
   }
 }
 function validar_duas_formas_de_abrir_lista_de_tarefa() {
-  if (lista_anterior.modo=="nova_lista") {
+  if (lista_anterior.modo == "nova_lista") {
     abrir_lista_normal();
   } else {
-    posicao_da_lista_filtrada_que_vai_ser_aberta=lista_anterior.posicao;
-    (menu_activo=="paginaincial")?abrir_lista_normal_pela_pagina_inicial(posicao_da_lista_filtrada_que_vai_ser_aberta):verificar_da_Saida_da_lista(menu_activo, "lista_filtrada");
+    posicao_da_lista_filtrada_que_vai_ser_aberta = lista_anterior.posicao;
+    menu_activo == "paginaincial"
+      ? abrir_lista_normal_pela_pagina_inicial(
+          posicao_da_lista_filtrada_que_vai_ser_aberta
+        )
+      : verificar_da_Saida_da_lista(menu_activo, "lista_filtrada");
   }
 }
- 
+function cancelar_alteracoes_no_db() {
+  deletar_lista();
+  let tarefas_extras = copia_da_lista_aberta.tarefas;
+  tarefas_extras.forEach((obj) => {
+    api.inserirTarefaEDescricao({
+      tarefas: {
+        tarefa: obj.tarefa,
+        estatos: obj.estatos ? 1 : 0,
+        codigo_de_lista: obj.codigo_de_lista,
+      },
+      descricoes: {
+        texto: obj.descricao.texto,
+        alturaDaCaixa: obj.descricao.alturaDaCaixa,
+        codigo_de_lista: obj.codigo_de_lista,
+      },
+    });
+  });
+
+  api.atualizarNumeroDeListasSalvamento({
+    titulo_lista: copia_da_lista_aberta.titulo_lista,
+    categoria: copia_da_lista_aberta.categoria,
+    num_tarefas: copia_da_lista_aberta.num_tarefas,
+    codigo_de_lista: copia_da_lista_aberta.codigo_de_lista,
+    lisa_salva: copia_da_lista_aberta.lisa_salva,
+  });
+
+  listas[lista_aberta] = copia_da_lista_aberta;
+}
+async function obter_dados_do_db() {
+  return await api.buscarDadosAoDB();
+}
+async function ultima_lista() {
+  return await api.buscarListaSalva();
+}
+
 //saida de dados
 function cor_menu_pagina_inicial() {
   item_menu_settings.style.backgroundColor = "";
@@ -2054,8 +2313,16 @@ function criacao_da_tarefas(tarefas, i) {
     }">${tarefas.tarefa}</span>
      </div>
      <div class="boxTask2">
-       <img src="../img/icons/edite.png" id="edite${i}" class="editartarefa">
-       <img src="../img/icons/delete.png" id="delete${i}" class="deletartarefa">
+       <img src=${
+         dados_das_configuracoes.cor_modo_do_sistema == "escuro"
+           ? "../img/icons/edite-white.png"
+           : "../img/icons/edite.png"
+       } id="edite${i}" class="editartarefa">
+       <img src=${
+         dados_das_configuracoes.cor_modo_do_sistema == "escuro"
+           ? "../img/icons/delete-white.png"
+           : "../img/icons/delete.png"
+       } id="delete${i}" class="deletartarefa">
      </div>
    </div>
    <div class="descricaoTask">
@@ -2138,7 +2405,10 @@ function cor_do_sistema_escolhida(cor) {
           : "../img/logo/logoapp2.png";
       document.getElementById("logomodaliniciar").src =
         dados_das_configuracoes.logo2;
-      cor_menu_configuracoes();
+      menu_activo != "paginaincial"
+        ? cor_menu_configuracoes()
+        : cor_menu_pagina_inicial();
+      icone_da_barra_de_titulo.src = "../img/logo/icone2.png";
       console.log("feito1");
       break;
     case "#5d35f2":
@@ -2161,7 +2431,10 @@ function cor_do_sistema_escolhida(cor) {
           : "../img/logo/logoapp2-1.png";
       document.getElementById("logomodaliniciar").src =
         dados_das_configuracoes.logo2;
-      cor_menu_configuracoes();
+      menu_activo != "paginaincial"
+        ? cor_menu_configuracoes()
+        : cor_menu_pagina_inicial();
+      icone_da_barra_de_titulo.src = "../img/logo/icone3.png";
       console.log("feito2");
       break;
     default:
@@ -2197,6 +2470,18 @@ function escolher_tema(e) {
       );
       dados_das_configuracoes.logo = "../img/logo/logoapp5.png";
       logo.src = dados_das_configuracoes.logo;
+
+      //icones brancos
+      //barra de titulo
+      seta_de_navegacao_esquerda.innerHTML = `<img class="icones_de_navegacao seta_esquerda" src="../img/icons/seta-esquerda-white.png" alt="seta esquerda">`;
+      seta_de_navegacao_direita.innerHTML = `<img class="icones_de_navegacao seta_direita" src="../img/icons/seta-direita-white.png" alt="seta direita">`;
+      btn_minimizar_da_barra_de_titulo.innerHTML = `<img class="icones_de_navegacao" src="../img/icons/minimize-white.png" alt="minimizar">`;
+      btn_maximizar_da_barra_de_titulo.innerHTML = `<img class="icones_de_navegacao" src="../img/icons/maximizar-white.png" alt="maximizar">`;
+      btn_fechar_da_barra_de_titulo.innerHTML = `<img class="icones_de_navegacao" src="../img/icons/cancel-white.png" alt="fechar">`;
+
+      //secção esquerda
+      icon_list_filter.src = "../img/icons/filterlist-white.png";
+
       break;
     case "claro":
       api.temaClaro();
@@ -2224,8 +2509,18 @@ function escolher_tema(e) {
       );
       dados_das_configuracoes.logo = "../img/logo/logoapp.png";
       logo.src = dados_das_configuracoes.logo;
-      break;
 
+      //icones pretos
+      seta_de_navegacao_esquerda.innerHTML = `<img class="icones_de_navegacao seta_esquerda" src="../img/icons/seta-esquerda-black.png" alt="seta esquerda">`;
+      seta_de_navegacao_direita.innerHTML = `<img class="icones_de_navegacao seta_direita" src="../img/icons/seta-direita-black.png" alt="seta direita">`;
+      btn_minimizar_da_barra_de_titulo.innerHTML = `<img class="icones_de_navegacao" src="../img/icons/minimize-black.png" alt="minimizar">`;
+      btn_maximizar_da_barra_de_titulo.innerHTML = `<img class="icones_de_navegacao" src="../img/icons/maximizar-black.png" alt="maximizar">`;
+      btn_fechar_da_barra_de_titulo.innerHTML = `<img class="icones_de_navegacao" src="../img/icons/cancel.png" alt="fechar">`;
+
+      //secção esquerda
+      icon_list_filter.src = "../img/icons/filterlist.png";
+
+      break;
     default:
       console.log("opção invalida");
       break;
@@ -2296,10 +2591,6 @@ function apresentar_listas_no_display_do_filtro(texto) {
       break;
   }
 }
-
-
-
-
 function carregar_listas() {
   console.clear();
 
@@ -2323,33 +2614,36 @@ function carregar_listas() {
   console.table(lista_anterior);
   console.groupEnd("tabela do historico de navegação");
 }
-async function obter_dados_do_db() {
-  return await api.buscarDadosAoDB();
-}
+
 
 
 
 window.onload = async () => {
-  let dados = await obter_dados_do_db()
+  let dados = await obter_dados_do_db();
   console.log(dados);
-  if (dados.definicoes=={}) {
+  if (dados.definicoes == {}) {
     console.log("definições vazia");
-  }else{
-    dados_das_configuracoes={
+  } else {
+    dados_das_configuracoes = {
+      id:dados.definicoes.id,
       nome_user: dados.definicoes.nome_user,
       cor_sistema: dados.definicoes.cor_sistema,
       cor_modo_do_sistema: dados.definicoes.cor_modo_do_sistema,
       percentagem_da_fonte: dados.definicoes.percentagem_da_fonte,
       logo: dados.definicoes.logo,
       logo2: dados.definicoes.logo2,
-      execucao_do_app:(dados.definicoes.execucao_do_app==1)?true:false
+      execucao_do_app: dados.definicoes.execucao_do_app == 1 ? true : false,
+      titulo_iguais:dados.definicoes.titulo_iguais
     };
-    listas=dados.listas;
-    ativar=dados_das_configuracoes.execucao_do_app;
-    contador_listas=listas.length;
-    codigo_de_lista=listas[listas.length-1].codigo_de_lista;
+    alteracoes_salvas();
+    listas = dados.listas;
+    ativar = dados_das_configuracoes.execucao_do_app;
+    titulo_iguais=dados_das_configuracoes.titulo_iguais;
+    contador_listas = listas.length;
+    if (contador_listas!=0) {
+      codigo_de_lista = listas[listas.length - 1].codigo_de_lista;
+    }
+    controlador_de_IDs = dados.controlador_de_IDs;
   }
   verificacao_modal_inicial();
 };
-
-

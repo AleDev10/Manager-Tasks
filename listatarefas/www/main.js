@@ -8,13 +8,16 @@ const notifier = require("node-notifier");
 const Database = require('better-sqlite3');
 const { app, BrowserWindow,ipcMain,nativeTheme,shell, ipcRenderer } = require("electron");
 const { log, Console } = require("console");
+const { get } = require("http");
 
 //aria das variaveis de dados
 let listas_do_db=[];
 let definicoes_do_db={};
 let tarefas_do_db=[];
 let descricoes_do_db=[];
+let ultima_lista_crida={};
 let conteudo_do_db;
+let ultimo_id_gerado_no_db
 
 //caminho do db para desenvolvimento
 const dbPath = path.join(__dirname,"db","Listas_de_tarefas.db");
@@ -45,7 +48,8 @@ db.exec(`create table if not exists definicoes(
   percentagem_da_fonte integer not null default 13,
   logo text not null default '../img/logo/logoapp5.png',
   logo2 text not null default '../img/logo/logoapp4.png',
-  execucao_do_app integer not null default 0
+  execucao_do_app integer not null default 0,
+  titulo_iguais integer not null default 0
 );
 `);
 
@@ -68,8 +72,8 @@ db.exec(`create table if not exists tarefas (
 );`);
 
 function inserir_dados_nas_definicoes(dados) {
-  let inserir = db.prepare(`insert into definicoes (nome_user,cor_sistema,cor_modo_do_sistema,percentagem_da_fonte,logo,logo2,execucao_do_app) values (?,?,?,?,?,?,?);`);
-  inserir.run(dados.nome_user,dados.cor_sistema,dados.cor_modo_do_sistema,dados.percentagem_da_fonte,dados.logo,dados.logo2,dados.execucao_do_app);
+  let inserir = db.prepare(`insert into definicoes (nome_user,cor_sistema,cor_modo_do_sistema,percentagem_da_fonte,logo,logo2,execucao_do_app,titulo_iguais) values (?,?,?,?,?,?,?,?);`);
+  inserir.run(dados.nome_user,dados.cor_sistema,dados.cor_modo_do_sistema,dados.percentagem_da_fonte,dados.logo,dados.logo2,dados.execucao_do_app,dados.titulo_iguais);
 }
 
 function inserir_dados_na_lista(dados) {
@@ -114,8 +118,8 @@ function buscar_tarefas_e_descrições_ao_db() {
   console.log(numero_de_listas);
 
   id_listas.forEach((posicao)=>{
-    let tarefa_temporaria=[];
-    let descricao_temporaria=db.prepare(`select * from descricao where codigo_de_lista=${posicao};`).all();
+  let tarefa_temporaria=[];
+  let descricao_temporaria=db.prepare(`select * from descricao where codigo_de_lista=${posicao};`).all();
 
     db.prepare(`select * from tarefas where codigo_de_lista=${posicao};`).all().forEach((obj,index2)=>{
       
@@ -138,6 +142,91 @@ function buscar_tarefas_e_descrições_ao_db() {
 
 }
 
+function buscar_ultima_lista_criada() {
+  let dados = db.prepare(`select * from lista order by id desc limit 1 ;`).get();
+  console.log(dados.id)
+  let descricoes= db.prepare(`select * from descricao where codigo_de_lista=${dados.id};`).all();
+  console.log(descricoes);
+
+  let tarefas= [];
+  db.prepare(`select * from tarefas where codigo_de_lista=${dados.id};`).all().forEach((obj,index)=>{
+    tarefas.push({
+      id: obj.id,
+      tarefa: obj.tarefa,
+      descricao: descricoes[index],
+      estatos: obj.estatos,
+      codigo_de_lista:obj.codigo_de_lista
+    });
+  });
+  console.log(tarefas);
+
+  listas={
+      titulo_lista: dados.titulo_lista,
+      categoria: dados.categoria,
+      num_tarefas: dados.num_tarefas,
+      tarefas: tarefas,
+      descricao:descricoes,
+      lisa_salva:dados.lisa_salva,
+      codigo_de_lista:dados.codigo_de_lista
+    };
+
+  return listas
+}
+
+function buscar_o_ultimo_id_gerado() {
+  let ultimo_id_tarefa = db.prepare(`select seq as ultimoid from sqlite_sequence where name = 'tarefas';`).get();
+  let ultimo_id_descricao = db.prepare(`select seq as ultimoid from sqlite_sequence where name = 'descricao';`).get();
+
+  if (ultimo_id_tarefa.ultimoid==ultimo_id_descricao.ultimoid) {
+    ultimo_id_gerado_no_db=ultimo_id_tarefa.ultimoid;
+    console.log(ultimo_id_gerado_no_db);
+  }
+}
+
+function deletar_uma_tarefa_e_descricao(dados) {
+  db.prepare(`delete from tarefas where id = ?;`).run(dados.id);
+  db.prepare(`delete from descricao where id = ?;`).run(dados.id);
+  db.prepare(`update lista set num_tarefas = ? where codigo_de_lista = ?;`).run((dados.num_tarefas)-1,dados.codigo_de_lista);
+  console.log(`Tarefa e Descricao com ID ${dados.id} foram deletados`);
+}
+
+function deletar_todas_tarefas_e_descricoes(dados) {
+  db.prepare(`delete from tarefas where codigo_de_lista = ?;`).run(dados);
+  db.prepare(`delete from descricao where codigo_de_lista = ?;`).run(dados);
+  db.prepare(`update lista set num_tarefas = ? where codigo_de_lista = ?;`).run(0,dados);
+  console.log(`todas as Tarefa e Descricao com codigo_de_lista ${dados} foram deletados`);
+}
+
+function deletar_todas_as_listas() {
+  db.prepare(`delete from lista;`).run();
+  db.prepare(`delete from sqlite_sequence where name = 'lista';`).run();
+  db.prepare(`delete from tarefas;`).run();
+  db.prepare(`delete from sqlite_sequence where name = 'tarefas';`).run();
+  db.prepare(`delete from descricao;`).run();
+  db.prepare(`delete from sqlite_sequence where name = 'descricao';`).run();
+  console.log(`Todas as Listas foram deletadas`);
+}
+
+function atualizar_lista_existente(dados) {
+  db.prepare(`update lista set titulo_lista = ?, categoria = ?, num_tarefas = ?, lisa_salva = ? where codigo_de_lista = ?;`).run(dados.titulo_lista,dados.categoria,dados.num_tarefas,dados.lisa_salva,dados.codigo_de_lista);
+  console.log(`Numero de tarefas e Salvamento da lista com codigo_de_lista ${dados.codigo_de_lista} foram atualizado`);
+}
+
+function atualizar_estatos_de_uma_tarefa(dados) {
+  db.prepare(`update tarefas set estatos = ? where id = ?;`).run(dados.estatos,dados.id);
+  console.log(`A Tarefa com ID ${dados.id} foi atualizado`);
+}
+
+function atualizar_texto_de_uma_tarefa(dados) {
+  db.prepare(`update tarefas set tarefa = ? where id = ?;`).run(dados.tarefa,dados.id);
+  console.log(`A Tarefa com ID ${dados.id} foi atualizado`);
+}
+
+function atualizar_titulos_iguais(dados) {
+  db.prepare(`update definicoes set titulo_iguais = ? where id = ?;`).run(dados.titulo_iguais,dados.id);
+  console.log(`As definições com ID ${dados.id} foram atualizadas`);
+}
+
 function verificar_contiudo_no_db() {
   let conteudo_definicoes = db.prepare(`select count (*) as total from definicoes;`).get();
   let conteudo_lista = db.prepare(`select count (*) as total from lista;`).get();
@@ -150,13 +239,15 @@ function verificar_contiudo_no_db() {
     console.log("banco vazio");
     conteudo_do_db="nenhum";
     definicoes_do_db={
+      id:1,
       nome_user: "",
       cor_sistema: "#c935f2",
       cor_modo_do_sistema: "escuro",
       percentagem_da_fonte: 13,
       logo: "../img/logo/logoapp.png",
       logo2: "../img/logo/logoapp2.png",
-      execucao_do_app:false
+      execucao_do_app:false,
+      titulo_iguais:0
     }
   }else if(conteudo_lista.total==0){
     console.log("listas vazias");
@@ -168,8 +259,11 @@ function verificar_contiudo_no_db() {
     buscar_difinicoes_ao_db();
     buscar_listas_ao_db();
     buscar_tarefas_e_descrições_ao_db();
+    buscar_o_ultimo_id_gerado();
   }
 }
+
+
 
 verificar_contiudo_no_db();
 
@@ -180,6 +274,8 @@ const criar_janela_segundaria = () => {
   janela_de_execucao = new BrowserWindow({
     width: 1280,
     height: 720,
+    minWidth:800,
+    minHeight:600,
     frame: false,
     autoHideMenuBar: true,
     icon: path.join(__dirname, "img", "logo", "icone.png"),
@@ -276,6 +372,9 @@ app.whenReady().then(() => {
     console.log(dados);
     inserir_dados_das_tarefas_e_descricoes(dados);
   });
+  ipcMain.handle('ultimaListaSalva', async ()=>{
+    return buscar_ultima_lista_criada();
+  });
   ipcMain.handle("dadosDoDB", async ()=>{
     let listas_enviadas=[]
 
@@ -293,9 +392,39 @@ app.whenReady().then(() => {
 
     return {
       listas: listas_enviadas,
-      definicoes:definicoes_do_db
+      definicoes:definicoes_do_db,
+      controlador_de_IDs:(listas_enviadas.length==0)?0:ultimo_id_gerado_no_db
     };
   });
+  ipcMain.on("deletarTarefaEDescricao",(event,dados)=>{
+    console.log(dados);
+    deletar_uma_tarefa_e_descricao(dados);
+  });
+  ipcMain.on("deletarTodasTarefasEDescricoes",(event,dados)=>{
+    console.log(dados)
+    deletar_todas_tarefas_e_descricoes(dados);
+  });
+  ipcMain.on("atualizarNumeroDeListasSalvamento",(event,dados)=>{
+    console.log(dados);
+    atualizar_lista_existente(dados)
+  });
+  ipcMain.on("atualizarEstatosDaTarefa",(event,dados)=>{
+    console.log(dados);
+    atualizar_estatos_de_uma_tarefa(dados);
+  });
+  ipcMain.on("atualizarTextoDeUmaTarefa",(event,dados)=>{
+    console.log(dados);
+    atualizar_texto_de_uma_tarefa(dados);
+  });
+  ipcMain.on("deletarTodasAsListas",()=>{
+    deletar_todas_as_listas();
+  });
+  ipcMain.on("atualizarTituloIguia",(event,dados)=>{
+    console.log(dados);
+    atualizar_titulos_iguais(dados);
+  });
+
+
 });
 
 app.on("window-all-closed", () => {
