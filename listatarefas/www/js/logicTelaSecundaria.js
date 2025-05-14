@@ -38,7 +38,7 @@ var dados_das_configuracoes = {
   logo: "../img/logo/logoapp.png",
   logo2: "../img/logo/logoapp2.png",
   execucao_do_app: false,
-  titulo_iguais:0
+  titulo_iguais: 0,
 };
 var copia_dos_dados_das_configuracoes = {};
 var posicao_da_lista_filtrada_que_vai_ser_aberta = 0;
@@ -798,7 +798,7 @@ function configuracoes() {
 
   //caixa de configurações armazenamento
   boxstorage.setAttribute("id", "boxstorage");
-  boxstorage.style.display="none";
+  boxstorage.style.display = "none";
   BoxConfig.appendChild(boxstorage);
   //titulo
   titleStorage.innerHTML = "Armazenamento";
@@ -1165,20 +1165,20 @@ function salvar_lista() {
           },
         });
       }
-
-      listas[lista_aberta].titulo_lista = title_task_normal.textContent;
-      listas[lista_aberta].categoria = seletor_categorias_normal.textContent;
-      listas[lista_aberta].num_tarefas = contador_tarefas;
-      listas[lista_aberta].lisa_salva = numero_de_salvamento;
-
-      api.atualizarNumeroDeListasSalvamento({
-        titulo_lista: title_task_normal.textContent,
-        categoria: seletor_categorias_normal.textContent,
-        num_tarefas: contador_tarefas,
-        codigo_de_lista: listas[lista_aberta].codigo_de_lista,
-        lisa_salva: listas[lista_aberta].lisa_salva + 1,
-      });
     }
+
+    listas[lista_aberta].titulo_lista = title_task_normal.textContent;
+    listas[lista_aberta].categoria = seletor_categorias_normal.textContent;
+    listas[lista_aberta].num_tarefas = contador_tarefas;
+    listas[lista_aberta].lisa_salva = numero_de_salvamento;
+
+    api.atualizarNumeroDeListasSalvamento({
+      titulo_lista: title_task_normal.textContent,
+      categoria: seletor_categorias_normal.textContent,
+      num_tarefas: contador_tarefas,
+      codigo_de_lista: listas[lista_aberta].codigo_de_lista,
+      lisa_salva: listas[lista_aberta].lisa_salva + 1,
+    });
   }
 
   dados_salvo_no_arrey = true;
@@ -1191,11 +1191,15 @@ function salvar_lista() {
   infolista("salvo");
 }
 function evento_de_foco_da_descricao(e, i) {
-  detalhes_da_descricao[i].texto=e.target.value;
-  detalhes_da_descricao[i].alturaDaCaixa=e.target.scrollHeight;
-  api.atualizarDescricao({id:detalhes_da_descricao[i].id,texto:detalhes_da_descricao[i].texto,alturaDaCaixa:detalhes_da_descricao[i].alturaDaCaixa});
+  detalhes_da_descricao[i].texto = e.target.value;
+  detalhes_da_descricao[i].alturaDaCaixa = e.target.scrollHeight;
+  api.atualizarDescricao({
+    id: detalhes_da_descricao[i].id,
+    texto: detalhes_da_descricao[i].texto,
+    alturaDaCaixa: detalhes_da_descricao[i].alturaDaCaixa,
+  });
   tarefas[i].descricao = detalhes_da_descricao[i];
-  
+
   apresentar_tarefas();
 }
 function salvar_configuracoes() {
@@ -1207,7 +1211,7 @@ function salvar_configuracoes() {
     logo: dados_das_configuracoes.logo,
     logo2: dados_das_configuracoes.logo2,
     execucao_do_app: true,
-    titulo_iguais:titulo_iguais
+    titulo_iguais: titulo_iguais,
   };
   api.inserirDefinicoes({
     nome_user: dados_das_configuracoes.nome_user,
@@ -1217,7 +1221,7 @@ function salvar_configuracoes() {
     logo: dados_das_configuracoes.logo,
     logo2: dados_das_configuracoes.logo2,
     execucao_do_app: ativar ? 1 : 0,
-    titulo_iguais:titulo_iguais
+    titulo_iguais: titulo_iguais,
   });
   alteracoes_salvas();
 }
@@ -1700,15 +1704,12 @@ function identificar_descricao() {
   let descricoes = [...document.querySelectorAll(".txtDescricao")];
   descricoes.forEach((item) => {
     item.addEventListener("click", (elemento) => {
-
       if (acesso_a_descricao) {
-        console.log(elemento.target.scrollHeight);
         acesso_a_descricao = false;
 
         for (let index = 0; index < contador_tarefas; index++) {
-
           if (elemento.target.id == `txtDescricao${index}`) {
-            elemento.target.style.height=`${detalhes_da_descricao[index].alturaDaCaixa}px`;
+            elemento.target.style.height = `${detalhes_da_descricao[index].alturaDaCaixa}px`;
             elemento.target.addEventListener("keydown", (ele1) => {
               editar_descricao(ele1);
             });
@@ -1717,12 +1718,18 @@ function identificar_descricao() {
               if (ele2.target.value === "") {
                 ele2.target.value = detalhes_da_descricao[index].texto;
                 ele2.target.scrollHeight = "54px";
-                api.atualizarDescricao({id:detalhes_da_descricao[index].id,texto:detalhes_da_descricao[index].texto,alturaDaCaixa:detalhes_da_descricao[index].alturaDaCaixa});
-                infolista("alterada");
+                api.atualizarDescricao({
+                  id: detalhes_da_descricao[index].id,
+                  texto: detalhes_da_descricao[index].texto,
+                  alturaDaCaixa: detalhes_da_descricao[index].alturaDaCaixa,
+                });
+                acesso_a_descricao = true;
+              } else if (
+                ele2.target.value != detalhes_da_descricao[index].texto
+              ) {
+                evento_de_foco_da_descricao(ele2, index);
                 acesso_a_descricao = true;
               } else {
-                evento_de_foco_da_descricao(ele2, index);
-                infolista("alterada");
                 acesso_a_descricao = true;
               }
             });
@@ -1775,8 +1782,8 @@ function deletar_todas_listas() {
   api.deletarTodasAsListas();
   contador_listas = 0;
   titulo_iguais = 0;
-  controlador_de_IDs=0;
-  codigo_de_lista=0;
+  controlador_de_IDs = 0;
+  codigo_de_lista = 0;
   actualizar_contador_de_listas();
   apresentar_listas_na_pagina_inicial();
   apresentar_listas_no_display_do_filtro(filter_list.innerHTML);
@@ -1786,7 +1793,9 @@ function deletar_selecao() {
   contador_listas -= todaslistas.length;
   todaslistas.forEach((item) => {
     let index = parseInt(item.id);
-    api.deletarListasSelecionadas({codigo_de_lista:listas[index].codigo_de_lista})
+    api.deletarListasSelecionadas({
+      codigo_de_lista: listas[index].codigo_de_lista,
+    });
     listas.splice(index, 1);
   });
   actualizar_contador_de_listas();
@@ -1861,8 +1870,11 @@ function verificar_se_a_lista_existe() {
       ativar_modalMensagem("Lista salva");
     } else {
       titulo_iguais++;
-      dados_das_configuracoes.titulo_iguais=titulo_iguais;
-      api.atualizarTituloIguia({id:dados_das_configuracoes.id,titulo_iguais:dados_das_configuracoes.titulo_iguais});
+      dados_das_configuracoes.titulo_iguais = titulo_iguais;
+      api.atualizarTituloIguia({
+        id: dados_das_configuracoes.id,
+        titulo_iguais: dados_das_configuracoes.titulo_iguais,
+      });
       title_task_normal.textContent = `Titulo${titulo_iguais}`;
       salvar_lista();
       ativar_modalMensagem("Lista salva");
@@ -2003,7 +2015,7 @@ function verificar_filtro_selecionado() {
 function sair_do_filtro_de_opcoes(elemento = "filter_list_opcoes") {
   document.addEventListener("click", (e) => {
     let elemento1 = document.querySelector(`#${elemento}`);
-    if (!elemento1.contains(e.target)) {
+    if (!elemento1.classList.contains(e.target)) {
       if (elemento == "box_opcoes__das_categorias_da_list_normal") {
         ativar_ou_desativar_opcoes1(
           "none",
@@ -2305,6 +2317,7 @@ function editar_descricao(e) {
     e.target.style.height = `${e.target.scrollHeight}px`;
     console.log(e.target.scrollHeight);
   }
+  infolista("alterada");
 }
 function criacao_da_tarefas(tarefas, i) {
   //caixa principal das tarefas
@@ -2622,9 +2635,6 @@ function carregar_listas() {
   console.groupEnd("tabela do historico de navegação");
 }
 
-
-
-
 window.onload = async () => {
   let dados = await obter_dados_do_db();
   console.log(dados);
@@ -2632,7 +2642,7 @@ window.onload = async () => {
     console.log("definições vazia");
   } else {
     dados_das_configuracoes = {
-      id:dados.definicoes.id,
+      id: dados.definicoes.id,
       nome_user: dados.definicoes.nome_user,
       cor_sistema: dados.definicoes.cor_sistema,
       cor_modo_do_sistema: dados.definicoes.cor_modo_do_sistema,
@@ -2640,14 +2650,14 @@ window.onload = async () => {
       logo: dados.definicoes.logo,
       logo2: dados.definicoes.logo2,
       execucao_do_app: dados.definicoes.execucao_do_app == 1 ? true : false,
-      titulo_iguais:dados.definicoes.titulo_iguais
+      titulo_iguais: dados.definicoes.titulo_iguais,
     };
     alteracoes_salvas();
     listas = dados.listas;
     ativar = dados_das_configuracoes.execucao_do_app;
-    titulo_iguais=dados_das_configuracoes.titulo_iguais;
+    titulo_iguais = dados_das_configuracoes.titulo_iguais;
     contador_listas = listas.length;
-    if (contador_listas!=0) {
+    if (contador_listas != 0) {
       codigo_de_lista = listas[listas.length - 1].codigo_de_lista;
     }
     controlador_de_IDs = dados.controlador_de_IDs;

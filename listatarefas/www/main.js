@@ -20,10 +20,10 @@ let conteudo_do_db;
 let ultimo_id_gerado_no_db
 
 //caminho do db para desenvolvimento
-const dbPath = path.join(__dirname,"db","Listas_de_tarefas.db");
+//const dbPath = path.join(__dirname,"db","Listas_de_tarefas.db");
 
 //caminho do db para compilação
-//const dbPath = path.join(app.getPath('userData'),"Listas_de_tarefas.db");
+const dbPath = path.join(app.getPath('userData'),"Listas_de_tarefas.db");
 
 console.log(dbPath);
 //comando para abrir ou criar o db
@@ -292,7 +292,7 @@ const criar_janela_segundaria = () => {
     autoHideMenuBar: true,
     icon: path.join(__dirname, "img", "logo", "icone.png"),
     webPreferences: {
-      devTools: true,
+      devTools: false,
       contextIsolation: true,
       nodeIntegration: false,
       preload: path.join(__dirname, "preload.js"),
@@ -301,7 +301,7 @@ const criar_janela_segundaria = () => {
 
   let pagina = path.join(__dirname, "view", "telasecundaria.html");
   janela_de_execucao.loadFile(`${pagina}`);
-  janela_de_execucao.webContents.openDevTools();
+  //janela_de_execucao.webContents.openDevTools();
 };
 
 const criar_janela_principal = () => {
