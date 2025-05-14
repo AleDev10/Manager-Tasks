@@ -3,11 +3,14 @@ const mainTelaAbertura = document.getElementById("main_tela_de_abertura");
 
 //arias das variaveis globais
 var dados_das_configuracoes={
-  nome_user:"",
-  cor_sistema:"#c935f2",
-  cor_modo_do_sistema:"escuro",
-  percentagem_da_fonte:10,
-  logo:"img/logo/logoapp.png"
+  nome_user: "",
+  cor_sistema: "#c935f2",
+  cor_modo_do_sistema: "escuro",
+  percentagem_da_fonte: 13,
+  logo: "../img/logo/logoapp.png",
+  logo2: "../img/logo/logoapp2.png",
+  execucao_do_app: false,
+  titulo_iguais:0
 };
 /*declaração dos elementos
  de maneira global*/
@@ -87,13 +90,15 @@ window.onload = async ()=>{
     console.log("definições vazia");
   }else{
     dados_das_configuracoes={
+      id:dados.definicoes.id,
       nome_user: dados.definicoes.nome_user,
       cor_sistema: dados.definicoes.cor_sistema,
       cor_modo_do_sistema: dados.definicoes.cor_modo_do_sistema,
       percentagem_da_fonte: dados.definicoes.percentagem_da_fonte,
       logo: dados.definicoes.logo,
       logo2: dados.definicoes.logo2,
-      execucao_do_app:(dados.definicoes.execucao_do_app==1)?true:false
+      execucao_do_app: dados.definicoes.execucao_do_app == 1 ? true : false,
+      titulo_iguais:dados.definicoes.titulo_iguais
     };
   }
   tela_de_abertura();

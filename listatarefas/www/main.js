@@ -207,6 +207,13 @@ function deletar_todas_as_listas() {
   console.log(`Todas as Listas foram deletadas`);
 }
 
+function deletar_listas_selecionadas(dados) {
+  db.prepare(`delete from lista where codigo_de_lista = ?;`).run(dados.codigo_de_lista);
+  db.prepare(`delete from tarefas where codigo_de_lista = ?;`).run(dados.codigo_de_lista);
+  db.prepare(`delete from descricao where codigo_de_lista = ?;`).run(dados.codigo_de_lista);
+  console.log(`Todas as Listas selecionadas foram deletadas`);
+}
+
 function atualizar_lista_existente(dados) {
   db.prepare(`update lista set titulo_lista = ?, categoria = ?, num_tarefas = ?, lisa_salva = ? where codigo_de_lista = ?;`).run(dados.titulo_lista,dados.categoria,dados.num_tarefas,dados.lisa_salva,dados.codigo_de_lista);
   console.log(`Numero de tarefas e Salvamento da lista com codigo_de_lista ${dados.codigo_de_lista} foram atualizado`);
@@ -225,6 +232,11 @@ function atualizar_texto_de_uma_tarefa(dados) {
 function atualizar_titulos_iguais(dados) {
   db.prepare(`update definicoes set titulo_iguais = ? where id = ?;`).run(dados.titulo_iguais,dados.id);
   console.log(`As definições com ID ${dados.id} foram atualizadas`);
+}
+
+function atualizar_uma_descricao(dados) {
+  db.prepare(`update descricao set texto = ?, alturaDaCaixa = ? where id = ?;`).run(dados.texto,dados.alturaDaCaixa,dados.id);
+  console.log(`A Descrição com ID ${dados.id} foi atualizada`);
 }
 
 function verificar_contiudo_no_db() {
@@ -422,6 +434,14 @@ app.whenReady().then(() => {
   ipcMain.on("atualizarTituloIguia",(event,dados)=>{
     console.log(dados);
     atualizar_titulos_iguais(dados);
+  });
+  ipcMain.on("deletarListasSelecionadas",(event,dados)=>{
+    console.log(dados);
+    deletar_listas_selecionadas(dados);
+  });
+  ipcMain.on("atualizarDescricao",(event,dados)=>{
+    console.log(dados);
+    atualizar_uma_descricao(dados);
   });
 
 

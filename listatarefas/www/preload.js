@@ -21,5 +21,7 @@ contextBridge.exposeInMainWorld('api',{
   atualizarEstatosDaTarefa:(dados)=> ipcRenderer.send("atualizarEstatosDaTarefa",dados),
   atualizarTextoDeUmaTarefa: (dados)=> ipcRenderer.send("atualizarTextoDeUmaTarefa",dados),
   deletarTodasAsListas: (dados)=> ipcRenderer.send("deletarTodasAsListas",dados),
-  atualizarTituloIguia: (dados)=> ipcRenderer.send("atualizarTituloIguia",dados)
+  atualizarTituloIguia: (dados)=> ipcRenderer.send("atualizarTituloIguia",dados),
+  deletarListasSelecionadas: (dados)=> ipcRenderer.send("deletarListasSelecionadas",dados),
+  atualizarDescricao: (dados)=> ipcRenderer.send("atualizarDescricao",dados)
 });

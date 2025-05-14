@@ -1127,6 +1127,19 @@ barra de titulo */
     background-color: var(--cor-main);
 }
 /* aria da responsividade com media query */
+@media screen and (max-width:900px){
+    .boxmenuitems {
+        font-size: .9rem;
+    }
+}
+@media screen and (max-width:800px){
+    #boxsearch img {
+        width: 8%;
+    }
+    .boxmenuitems {
+        font-size: .7rem;
+    }
+}
 @media screen and (max-width:700px){
     *{
         margin: 0;
@@ -1151,8 +1164,17 @@ barra de titulo */
     
 }
 @media screen and (max-width:500px) {
-    #barra {
+    #elementos_do_lado_direito_da_barra_de_titulo {
         display: none;
+    }
+    #elementos_do_centro_da_barra_de_titulo {
+        display: none;
+    }
+    #elementos_do_lado_esquerdo_da_barra_de_titulo {
+        padding: .6rem;
+    }
+    button#seta_de_navegacao_esquerda {
+        margin-left: 80%;
     }
     #secao_esquerda{
         display: none;
@@ -1173,7 +1195,17 @@ barra de titulo */
     }
     #boxlistinputnormal {
         margin-bottom: 1rem;
+        justify-content: center;
     }
+    #boxdisplaylistnormal {
+        margin-bottom: 5rem;
+    }
+    .boxTask2 {
+        display: none;
+    }
+    #display_list {
+        margin-bottom: 5rem;
+}
 }
 @media screen and (max-width:315px){
     #btn_new_list {

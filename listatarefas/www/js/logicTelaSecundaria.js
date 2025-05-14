@@ -1191,14 +1191,11 @@ function salvar_lista() {
   infolista("salvo");
 }
 function evento_de_foco_da_descricao(e, i) {
-  detalhes_da_descricao[i] = {
-    texto: e.target.value,
-    alturaDaCaixa: e.target.scrollHeight,
-  };
+  detalhes_da_descricao[i].texto=e.target.value;
+  detalhes_da_descricao[i].alturaDaCaixa=e.target.scrollHeight;
+  api.atualizarDescricao({id:detalhes_da_descricao[i].id,texto:detalhes_da_descricao[i].texto,alturaDaCaixa:detalhes_da_descricao[i].alturaDaCaixa});
   tarefas[i].descricao = detalhes_da_descricao[i];
-  console.log(detalhes_da_descricao);
-  console.log(tarefas);
-  console.log(e.target.scrollHeight);
+  
   apresentar_tarefas();
 }
 function salvar_configuracoes() {
@@ -1702,22 +1699,30 @@ function remover_lista_normal(texto, ativado_por = "lista_normal") {
 function identificar_descricao() {
   let descricoes = [...document.querySelectorAll(".txtDescricao")];
   descricoes.forEach((item) => {
-    item.addEventListener("click", (e) => {
+    item.addEventListener("click", (elemento) => {
+
       if (acesso_a_descricao) {
-        console.log(detalhes_da_descricao);
-        console.log(e.target.style.height);
+        console.log(elemento.target.scrollHeight);
         acesso_a_descricao = false;
+
         for (let index = 0; index < contador_tarefas; index++) {
-          if (e.target.id == `txtDescricao${index}`) {
-            e.target.addEventListener("keydown", (ele) => {
-              editar_descricao(ele);
+
+          if (elemento.target.id == `txtDescricao${index}`) {
+            elemento.target.style.height=`${detalhes_da_descricao[index].alturaDaCaixa}px`;
+            elemento.target.addEventListener("keydown", (ele1) => {
+              editar_descricao(ele1);
             });
-            e.target.addEventListener("blur", (ele) => {
-              if (e.target.value === "") {
-                e.target.value = "......";
-                e.target.style.height = "auto";
+
+            elemento.target.addEventListener("blur", (ele2) => {
+              if (ele2.target.value === "") {
+                ele2.target.value = detalhes_da_descricao[index].texto;
+                ele2.target.scrollHeight = "54px";
+                api.atualizarDescricao({id:detalhes_da_descricao[index].id,texto:detalhes_da_descricao[index].texto,alturaDaCaixa:detalhes_da_descricao[index].alturaDaCaixa});
+                infolista("alterada");
+                acesso_a_descricao = true;
               } else {
-                evento_de_foco_da_descricao(ele, index);
+                evento_de_foco_da_descricao(ele2, index);
+                infolista("alterada");
                 acesso_a_descricao = true;
               }
             });
@@ -1780,7 +1785,9 @@ function deletar_selecao() {
   let todaslistas = [...document.querySelectorAll(".selecionado")];
   contador_listas -= todaslistas.length;
   todaslistas.forEach((item) => {
-    listas.splice(parseInt(item.id), 1);
+    let index = parseInt(item.id);
+    api.deletarListasSelecionadas({codigo_de_lista:listas[index].codigo_de_lista})
+    listas.splice(index, 1);
   });
   actualizar_contador_de_listas();
   ativar_btn_deletar_selecao("Cancelar-seleção");
@@ -2326,7 +2333,7 @@ function criacao_da_tarefas(tarefas, i) {
      </div>
    </div>
    <div class="descricaoTask">
-     <textarea id="txtDescricao${i}" class="txtDescricao" style="height:${
+     <textarea id="txtDescricao${i}" class="txtDescricao" style="line-height:${
       tarefas.descricao.alturaDaCaixa
     }px;">${tarefas.descricao.texto}</textarea> 
     </div>` + boxTasklistnormal.innerHTML;
