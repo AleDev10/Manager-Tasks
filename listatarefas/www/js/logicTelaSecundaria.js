@@ -54,6 +54,7 @@ let codigo_de_lista = 0;
 let controlador_de_IDs = 0;
 let copia_da_lista_aberta = {};
 let elemento_editar_aberto = false;
+let estado_do_qr_code = true;
 
 /*declaração dos elementos
  de maneira global*/
@@ -148,8 +149,11 @@ const informacao_da_parcentagem_da_fonte = document.createElement("span");
 const gerenciador = document.createElement("div");
 const nome_do_gerencidor = document.createElement("input");
 const boxstorage = document.createElement("div");
+const boxstorage2 = document.createElement("div");
 const titleStorage = document.createElement("h3");
 const btn_delAll_storage = document.createElement("button");
+const btn_delAll_storage2 = document.createElement("button");
+const boxqrcode = document.createElement("div");
 const btnsConfig = document.createElement("div");
 const btnSalveconfig = document.createElement("button");
 const btnCancelconfig = document.createElement("button");
@@ -798,14 +802,37 @@ function configuracoes() {
 
   //caixa de configurações armazenamento
   boxstorage.setAttribute("id", "boxstorage");
-  boxstorage.style.display = "none";
   BoxConfig.appendChild(boxstorage);
   //titulo
-  titleStorage.innerHTML = "Armazenamento";
+  titleStorage.innerHTML = "Sincronização de dados";
   boxstorage.appendChild(titleStorage);
+  //mais uma caixa
+  boxstorage2.setAttribute("id", "boxstorage2");
+  boxstorage.appendChild(boxstorage2);
   //botão apagar todo armazenamento
-  btn_delAll_storage.innerHTML = "Apagar todo";
-  boxstorage.appendChild(btn_delAll_storage);
+  btn_delAll_storage.innerHTML = "Sincronizar";
+  btn_delAll_storage.style.display = estado_do_qr_code ? "block" : "none";
+  btn_delAll_storage.addEventListener("click", () => {
+    gerar_qr_code();
+    configuracoes_alteradas();
+    btn_delAll_storage.style.display = "none";
+    btn_delAll_storage2.style.display = "block";
+    estado_do_qr_code = false;
+  });
+  boxstorage2.appendChild(btn_delAll_storage);
+  btn_delAll_storage2.innerHTML = "Dessincronizar";
+  btn_delAll_storage2.style.display = estado_do_qr_code ? "none" : "block";
+  btn_delAll_storage2.addEventListener("click", () => {
+    desfazer_qr_code();
+    configuracoes_alteradas();
+    btn_delAll_storage2.style.display = "none";
+    btn_delAll_storage.style.display = "block";
+    estado_do_qr_code = true;
+  });
+  boxstorage2.appendChild(btn_delAll_storage2);
+  //caixa do qr code
+  boxqrcode.setAttribute("id", "boxqrcode");
+  boxstorage2.appendChild(boxqrcode);
 
   // caixa dis botões cancelar e salvar da configurações
   btnsConfig.setAttribute("id", "btnsconfig");
@@ -1960,6 +1987,8 @@ function cancelar_alteracoes_das_configuracoes() {
   informacao_da_parcentagem_da_fonte.innerHTML = `${inputfont.value}px`;
   dados_das_configuracoes.logo = copia_dos_dados_das_configuracoes.logo;
 
+  desfazer_qr_code();
+  qr_code_normal();
   escolher_tema(dados_das_configuracoes.cor_modo_do_sistema);
   cor_do_sistema_escolhida(dados_das_configuracoes.cor_sistema);
   alterar_tamanho_da_fonte();
@@ -2633,6 +2662,48 @@ function carregar_listas() {
   console.group("tabela do historico de navegação");
   console.table(lista_anterior);
   console.groupEnd("tabela do historico de navegação");
+}
+
+function fechar_qr_code() {
+  document.getElementById("boxqrcode").innerHTML = "";
+  btn_delAll_storage2.style.display = "none";
+  btn_delAll_storage.style.display = "block";
+  estado_do_qr_code = true;
+}
+
+function desfazer_qr_code() {
+  api.limparListasNoFirebase();
+  fechar_qr_code();
+}
+
+function qr_code_normal() {
+  btn_delAll_storage2.style.display = "none";
+  btn_delAll_storage.style.display = "block";
+  estado_do_qr_code = true;
+}
+
+function gerar_qr_code() {
+  api.enviarListasNoFirebase({
+    listas: listas,
+    definicoes: dados_das_configuracoes,
+  });
+  let chave_de_acesso = JSON.stringify({
+    apiKey: "AIzaSyA3e5iNeY_Y1G_jCn5ytkmdgBfD_lxajj0",
+    authDomain: "managar-tasks-mobile.firebaseapp.com",
+    databaseURL:
+      "https://managar-tasks-mobile-default-rtdb.europe-west1.firebasedatabase.app",
+    projectId: "managar-tasks-mobile",
+    storageBucket: "managar-tasks-mobile.firebasestorage.app",
+    messagingSenderId: "1083573779195",
+    appId: "1:1083573779195:web:aaee47c8f8a42dc6a1ce5e",
+    measurementId: "G-J7WMRT8PLB",
+  });
+  document.getElementById("boxqrcode").innerHTML = "";
+  new QRCode(document.getElementById("boxqrcode"), {
+    text: chave_de_acesso,
+    width: 200,
+    height: 200,
+  });
 }
 
 window.onload = async () => {

@@ -10,6 +10,9 @@ const { app, BrowserWindow,ipcMain,nativeTheme,shell, ipcRenderer } = require("e
 const { log, Console } = require("console");
 const { get } = require("http");
 
+const {initializeApp} = require("firebase/app");
+const {getDatabase,ref,set,remove} = require("firebase/database");
+
 //aria das variaveis de dados
 let listas_do_db=[];
 let definicoes_do_db={};
@@ -20,12 +23,13 @@ let conteudo_do_db;
 let ultimo_id_gerado_no_db
 
 //caminho do db para desenvolvimento
-//const dbPath = path.join(__dirname,"db","Listas_de_tarefas.db");
+const dbPath = path.join(__dirname,"db","Listas_de_tarefas.db");
 
 //caminho do db para compilação
-const dbPath = path.join(app.getPath('userData'),"Listas_de_tarefas.db");
+//const dbPath = path.join(app.getPath('userData'),"Listas_de_tarefas.db");
 
 console.log(dbPath);
+
 //comando para abrir ou criar o db
 const db = new Database(`${dbPath}`, { verbose: console.log });
 
@@ -239,6 +243,55 @@ function atualizar_uma_descricao(dados) {
   console.log(`A Descrição com ID ${dados.id} foi atualizada`);
 }
 
+function enviar_listas_ao_firebase(dados) {
+  const firebaseConfig = {
+    apiKey: "AIzaSyA3e5iNeY_Y1G_jCn5ytkmdgBfD_lxajj0",
+    authDomain: "managar-tasks-mobile.firebaseapp.com",
+    databaseURL: "https://managar-tasks-mobile-default-rtdb.europe-west1.firebasedatabase.app",
+    projectId: "managar-tasks-mobile",
+    storageBucket: "managar-tasks-mobile.firebasestorage.app",
+    messagingSenderId: "1083573779195",
+    appId: "1:1083573779195:web:aaee47c8f8a42dc6a1ce5e",
+    measurementId: "G-J7WMRT8PLB"
+  };
+  
+  // Initialize Firebase
+  const appfire = initializeApp(firebaseConfig);
+  const dbfire = getDatabase(appfire);
+
+  set(ref(dbfire,'app/'),dados).then(()=>{
+    console.log("dados enviados com sucesso");
+  }).catch(()=>{
+    console.log("erro ao enviar os dados");
+  });
+}
+
+function limpar_listas_ao_firebase() {
+  const firebaseConfig = {
+    apiKey: "AIzaSyA3e5iNeY_Y1G_jCn5ytkmdgBfD_lxajj0",
+    authDomain: "managar-tasks-mobile.firebaseapp.com",
+    databaseURL: "https://managar-tasks-mobile-default-rtdb.europe-west1.firebasedatabase.app",
+    projectId: "managar-tasks-mobile",
+    storageBucket: "managar-tasks-mobile.firebasestorage.app",
+    messagingSenderId: "1083573779195",
+    appId: "1:1083573779195:web:aaee47c8f8a42dc6a1ce5e",
+    measurementId: "G-J7WMRT8PLB"
+  };
+  
+  // Initialize Firebase
+  const appfire = initializeApp(firebaseConfig);
+  const dbfire = getDatabase(appfire);
+
+  remove(ref(dbfire,"/")).then(()=>{
+    console.log("banco de dados apagado");
+  }).catch(()=>{
+    console.log("erro ao apagar o banco de dados");
+  });
+
+}
+
+
+
 function verificar_contiudo_no_db() {
   let conteudo_definicoes = db.prepare(`select count (*) as total from definicoes;`).get();
   let conteudo_lista = db.prepare(`select count (*) as total from lista;`).get();
@@ -274,10 +327,10 @@ function verificar_contiudo_no_db() {
     buscar_o_ultimo_id_gerado();
   }
 }
-
-
-
 verificar_contiudo_no_db();
+
+
+
 
 let janela_de_abertura;
 let janela_de_execucao;
@@ -292,7 +345,7 @@ const criar_janela_segundaria = () => {
     autoHideMenuBar: true,
     icon: path.join(__dirname, "img", "logo", "icone.png"),
     webPreferences: {
-      devTools: false,
+      devTools: true,
       contextIsolation: true,
       nodeIntegration: false,
       preload: path.join(__dirname, "preload.js"),
@@ -301,7 +354,7 @@ const criar_janela_segundaria = () => {
 
   let pagina = path.join(__dirname, "view", "telasecundaria.html");
   janela_de_execucao.loadFile(`${pagina}`);
-  //janela_de_execucao.webContents.openDevTools();
+  janela_de_execucao.webContents.openDevTools();
 };
 
 const criar_janela_principal = () => {
@@ -442,6 +495,23 @@ app.whenReady().then(() => {
   ipcMain.on("atualizarDescricao",(event,dados)=>{
     console.log(dados);
     atualizar_uma_descricao(dados);
+  });
+  ipcMain.on("enviarListasNoFirebase",(event,dados)=>{
+    console.log(dados);
+    notifier.notify({
+      title: "Sincronização ativa",
+      message: "As suas listas estão online",
+      icon: path.join(__dirname, "img", "logo", "icone.png"),
+    });
+    enviar_listas_ao_firebase(dados);
+  });
+  ipcMain.on("limparListasNoFirebase",()=>{
+    notifier.notify({
+      title: "Sincronização desativada",
+      message: "As suas listas estão offline",
+      icon: path.join(__dirname, "img", "logo", "icone.png"),
+    });
+    limpar_listas_ao_firebase();
   });
 
 

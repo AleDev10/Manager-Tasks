@@ -516,13 +516,19 @@ janela pagina inicial */
 #boxstorage{
     padding: 1rem;
 }
+#boxstorage2{
+    padding: 1rem;
+    display: flex;
+    gap: 1.5rem;
+}
 #boxstorage h3{
     color: var(--cor-main);
 }
-#boxstorage button{
+#boxstorage2 button{
     color: var(--modo-primeira-cor);
     background-color: var(--cor-do-texto);
-    width: 40%;
+    width: 30%;
+    height: 15%;
     padding: .6rem;
     border: none;
     border-radius: 2rem;
@@ -530,11 +536,11 @@ janela pagina inicial */
     margin: .5rem;
     font-family: "Montserrat_medium";
 }
-#boxstorage button:hover{
+#boxstorage2 button:hover{
     background-color: var(--cor-main);
     color: var(--modo-primeira-cor);
 }
-#boxstorage button:hover:active{
+#boxstorage2 button:hover:active{
     background-color: var(--cor-secund);
 }
 #btnsconfig{
