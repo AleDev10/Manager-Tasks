@@ -23,10 +23,10 @@ let conteudo_do_db;
 let ultimo_id_gerado_no_db
 
 //caminho do db para desenvolvimento
-const dbPath = path.join(__dirname,"db","Listas_de_tarefas.db");
+//const dbPath = path.join(__dirname,"db","Listas_de_tarefas.db");
 
 //caminho do db para compilação
-//const dbPath = path.join(app.getPath('userData'),"Listas_de_tarefas.db");
+const dbPath = path.join(app.getPath('userData'),"Listas_de_tarefas.db");
 
 console.log(dbPath);
 
@@ -112,16 +112,16 @@ function buscar_listas_ao_db() {
 
 function buscar_tarefas_e_descrições_ao_db() {
   let numero_de_listas = db.prepare(`select count (*) as total from lista;`).get();
-  let id_listas=[];
+  let codigo_de_lista=[];
 
-  db.prepare(`select id from lista;`).all().forEach((obj)=>{
-    id_listas.push(obj.id);
+  db.prepare(`select codigo_de_lista from lista;`).all().forEach((obj)=>{
+    codigo_de_lista.push(obj.codigo_de_lista);
   });
 
-  console.log(id_listas)
+  console.log(codigo_de_lista)
   console.log(numero_de_listas);
 
-  id_listas.forEach((posicao)=>{
+  codigo_de_lista.forEach((posicao)=>{
   let tarefa_temporaria=[];
   let descricao_temporaria=db.prepare(`select * from descricao where codigo_de_lista=${posicao};`).all();
 
@@ -180,11 +180,15 @@ function buscar_ultima_lista_criada() {
 function buscar_o_ultimo_id_gerado() {
   let ultimo_id_tarefa = db.prepare(`select seq as ultimoid from sqlite_sequence where name = 'tarefas';`).get();
   let ultimo_id_descricao = db.prepare(`select seq as ultimoid from sqlite_sequence where name = 'descricao';`).get();
+  let numero_de_tarefas = db.prepare(`select count (*) as total from tarefas;`).get();
+  let numero_de_descricao = db.prepare(`select count (*) as total from descricao;`).get();
 
-  if (ultimo_id_tarefa.ultimoid==ultimo_id_descricao.ultimoid) {
+  if (numero_de_tarefas.total==0 || numero_de_descricao.total==0) {
+    ultimo_id_gerado_no_db=0;
+  } else if (ultimo_id_tarefa.ultimoid==ultimo_id_descricao.ultimoid) {
     ultimo_id_gerado_no_db=ultimo_id_tarefa.ultimoid;
-    console.log(ultimo_id_gerado_no_db);
   }
+  console.log(ultimo_id_gerado_no_db);
 }
 
 function deletar_uma_tarefa_e_descricao(dados) {
