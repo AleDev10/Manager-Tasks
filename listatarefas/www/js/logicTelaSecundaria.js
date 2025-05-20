@@ -1097,6 +1097,8 @@ function adicionar_tarefa() {
       tarefa: inputlistnormal.value.trim(),
       descricao: detalhes_da_descricao[contador_tarefas - 1],
       estatos: false,
+      data_inicial:"yyyy-mm-dd",
+      data_final:"yyyy-mm-dd",
       codigo_de_lista:
         modo_da_lista == "lista_existente"
           ? listas[lista_aberta].codigo_de_lista
@@ -1136,6 +1138,8 @@ function salvar_lista() {
         tarefas: {
           tarefa: tarefas[index].tarefa,
           estatos: tarefas[index].estatos ? 1 : 0,
+          data_inicial:tarefas[index].data_inicial,
+          data_final:tarefas[index].data_final,
           codigo_de_lista: codigo_de_lista,
         },
         descricoes: {
@@ -1183,6 +1187,8 @@ function salvar_lista() {
           tarefas: {
             tarefa: tarefasExtras[index].tarefa,
             estatos: tarefasExtras[index].estatos ? 1 : 0,
+            data_inicial:tarefas[index].data_inicial,
+            data_final:tarefas[index].data_final,
             codigo_de_lista: listas[lista_aberta].codigo_de_lista,
           },
           descricoes: {
@@ -1431,10 +1437,10 @@ function verificar_caixa_de_verificacao_de_tarefa(e) {
     if (e.target.id == `caixa_concluir${index}`) {
       if (e.target.checked) {
         tarefas[index].estatos = true;
-        api.atualizarEstatosDaTarefa({ id: tarefas[index].id, estatos: 1 });
+        (modo_da_lista=='nova_lista')?"":api.atualizarEstatosDaTarefa({ id: tarefas[index].id, estatos: 1 });
       } else {
         tarefas[index].estatos = false;
-        api.atualizarEstatosDaTarefa({ id: tarefas[index].id, estatos: 0 });
+        (modo_da_lista=='nova_lista')?"":api.atualizarEstatosDaTarefa({ id: tarefas[index].id, estatos: 1 });
       }
     }
   }
@@ -1464,7 +1470,7 @@ function deletar_tarefa_selecionada(i) {
     if (tarefas[i].id == detalhes_da_descricao[i].id) {
       console.log(tarefas[i].id);
       console.log(detalhes_da_descricao[i].id);
-      api.deletar_uma_tarefa_e_descricao({
+      (modo_da_lista=='nova_lista')?"":api.deletar_uma_tarefa_e_descricao({
         id: tarefas[i].id,
         num_tarefas: listas[lista_aberta].num_tarefas,
         codigo_de_lista: tarefas[i].codigo_de_lista,
@@ -1563,7 +1569,7 @@ function verificacao_botao_editar_selecionado(e) {
         elemento_editar_aberto = false;
         copia_das_tarefas[index] != tarefas[index]
           ? ""
-          : api.atualizarTextoDeUmaTarefa({
+          : (modo_da_lista=='nova_lista')?"":api.atualizarTextoDeUmaTarefa({
               id: tarefas[index].id,
               tarefa: copia_das_tarefas[index].tarefa,
             });
@@ -1587,7 +1593,7 @@ function guardar_tarefa_editada(pai, filho, i) {
   filho.textContent = pai.value;
   tarefas[i].tarefa = pai.value;
   elemento_editar_aberto = false;
-  api.atualizarTextoDeUmaTarefa({
+  (modo_da_lista=='nova_lista')?"":api.atualizarTextoDeUmaTarefa({
     id: tarefas[i].id,
     tarefa: tarefas[i].tarefa,
   });
@@ -1745,7 +1751,7 @@ function identificar_descricao() {
               if (ele2.target.value === "") {
                 ele2.target.value = detalhes_da_descricao[index].texto;
                 ele2.target.scrollHeight = "54px";
-                api.atualizarDescricao({
+                (modo_da_lista=='nova_lista')?"":api.atualizarDescricao({
                   id: detalhes_da_descricao[index].id,
                   texto: detalhes_da_descricao[index].texto,
                   alturaDaCaixa: detalhes_da_descricao[index].alturaDaCaixa,
@@ -2211,6 +2217,69 @@ async function obter_dados_do_db() {
 async function ultima_lista() {
   return await api.buscarListaSalva();
 }
+function desfazer_qr_code() {
+  api.limparListasNoFirebase();
+  fechar_qr_code();
+}
+function gerar_qr_code() {
+  api.enviarListasNoFirebase({
+    listas: listas,
+    definicoes: dados_das_configuracoes,
+  });
+  let chave_de_acesso = JSON.stringify({
+    apiKey: "AIzaSyA3e5iNeY_Y1G_jCn5ytkmdgBfD_lxajj0",
+    authDomain: "managar-tasks-mobile.firebaseapp.com",
+    databaseURL:
+      "https://managar-tasks-mobile-default-rtdb.europe-west1.firebasedatabase.app",
+    projectId: "managar-tasks-mobile",
+    storageBucket: "managar-tasks-mobile.firebasestorage.app",
+    messagingSenderId: "1083573779195",
+    appId: "1:1083573779195:web:aaee47c8f8a42dc6a1ce5e",
+    measurementId: "G-J7WMRT8PLB",
+  });
+  document.getElementById("boxqrcode").innerHTML = "";
+  new QRCode(document.getElementById("boxqrcode"), {
+    text: chave_de_acesso,
+    width: 200,
+    height: 200,
+  });
+}
+function caixa_da_data() {
+  let entrada_das_datas = [...document.querySelectorAll(".data-final")];
+
+  entrada_das_datas.forEach((item)=>{
+    item.addEventListener("click",(elemento)=>{
+      for (let index = 0; index < contador_tarefas; index++) {
+        if (elemento.target.id==`${index}dataFinal`) {
+          console.log(`clicou em ${index}dataFinal`);
+          elemento.target.addEventListener("change",(e)=>{
+            validar_data(e,index);
+          });
+        }
+        
+      }
+    });
+  });
+}
+function validar_data(elemento,posicao) {
+  let data_do_fim = String(elemento.target.value);
+  let data = new Date;
+  let data_do_inicio = data.toISOString().split('T')[0];
+  console.log(data_do_inicio);
+  console.log(data_do_fim);
+
+  if (data_do_inicio>data_do_fim) {
+    elemento.target.value='';
+    console.log("O evento já passou");
+  }else{
+    console.log("Data agendada");
+    tarefas[posicao].data_inicial=data_do_inicio;
+    tarefas[posicao].data_final=data_do_fim;
+    (modo_da_lista=='nova_lista')?"":api.atualizarDatadaTarefa({ id: tarefas[posicao].id,data_inicial:tarefas[posicao].data_inicial,data_final: tarefas[posicao].data_final});
+    console.log(tarefas[posicao]);
+  }
+  infolista("alterada");
+}
 
 //saida de dados
 function cor_menu_pagina_inicial() {
@@ -2362,6 +2431,7 @@ function criacao_da_tarefas(tarefas, i) {
     }">${tarefas.tarefa}</span>
      </div>
      <div class="boxTask2">
+       <input type="date" name="data_final" id="${i}dataFinal" class="data-final" value=${tarefas.data_final=="yyyy-mm-dd"?"":tarefas.data_final}>
        <img src=${
          dados_das_configuracoes.cor_modo_do_sistema == "escuro"
            ? "../img/icons/edite-white.png"
@@ -2385,6 +2455,7 @@ function criacao_da_tarefas(tarefas, i) {
   deletar_uma_tarefa();
   editar_uma_tarefas();
   identificar_descricao();
+  caixa_da_data();
 }
 function actualizar_contador_de_listas() {
   info_count_list.innerHTML = `${contador_listas} listas`;
@@ -2663,48 +2734,29 @@ function carregar_listas() {
   console.table(lista_anterior);
   console.groupEnd("tabela do historico de navegação");
 }
-
 function fechar_qr_code() {
   document.getElementById("boxqrcode").innerHTML = "";
   btn_delAll_storage2.style.display = "none";
   btn_delAll_storage.style.display = "block";
   estado_do_qr_code = true;
 }
-
-function desfazer_qr_code() {
-  api.limparListasNoFirebase();
-  fechar_qr_code();
-}
-
 function qr_code_normal() {
   btn_delAll_storage2.style.display = "none";
   btn_delAll_storage.style.display = "block";
   estado_do_qr_code = true;
 }
 
-function gerar_qr_code() {
-  api.enviarListasNoFirebase({
-    listas: listas,
-    definicoes: dados_das_configuracoes,
-  });
-  let chave_de_acesso = JSON.stringify({
-    apiKey: "AIzaSyA3e5iNeY_Y1G_jCn5ytkmdgBfD_lxajj0",
-    authDomain: "managar-tasks-mobile.firebaseapp.com",
-    databaseURL:
-      "https://managar-tasks-mobile-default-rtdb.europe-west1.firebasedatabase.app",
-    projectId: "managar-tasks-mobile",
-    storageBucket: "managar-tasks-mobile.firebasestorage.app",
-    messagingSenderId: "1083573779195",
-    appId: "1:1083573779195:web:aaee47c8f8a42dc6a1ce5e",
-    measurementId: "G-J7WMRT8PLB",
-  });
-  document.getElementById("boxqrcode").innerHTML = "";
-  new QRCode(document.getElementById("boxqrcode"), {
-    text: chave_de_acesso,
-    width: 200,
-    height: 200,
-  });
-}
+
+
+
+
+
+
+
+
+
+
+
 
 window.onload = async () => {
   let dados = await obter_dados_do_db();

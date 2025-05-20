@@ -25,5 +25,6 @@ contextBridge.exposeInMainWorld('api',{
   deletarListasSelecionadas: (dados)=> ipcRenderer.send("deletarListasSelecionadas",dados),
   atualizarDescricao: (dados)=> ipcRenderer.send("atualizarDescricao",dados),
   enviarListasNoFirebase: (dados)=> ipcRenderer.send("enviarListasNoFirebase",dados),
-  limparListasNoFirebase:()=> ipcRenderer.send("limparListasNoFirebase")
+  limparListasNoFirebase:()=> ipcRenderer.send("limparListasNoFirebase"),
+  atualizarDatadaTarefa:(dados)=> ipcRenderer.send("atualizarDatadaTarefa",dados)
 });

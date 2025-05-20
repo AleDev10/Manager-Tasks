@@ -23,10 +23,10 @@ let conteudo_do_db;
 let ultimo_id_gerado_no_db
 
 //caminho do db para desenvolvimento
-//const dbPath = path.join(__dirname,"db","Listas_de_tarefas.db");
+const dbPath = path.join(__dirname,"db","Listas_de_tarefas.db");
 
 //caminho do db para compilação
-const dbPath = path.join(app.getPath('userData'),"Listas_de_tarefas.db");
+//const dbPath = path.join(app.getPath('userData'),"Listas_de_tarefas.db");
 
 console.log(dbPath);
 
@@ -71,6 +71,8 @@ db.exec(`create table if not exists tarefas (
   id integer primary key autoincrement,
   tarefa text not null,
   estatos integer not null,
+  data_inicial text,
+  data_final text,
   codigo_de_lista integer not null,
   foreign key (codigo_de_lista) references  lista(codigo_de_lista) on delete cascade
 );`);
@@ -87,10 +89,10 @@ function inserir_dados_na_lista(dados) {
 }
 
 const inserir_dados_das_tarefas_e_descricoes = db.transaction((dados)=>{
-    let inserirTarefa = db.prepare(`insert into tarefas(tarefa,estatos,codigo_de_lista) values(?,?,?);`);
+    let inserirTarefa = db.prepare(`insert into tarefas(tarefa,estatos,data_inicial,data_final,codigo_de_lista) values(?,?,?,?,?);`);
     let inserirDescricoes = db.prepare(`insert into descricao (id,texto,alturaDaCaixa,codigo_de_lista) values(?,?,?,?);`);
 
-    let id = inserirTarefa.run(dados.tarefas.tarefa,dados.tarefas.estatos,dados.tarefas.codigo_de_lista);
+    let id = inserirTarefa.run(dados.tarefas.tarefa,dados.tarefas.estatos,dados.tarefas.data_inicial,dados.tarefas.data_final,dados.tarefas.codigo_de_lista);
     let idTarefa = id.lastInsertRowid;
 
     inserirDescricoes.run(idTarefa,dados.descricoes.texto,dados.descricoes.alturaDaCaixa,dados.descricoes.codigo_de_lista);
@@ -132,6 +134,8 @@ function buscar_tarefas_e_descrições_ao_db() {
         tarefa: obj.tarefa,
         descricao: descricao_temporaria[index2],
         estatos: obj.estatos,
+        data_inicial:obj.data_inicial,
+        data_final:obj.data_final,
         codigo_de_lista:obj.codigo_de_lista
       });
     });
@@ -158,6 +162,8 @@ function buscar_ultima_lista_criada() {
       id: obj.id,
       tarefa: obj.tarefa,
       descricao: descricoes[index],
+      data_inicial:obj.data_inicial,
+      data_final:obj.data_final,
       estatos: obj.estatos,
       codigo_de_lista:obj.codigo_de_lista
     });
@@ -247,6 +253,11 @@ function atualizar_uma_descricao(dados) {
   console.log(`A Descrição com ID ${dados.id} foi atualizada`);
 }
 
+function atualizar_data_de_uma_tarefa(dados) {
+  db.prepare(`update tarefas set data_inicial = ?,data_final = ? where id = ?;`).run(dados.data_inicial,dados.data_final,dados.id);
+  console.log(`A Tarefa com ID ${dados.id} foi atualizado`);
+}
+
 function enviar_listas_ao_firebase(dados) {
   const firebaseConfig = {
     apiKey: "AIzaSyA3e5iNeY_Y1G_jCn5ytkmdgBfD_lxajj0",
@@ -333,7 +344,62 @@ function verificar_contiudo_no_db() {
 }
 verificar_contiudo_no_db();
 
+function verificar_datas_das_tarefas() {
+  let contador_de_tarefas_para_amanha=0;
+  let contador_de_tarefas_para_hoje=0;
 
+  console.log("A verificar datas das tarefas.");
+  tarefas_do_db.forEach((item)=>{
+    item.forEach((item2,index)=>{
+      console.log(item2.data_final);
+      let estado = item2.estatos;
+      let dataFinal = item2.data_final;
+      let data = new Date;
+      let dataAtual = data.toISOString().split('T')[0];
+
+      const atual = new Date(dataAtual);
+      const final = new Date(dataFinal);
+      let diferenca;
+      let dias_em_falta =-1;
+
+      if (dataFinal!="yyyy-mm-dd") {
+        diferenca = final.getTime()-atual.getTime();
+        dias_em_falta = Math.ceil(diferenca/(1000*60*60*24));
+      }
+
+      console.log(dias_em_falta);
+      if (dataAtual>dataFinal) {
+        console.log(`Tarefa com id ${item2.id} da lista ${item2.codigo_de_lista} já passou`);
+      } else if(dias_em_falta==2 && estado==0){
+        contador_de_tarefas_para_amanha++;
+      }else if(dias_em_falta==0 && estado==0) {
+        contador_de_tarefas_para_hoje++;
+      }
+    })
+
+  });
+
+  if (contador_de_tarefas_para_amanha>0 && contador_de_tarefas_para_hoje>0) {
+    notifier.notify({
+      title: "Lembrete",
+      message: `Tens ${contador_de_tarefas_para_amanha} Tarefas para realizar em 2 dias e ${contador_de_tarefas_para_hoje} para hoje.`,
+      icon: path.join(__dirname, "img", "logo", "icone.png")
+    });
+  } else if(contador_de_tarefas_para_amanha>0 && contador_de_tarefas_para_hoje==0){
+    notifier.notify({
+      title: "Lembrete",
+      message: `Tens ${contador_de_tarefas_para_amanha} Tarefas para realizar em 2 dias.`,
+      icon: path.join(__dirname, "img", "logo", "icone.png")
+    });
+  }else if (contador_de_tarefas_para_amanha==0 && contador_de_tarefas_para_hoje>0) {
+    notifier.notify({
+      title: "Lembrete",
+      message: `Tens  ${contador_de_tarefas_para_hoje} Tarefas para hoje.`,
+      icon: path.join(__dirname, "img", "logo", "icone.png")
+    });
+  }
+
+}
 
 
 let janela_de_abertura;
@@ -349,7 +415,7 @@ const criar_janela_segundaria = () => {
     autoHideMenuBar: true,
     icon: path.join(__dirname, "img", "logo", "icone.png"),
     webPreferences: {
-      devTools: true,
+      devTools:true,
       contextIsolation: true,
       nodeIntegration: false,
       preload: path.join(__dirname, "preload.js"),
@@ -359,6 +425,8 @@ const criar_janela_segundaria = () => {
   let pagina = path.join(__dirname, "view", "telasecundaria.html");
   janela_de_execucao.loadFile(`${pagina}`);
   janela_de_execucao.webContents.openDevTools();
+
+  verificar_datas_das_tarefas();
 };
 
 const criar_janela_principal = () => {
@@ -390,11 +458,11 @@ const criar_janela_principal = () => {
 
 app.whenReady().then(() => {
   criar_janela_principal();
-  notifier.notify({
+  /* notifier.notify({
     title: "Bem vindo",
     message: "O app está abrindo.",
     icon: path.join(__dirname, "img", "logo", "icone.png"),
-  });
+  }); */
 
   app.on("activate", () => {
     if (BrowserWindow.getAllWindows().length === 0) criar_janela_principal();
@@ -446,7 +514,7 @@ app.whenReady().then(() => {
   });
   ipcMain.handle("dadosDoDB", async ()=>{
     let listas_enviadas=[]
-
+    
     listas_do_db.forEach((item,index)=>{
       listas_enviadas.push({
         titulo_lista: item.titulo_lista,
@@ -516,6 +584,10 @@ app.whenReady().then(() => {
       icon: path.join(__dirname, "img", "logo", "icone.png"),
     });
     limpar_listas_ao_firebase();
+  });
+  ipcMain.on("atualizarDatadaTarefa",(event,dados)=>{
+    console.log(dados);
+    atualizar_data_de_uma_tarefa(dados);
   });
 
 
